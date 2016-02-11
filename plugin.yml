@@ -1,0 +1,34 @@
+name: TitlesPlugin
+main: me.semakon.TitlesPlugin
+version: 1.0
+commands:
+  titles:
+    description: Returns all available titles.
+    usage: /<command>
+  description:
+    description: Returns a description.
+    usage: /<command> <title>
+  create:
+    description: Creates a new Title with a name and a description.
+    usage: /<command> <new_title> <description>
+  remove:
+    description: Deletes a specified title.
+    usage: /<command> <title>
+  edit_description:
+    description: Edits description of title.
+    usage: /<command> <title> <new_description>
+  edit_category:
+    description: Edits category of title.
+    usage: /<command> <title> <new_category>
+  unlock_title:
+    description: Submit request for a title.
+    usage: /<command> <title>
+  change_title:
+    description: Change to a different unlocked title.
+    usage: /<command> <title>
+  retract_request:
+    description: Retract pending title request.
+    usage: /<command> <title>
+  view_requests:
+    description: Returns all pending request.
+    usage: /<command>
