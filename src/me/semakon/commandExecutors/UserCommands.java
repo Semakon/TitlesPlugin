@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -35,53 +36,63 @@ public class UserCommands implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            FileConfiguration config = plugin.getConfig();
+        Player player = null;
+        if (sender instanceof Player) player = (Player) sender;
 
-            switch (cmd.getName()) {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
 
-                case Utils.GET_TITLES:
-                    String res;
-                    List<String> titles;
-                    if (args.length != 0) {
-                        res = String.format("%sAvailable titles in %s:\n%s", ChatColor.GOLD, args[0], ChatColor.RESET);
-                        titles = GetHandler.getTitlesFromCategory(plugin, args[0]);
+        switch (cmd.getName()) {
+
+            case Utils.GET_TITLES:
+                String res;
+                List<String> titles;
+                if (args.length != 0) {
+                    String category = args[0];
+                    res = String.format("%sAvailable titles in %s:\n%s", ChatColor.GOLD, category, ChatColor.RESET);
+                    titles = GetHandler.getTitlesFromCategory(config, category);
+                } else {
+                    res = String.format("%sAvailable titles:\n%s", ChatColor.GOLD, ChatColor.RESET);
+                    titles = GetHandler.getTitles(config);
+                }
+                for (String title : titles) res += title + "\n";
+
+                if (player == null) Utils.consolePrint(res);
+                else player.sendMessage(res);
+
+                return true;
+
+            case Utils.GET_DESCRIPTION:
+                if (args.length == 1) {
+                    String title = args[0];
+                    String description = GetHandler.getFromTitle(config, title, Utils.DESC);
+                    if (description == null) {
+                        if (player == null) Utils.consolePrint("That title doesn't exist.");
+                        else Utils.sendError(player, "That title doesn't exist.");
                     } else {
-                        res = String.format("%sAvailable titles:\n%s", ChatColor.GOLD, ChatColor.RESET);
-                        titles = GetHandler.getTitles(plugin);
-                    }
-                    for (String title : titles) {
-                        res += title + "\n";
-                    }
-                    player.sendMessage(res);
-                    return true;
-
-                //TODO: implement GetHandler on cases below
-                case Utils.GET_DESCRIPTION:
-                    if (args.length == 1) {
-                        if (config.contains(Utils.TITLES + args[0].toLowerCase() + Utils.DESC)) {
-                            player.sendMessage(Utils.createSpaces(config.getString(Utils.TITLES + args[0].toLowerCase() + Utils.DESC)));
-                        }
+                        if (player == null) Utils.consolePrint(description);
+                        else player.sendMessage(description);
                         return true;
                     }
-                    break;
+                }
+                break;
 
-                case Utils.UNLOCK_TITLE:
-                    if (args.length == 1) {
-                        UUID uuid = player.getUniqueId();
-                        String title = args[0];
-                        System.out.println("uuid: " + uuid + "\ntitle: " + title);
-                        if (!config.contains(Utils.REQUESTS + uuid)) {
-                            config.set(Utils.REQUESTS + uuid, title.toLowerCase());
-                            player.sendMessage("Title request submitted.");
-                            plugin.saveConfig();
-                            return true;
-                        } else player.sendMessage(ChatColor.RED + "You've already submitted a title request.");
-                    }
-                    break;
-            }
+            //TODO: implement RequestHandler on case below
+//            case Utils.UNLOCK_TITLE:
+//                if (player == null) break;
+//                if (args.length == 1) {
+//                    UUID uuid = player.getUniqueId();
+//                    String title = args[0];
+//                    System.out.println("uuid: " + uuid + "\ntitle: " + title);
+//                    if (!config.contains(Utils.REQUESTS + uuid)) {
+//                        config.set(Utils.REQUESTS + uuid, title.toLowerCase());
+//                        player.sendMessage("Title request submitted.");
+//                        plugin.saveConfig();
+//                        return true;
+//                    } else player.sendMessage(ChatColor.RED + "You've already submitted a title request.");
+//                }
+//                break;
         }
+
         return false;
     }
 

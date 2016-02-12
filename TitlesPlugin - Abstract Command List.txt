@@ -1,0 +1,83 @@
+TitlesPlugin - Abstract Command List
+
+---------------------------------------------------------------------------
+
+Set-Title Commands:				
+- Set title for self            
+
+View-Titles Commands:           
+- Get all titles                
+- Get all titles from category  
+- Get description of title      
+- Get category of title         
+
+Make-Request Commands:          
+- Submit request for title      
+- Retract request for title     
+- View self.request for title        
+
+Edit-Titles Commands:           
+- Create title                  
+- Remove title                  
+- Edit description of title     
+- Edit category of title        
+- Rename category               
+
+Edit-User-Titles Commands:      
+- Add title to user titles      
+- Remove title from user titles 
+
+Handle-Request Commands:        
+- View all title requests       
+- Approve title request of user 
+- Deny title request of user	
+
+---------------------------------------------------------------------------
+
+Permissions:
+    User Level 0:
+		- View-Titles Commands
+		Inherit:
+	User Level 1:
+		- Set-Title Commands
+		- Make-Request Commands
+		Inherit: User Level 0
+	User Level 2:
+		- Handle-Request Commands
+		- Edit-User-Titles Commands
+		Inherit: User Level 1
+	User Level 3:
+		- Edit-Titles Commands
+		Inherit: User Level 2
+	Console:
+		- View-Titles Commands
+		- Edit-Titles Commands
+		- Edit-User-Titles Commands
+		- Handle-Request Commands
+		Inherit:
+
+---------------------------------------------------------------------------
+
+/titles get
+/titles get category <category>
+/titles get <title> description
+/titles get <title> category
+
+/titles title <title>
+
+/titles submit <title>
+/titles retract
+/titles get request
+
+/titles create <title> <description> <category>
+/titles remove <title>
+/titles set <title> description <description>
+/titles set <title> category <category>
+/titles rename <category> <newCategory>
+
+/titles <user> add <title>
+/titles <user> remove <title>
+
+/titles requests
+/titles approve <user>
+/titles deny <user>

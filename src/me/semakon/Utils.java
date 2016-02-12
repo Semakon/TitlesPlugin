@@ -68,4 +68,12 @@ public class Utils {
         p.sendMessage(ChatColor.RED + "ERROR: " + msg);
     }
 
+    /**
+     * Prints a message to the console.
+     * @param msg Message to be printed.
+     */
+    public static void consolePrint(String msg) {
+        System.out.println("[TitlePlugin] " + msg);
+    }
+
 }

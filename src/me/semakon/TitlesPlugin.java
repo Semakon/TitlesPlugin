@@ -14,6 +14,9 @@ public class TitlesPlugin extends JavaPlugin {
 
     public Permission pm = new Permission("editTitles.allowed");
     public Permission pm2 = new Permission("handleRequests.allowed");
+    public Permission pm3 = new Permission("editUserTitles.allowed");
+    public Permission pm4 = new Permission("makeRequests.allowed");
+    public Permission pm5 = new Permission("setTitle.allowed");
 
     /**
      * Called when the plugin is enabled. Creates new instances of CommandExecutors for the corresponding commands.
