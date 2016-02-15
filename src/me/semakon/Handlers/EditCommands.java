@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
  * Author:  Martijn
  * Date:    11-2-2016
  */
-public class EditHandler {
+public class EditCommands {
 
     /**
      * Creates a new title with a name, description and category. It is then saved to the config.

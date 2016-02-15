@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * Author:  Martijn
  * Date:    11-2-2016
  */
-public class GetHandler {
+public class GetCommands {
 
     /**
      * Creates a list of all titles in a config and returns them.

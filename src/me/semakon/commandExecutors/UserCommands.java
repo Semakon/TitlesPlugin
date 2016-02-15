@@ -1,6 +1,7 @@
 package me.semakon.commandExecutors;
 
-import me.semakon.Handlers.GetHandler;
+import me.semakon.Handlers.GetCommands;
+import me.semakon.Handlers.SetCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.ChatColor;
@@ -8,11 +9,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Author:  Martijn
@@ -39,6 +38,7 @@ public class UserCommands implements CommandExecutor {
         Player player = null;
         if (sender instanceof Player) player = (Player) sender;
 
+        SetCommands sh = new SetCommands(plugin);
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
 
         switch (cmd.getName()) {
@@ -49,10 +49,10 @@ public class UserCommands implements CommandExecutor {
                 if (args.length != 0) {
                     String category = args[0];
                     res = String.format("%sAvailable titles in %s:\n%s", ChatColor.GOLD, category, ChatColor.RESET);
-                    titles = GetHandler.getTitlesFromCategory(config, category);
+                    titles = GetCommands.getTitlesFromCategory(config, category);
                 } else {
                     res = String.format("%sAvailable titles:\n%s", ChatColor.GOLD, ChatColor.RESET);
-                    titles = GetHandler.getTitles(config);
+                    titles = GetCommands.getTitles(config);
                 }
                 for (String title : titles) res += title + "\n";
 
@@ -64,7 +64,7 @@ public class UserCommands implements CommandExecutor {
             case Utils.GET_DESCRIPTION:
                 if (args.length == 1) {
                     String title = args[0];
-                    String description = GetHandler.getFromTitle(config, title, Utils.DESC);
+                    String description = GetCommands.getFromTitle(config, title, Utils.DESC);
                     if (description == null) {
                         if (player == null) Utils.consolePrint("That title doesn't exist.");
                         else Utils.sendError(player, "That title doesn't exist.");
@@ -73,6 +73,14 @@ public class UserCommands implements CommandExecutor {
                         else player.sendMessage(description);
                         return true;
                     }
+                }
+                break;
+
+            case "test":
+                if (player != null && args.length == 1) {
+                    String title = args[0];
+                    sh.setTitle(player, title);
+                    return true;
                 }
                 break;
 

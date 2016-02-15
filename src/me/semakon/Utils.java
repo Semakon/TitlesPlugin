@@ -12,11 +12,15 @@ import org.bukkit.entity.Player;
 public class Utils {
 
     /**
+     * Commands:
+     */
+    public static final String TITLES_COMMAND = "titles";
+
+    /**
      * Normal user commands:
      */
     public static final String GET_TITLES = "titles";
     public static final String GET_DESCRIPTION = "description";
-    public static final String GET_CATEGORY = "categories";
 
     public static final String UNLOCK_TITLE = "unlock_title";
     public static final String CHANGE_TITLE = "change_title";
@@ -28,10 +32,8 @@ public class Utils {
     public static final String CREATE_NEW_TITLE = "create";
     public static final String REMOVE_TITLE = "remove";
     public static final String EDIT_DESCRIPTION = "edit_description";
-    public static final String EDIT_CATEGORY = "edit_category";
 
     public static final String VIEW_REQUESTS = "view_requests";
-
 
     /**
      * YAML file conventions:
@@ -48,7 +50,7 @@ public class Utils {
      * @param string Original String.
      * @return String with all underscores replaced by spaces.
      */
-    public static String createSpaces(String string) {
+    public static String addSpaces(String string) {
         if (string.contains("_")) {
             String[] split = string.split("_");
             String res = "";

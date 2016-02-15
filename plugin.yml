@@ -3,32 +3,28 @@ main: me.semakon.TitlesPlugin
 version: 1.0
 commands:
   titles:
-    description: Returns all available titles.
-    usage: /<command>
-  description:
-    description: Returns a description.
-    usage: /<command> <title>
-  create:
-    description: Creates a new Title with a name and a description.
-    usage: /<command> <new_title> <description>
-  remove:
-    description: Deletes a specified title.
-    usage: /<command> <title>
-  edit_description:
-    description: Edits description of title.
-    usage: /<command> <title> <new_description>
-  edit_category:
-    description: Edits category of title.
-    usage: /<command> <title> <new_category>
-  unlock_title:
-    description: Submit request for a title.
-    usage: /<command> <title>
-  change_title:
-    description: Change to a different unlocked title.
-    usage: /<command> <title>
-  retract_request:
-    description: Retract pending title request.
-    usage: /<command> <title>
-  view_requests:
-    description: Returns all pending request.
-    usage: /<command>
+    description: Provides access to the Titles commands.
+    usage: |
+           Usage:
+           /<command> set title <title> - Sets current title to <title>.
+           /<command> get titles - Print all available titles.
+           /<command> get titles <category> - Print all available titles from <category>.
+           /<command> get title <title> description - Print description of <title>.
+           /<command> get title <title> category - Print category of <title>.
+           /<command> get request - Print pending request.
+           /<command> get requests - Print all pending requests.
+           /<command> create title <name> <description> <category> - Create a new title called <name> with <description> and <category>.
+           /<command> create category <name> - Create a new category called <name>.
+           /<command> remove title <title> - Completely remove <title> from TitlesPlugin.
+           /<command> remove category <category> - Completely remove <category> from TitlesPlugin.
+           /<command> edit <title> description <description> - Edit description of <title>.
+           /<command> edit <title> category <category> - Change category of <title> to <category>.
+           /<command> rename title <title> <newName> - Rename <title> to <newName>.
+           /<command> rename category <category> <newName> - Rename <category> to <newName>.
+           /<command> user <user> add <title> - Add <title> to owned list of <user>.
+           /<command> user <user> remove <title> - Remove <title> from owned list of <user>.
+           /<command> user <user> set title <title> - Sets current title of <user> to <title>.
+           /<command> request approve <user> - Approve title request of <user>.
+           /<command> request deny <user> - Deny title request of <user>.
+           /<command> request submit <title> [<comments>] - Submit title request for <title> with optional <comments>.
+           /<command> request retract - Retract title request.

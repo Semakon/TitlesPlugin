@@ -1,8 +1,7 @@
 package me.semakon;
 
-import me.semakon.commandExecutors.EditTitleCommands;
-import me.semakon.commandExecutors.RequestCommands;
-import me.semakon.commandExecutors.UserCommands;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,26 +17,17 @@ public class TitlesPlugin extends JavaPlugin {
     public Permission pm4 = new Permission("makeRequests.allowed");
     public Permission pm5 = new Permission("setTitle.allowed");
 
+    public void registerListeners() {
+        org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new PlayerListener(this), this);
+    }
+
     /**
-     * Called when the plugin is enabled. Creates new instances of CommandExecutors for the corresponding commands.
+     * Called when the plugin is enabled. Registers Listeners.
      */
     @Override
     public void onEnable() {
-        UserCommands uc = new UserCommands(this);
-        EditTitleCommands etc = new EditTitleCommands(this);
-        RequestCommands rc = new RequestCommands(this);
-
-        this.getCommand(Utils.GET_TITLES).setExecutor(uc);
-        this.getCommand(Utils.GET_DESCRIPTION).setExecutor(uc);
-        this.getCommand(Utils.UNLOCK_TITLE).setExecutor(uc);
-        this.getCommand(Utils.CHANGE_TITLE).setExecutor(uc);
-        this.getCommand(Utils.RETRACT_TITLE_REQUEST).setExecutor(uc);
-
-        this.getCommand(Utils.CREATE_NEW_TITLE).setExecutor(etc);
-        this.getCommand(Utils.REMOVE_TITLE).setExecutor(etc);
-        this.getCommand(Utils.EDIT_DESCRIPTION).setExecutor(etc);
-
-        this.getCommand(Utils.VIEW_REQUESTS).setExecutor(rc);
+        registerListeners();
     }
 
     /**
@@ -46,6 +36,40 @@ public class TitlesPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 2) {
+            String type = args[0];
+            switch (type) {
+                case "set":
+                    //TODO: implement
+                    break;
+                case "get":
+                    //TODO: implement
+                    break;
+                case "create":
+                    //TODO: implement
+                    break;
+                case "remove":
+                    //TODO: implement
+                    break;
+                case "edit":
+                    //TODO: implement
+                    break;
+                case "rename":
+                    //TODO: implement
+                    break;
+                case "user":
+                    //TODO: implement
+                    break;
+                case "request":
+                    //TODO: implement
+                    break;
+            }
+        }
+        return false;
     }
 
 }
