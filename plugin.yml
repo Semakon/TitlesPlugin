@@ -8,7 +8,7 @@ commands:
            Usage:
            /<command> set title <title> - Sets current title to <title>.
            /<command> get titles - Print all available titles.
-           /<command> get titles <category> - Print all available titles from <category>.
+           /<command> get titles category <category> - Print all available titles from <category>.
            /<command> get title <title> description - Print description of <title>.
            /<command> get title <title> category - Print category of <title>.
            /<command> get request [user] [<user>] - Print pending request of self or <user>.

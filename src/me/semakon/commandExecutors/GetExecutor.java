@@ -5,11 +5,13 @@ import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Author:  Martijn
@@ -36,7 +38,7 @@ public class GetExecutor {
         if (type.equals("get")) {
             switch (selector) {
 
-                // /titles get titles [<category>]
+                // /titles get titles category [<category>]
                 case "titles":
                     String topLine;
                     List<String> titles;
@@ -44,9 +46,9 @@ public class GetExecutor {
                     if (args.length == 2) {
                         topLine = String.format("%sAvailable titles:\n%s", ChatColor.GOLD, ChatColor.RESET);
                         titles = GetCommands.getTitles(titlesConfig);
-                    } else if (args.length == 3){
-                        String category = args[2];
-                        if (category.equalsIgnoreCase("category")) {
+                    } else if (args.length == 4){
+                        String category = args[3];
+                        if (args[2].equalsIgnoreCase("category")) {
                             topLine = String.format("%sAvailable titles in %s:\n%s", ChatColor.GOLD, category, ChatColor.RESET);
                             titles = GetCommands.getTitlesFromCategory(titlesConfig, category);
                         } else return false;
@@ -57,7 +59,7 @@ public class GetExecutor {
 
                     for (String title : titles) {
                         if (player == null) Utils.consolePrint(title);
-                        else player.sendMessage(title);
+                        else player.sendMessage("- " + title);
                     }
 
                     return true;
@@ -71,7 +73,7 @@ public class GetExecutor {
 
                         for (String request : GetCommands.getRequests(requestsConfig)) {
                             if (player == null) Utils.consolePrint(request);
-                            else player.sendMessage(request);
+                            else player.sendMessage("- " + request);
                         }
                         return true;
                     } else return false;
@@ -85,7 +87,7 @@ public class GetExecutor {
 
                         for (String category : GetCommands.getCategories(titlesConfig)) {
                             if (player == null) Utils.consolePrint(category);
-                            else player.sendMessage(category);
+                            else player.sendMessage("- " + category);
                         }
                         return true;
                     } else return false;
@@ -98,9 +100,18 @@ public class GetExecutor {
                             request = GetCommands.getRequest(requestsConfig, player);
                         } else return false;
                     } else if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
-                        //TODO: fix: change to online player, keep track of UUIDs.
-                        Player user = Bukkit.getPlayer(args[2]);
-                        if (user == null) return false;
+                        String uuid = Utils.nameToUUID(args[3]);
+                        OfflinePlayer user = null;
+                        try {
+                            UUID uidP = UUID.fromString(uuid);
+                            user = Bukkit.getOfflinePlayer(uidP);
+                        } catch (IllegalArgumentException e) {
+                            Utils.consolePrint(e.getMessage());
+                        }
+                        if (user == null) {
+                            sender.sendMessage("[TitlesPlugin] The server doesn't know that player.");
+                            return false;
+                        }
                         request = GetCommands.getRequest(requestsConfig, user);
                     } else return false;
                     if (player == null) Utils.consolePrint(request);

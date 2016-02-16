@@ -1,8 +1,8 @@
 package me.semakon.Handlers;
 
 import me.semakon.Utils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class GetCommands {
      * @param player Player whose request is queried.
      * @return The pending request of a player.
      */
-    public static String getRequest(ConfigurationSection config, Player player) {
+    public static String getRequest(ConfigurationSection config, OfflinePlayer player) {
         String uuid = player.getUniqueId().toString();
         for (String key : config.getKeys(false)) {
             if (uuid.equalsIgnoreCase(key)) {
