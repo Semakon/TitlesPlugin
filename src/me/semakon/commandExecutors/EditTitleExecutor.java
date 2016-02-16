@@ -13,11 +13,11 @@ import org.bukkit.entity.Player;
  * Author:  Martijn
  * Date:    10-2-2016
  */
-public class EditTitleCommands implements CommandExecutor {
+public class EditTitleExecutor implements CommandExecutor {
 
     private TitlesPlugin plugin;
 
-    public EditTitleCommands(TitlesPlugin plugin) {
+    public EditTitleExecutor(TitlesPlugin plugin) {
         this.plugin = plugin;
     }
 

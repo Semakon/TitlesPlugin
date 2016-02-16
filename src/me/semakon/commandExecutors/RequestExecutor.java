@@ -17,11 +17,11 @@ import java.util.UUID;
  * Author:  Martijn
  * Date:    11-2-2016
  */
-public class RequestCommands implements CommandExecutor {
+public class RequestExecutor implements CommandExecutor {
 
     private TitlesPlugin plugin;
 
-    public RequestCommands(TitlesPlugin plugin) {
+    public RequestExecutor(TitlesPlugin plugin) {
         this.plugin = plugin;
     }
 

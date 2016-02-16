@@ -1,7 +1,12 @@
 package me.semakon;
 
+import me.semakon.commandExecutors.EditTitleExecutor;
+import me.semakon.commandExecutors.GetExecutor;
+import me.semakon.commandExecutors.RequestExecutor;
+import me.semakon.commandExecutors.SetExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +22,11 @@ public class TitlesPlugin extends JavaPlugin {
     public Permission pm4 = new Permission("makeRequests.allowed");
     public Permission pm5 = new Permission("setTitle.allowed");
 
+    private GetExecutor getExecutor;
+    private SetExecutor setExecutor;
+    private RequestExecutor requestExecutor;
+    private EditTitleExecutor editTitleExecutor;
+
     public void registerListeners() {
         org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(this), this);
@@ -28,6 +38,10 @@ public class TitlesPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         registerListeners();
+        getExecutor = new GetExecutor(this);
+        setExecutor = new SetExecutor(this);
+        requestExecutor = new RequestExecutor(this);
+        editTitleExecutor = new EditTitleExecutor(this);
     }
 
     /**
@@ -47,8 +61,8 @@ public class TitlesPlugin extends JavaPlugin {
                     //TODO: implement
                     break;
                 case "get":
-                    //TODO: implement
-                    break;
+                    sender.sendMessage(String.valueOf(getExecutor.execute(sender, args)));
+                    return true;
                 case "create":
                     //TODO: implement
                     break;
