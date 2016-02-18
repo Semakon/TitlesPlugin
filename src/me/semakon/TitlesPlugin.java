@@ -93,8 +93,10 @@ public class TitlesPlugin extends JavaPlugin {
                     }
                     return true;
                 case "request":
-                    //TODO: implement
-                    break;
+                    if (!requestExecutor.execute(sender, args)) {
+                        sender.sendMessage("Requests: fail.");
+                    }
+                    return true;
             }
         }
         return false;

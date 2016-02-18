@@ -15,19 +15,17 @@ import java.util.List;
  * Date:    15-2-2016
  *
  * Class that contains static methods that deal with the adding, removing and setting of titles to a user.
- * Every class returns a String that contains information about the result of the method.
  */
 public class SetCommands {
 
     /**
      * Sets the current title of a player to <code>title</code>. If the player does not own the title or if it
-     * doesn't exist, an error will be sent. Returns a response message containing information about the result of this method.
+     * doesn't exist, an error will be sent.
      * @param player The player who will get the title.
      * @param title The title the player will get.
-     * @return A response message containing information about the result of this method.
+     * @return True if the title has been set.
      */
-    public static String setTitle(TitlesPlugin plugin, Player player, String title) {
-        System.out.println("title: " + title);
+    public static boolean setTitle(TitlesPlugin plugin, Player player, String title) {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
         String uuid = player.getUniqueId().toString();
 
@@ -39,25 +37,23 @@ public class SetCommands {
                 owned.add(mapConfig.getString(uuid + ".Owned"));
             }
             for (String t : owned) {
-                System.out.println("t: " + t);
                 if (t.equalsIgnoreCase(title)) {
                     mapConfig.getConfigurationSection(uuid).set("Current", title);
                     plugin.saveConfig();
-                    return "Title set to %s" + title + "%s.";
+                    return true;
                 }
             }
-            return "You don't own that title.";
-        } else return "You don't own that title or it doesn't exist.";
+        }
+        return false;
     }
 
     /**
-     * Disables the player's current title if they have one. Returns a response message containing
-     * information about the result of this method.
+     * Disables the player's current title if they have one.
      * @param plugin This plugin.
      * @param player Player whose title will be disabled.
-     * @return A response message containing information about the result of this method.
+     * @return True if the title has been disabled.
      */
-    public static String disableTitle(TitlesPlugin plugin, OfflinePlayer player) {
+    public static boolean disableTitle(TitlesPlugin plugin, OfflinePlayer player) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Mappings");
         String uuid = player.getUniqueId().toString();
 
@@ -65,20 +61,19 @@ public class SetCommands {
         if (config.contains(uuid)) {
             config.getConfigurationSection(uuid).set("Current", null);
             plugin.saveConfig();
-            return "Title disabled.";
+            return true;
         }
-        return "Player not found.";
+        return false;
     }
 
     /**
-     * Adds a title to a player's list of owned titles. Returns a message with information about
-     * the result of this method.
+     * Adds a title to a player's list of owned titles.
      * @param plugin This plugin.
      * @param player Player who will receive a new title.
      * @param title Title that will be added.
-     * @return A response message containing information about the result of this method.
+     * @return True if the title has been added.
      */
-    public static String addTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
+    public static boolean addTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
@@ -89,19 +84,19 @@ public class SetCommands {
             stringList.add(title.toLowerCase());
             mapConfig.set("Owned", stringList);
             plugin.saveConfig();
-            return "Added %s" + title + "%s to " + player.getName() + "'s owned titles.";
-        } else return "Title doesn't exist or player already has that title.";
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Removes a title from a player's list of owned titles. Returns a message with information about
-     * the result of this method.
+     * Removes a title from a player's list of owned titles.
      * @param plugin This plugin.
      * @param player Player whose title will be removed.
      * @param title Title that will be removed.
-     * @return A response message containing information about the result of this method.
+     * @return True if the title has been removed.
      */
-    public static String removeTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
+    public static boolean removeTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
 
@@ -114,8 +109,9 @@ public class SetCommands {
                 disableTitle(plugin, player);
             }
             plugin.saveConfig();
-            return "Removed %s" + title + "%s from " + player.getName() + "'s owned titles.";
-        } else return "Player doesn't own that title.";
+            return true;
+        }
+        return false;
     }
 
 

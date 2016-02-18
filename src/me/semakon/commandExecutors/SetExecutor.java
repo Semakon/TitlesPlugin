@@ -33,11 +33,15 @@ public class SetExecutor {
                     String response = "";
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
                        String title = args[2];
-                       response = SetCommands.setTitle(plugin, player, title);
+                        if (SetCommands.setTitle(plugin, player, title)) {
+                            response = "Title set to %s" + title + "%s.";
+                        } else response = "You don't own that title or it doesn't exist.";
 
                     // set title
                     } else if (args.length == 2 && args[1].equalsIgnoreCase("title")) {
-                       response = SetCommands.disableTitle(plugin, player);
+                        if (SetCommands.disableTitle(plugin, player)) {
+                            response = "Title disabled.";
+                        } else response = "Player doesn't have that title active.";
                     }
                     player.sendMessage(String.format(response, ChatColor.ITALIC, ChatColor.RESET));
                 } else Utils.consolePrint("Only players can use the \"set\" command.");
@@ -56,14 +60,23 @@ public class SetExecutor {
                     if (args[3].equalsIgnoreCase("title")) {
                         String title = args[4];
                         String response = "%s%s";
+
                         if (args[2].equalsIgnoreCase("add")) {                                      // user <user> add title <title>
-                            response = SetCommands.addTitle(plugin, offlinePlayer, title);
+                            if (SetCommands.addTitle(plugin, offlinePlayer, title)) {
+                                response = "Added %s" + title + "%s to " + offlinePlayer.getName() + "'s owned titles.";
+                            } else response = "Title doesn't exist or player already has that title.";
+
                         } else if (args[2].equalsIgnoreCase("remove")) {                            // user <user> remove title <title>
-                            response = SetCommands.removeTitle(plugin, offlinePlayer, title);
+                            if (SetCommands.removeTitle(plugin, offlinePlayer, title)) {
+                                response = "Removed %s" + title + "%s from " + offlinePlayer.getName() + "'s owned titles.";
+                            } else response = "Player doesn't own that title.";
+
                         } else if (args[2].equalsIgnoreCase("set")) {                               // user <user> set title <title>
                             Player p = offlinePlayer.getPlayer();
                             if (p != null) {
-                                response = SetCommands.setTitle(plugin, p, title);
+                                if (SetCommands.setTitle(plugin, p, title)) {
+                                    response = "Title set to %s" + title + "%s.";
+                                } else response = "You don't own that title or it doesn't exist.";
                             } else response = "Player is not online.";
                         }
                         if (player == null) Utils.consolePrint(String.format(response, "", ""));
