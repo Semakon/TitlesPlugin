@@ -22,10 +22,10 @@ public class PlayerListener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
         String name;
-        if (plugin.getConfig().getConfigurationSection(Utils.MAPPINGS).contains(player.getUniqueId().toString())) {
-            String title = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + player.getUniqueId().toString()).getString("Current");
+        if (plugin.getConfig().getConfigurationSection("Mappings").contains(player.getUniqueId().toString())) {
+            String title = plugin.getConfig().getString(Utils.MAPPINGS + player.getUniqueId().toString() + ".Current");
             if (title != null) {
-                String titleName = plugin.getConfig().getConfigurationSection(Utils.TITLES + title).getString(Utils.NAME);
+                String titleName = plugin.getConfig().getString(Utils.TITLES + title + Utils.NAME);
                 name = ChatColor.ITALIC + Utils.addSpaces(titleName) + " " + ChatColor.RESET + player.getName();
             } else name = player.getName();
         } else name = player.getName();

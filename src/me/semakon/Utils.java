@@ -21,16 +21,6 @@ public class Utils {
     public static final String TITLES_COMMAND = "titles";
 
     /**
-     * Normal user commands:
-     */
-    public static final String GET_TITLES = "titles";
-    public static final String GET_DESCRIPTION = "description";
-
-    public static final String UNLOCK_TITLE = "unlock_title";
-    public static final String CHANGE_TITLE = "change_title";
-    public static final String RETRACT_TITLE_REQUEST = "retract_request";
-
-    /**
      * OP user commands:
      */
     public static final String CREATE_NEW_TITLE = "create";
@@ -84,26 +74,35 @@ public class Utils {
     }
 
     /**
-     * Converts a name of an online player to their unique ID. If the player is not online,
-     * the offline players will be checked.
+     * Converts a name of an offline player to their unique ID.
      * If the player can't be found, the name is returned instead.
      * @param name Name of target player.
      * @return A player's unique ID or their name.
      */
     public static String nameToUUID(String name) {
-//        for (Player player : Bukkit.getOnlinePlayers()) {
-//            if (player.getName().equals(name)) {
-//                consolePrint("online");
-//                return player.getUniqueId().toString();
-//            }
-//        }
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             if (player.getName().equals(name)) {
-                consolePrint("offline");
                 return player.getUniqueId().toString();
             }
         }
         return name;
+    }
+
+    /**
+     * Gets an offline player by a name. If the player can't be found, null is returned.
+     * @param name Name of player.
+     * @return OfflinePlayer or null if it can't be found.
+     */
+    public static OfflinePlayer getOfflinePlayer(String name) {
+        String uuid = Utils.nameToUUID(name);
+        OfflinePlayer user = null;
+        try {
+            UUID uidP = UUID.fromString(uuid);
+            user = Bukkit.getOfflinePlayer(uidP);
+        } catch (IllegalArgumentException e) {
+            Utils.consolePrint(e.getMessage());
+        }
+        return user;
     }
 
     /**

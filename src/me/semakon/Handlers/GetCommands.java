@@ -41,6 +41,18 @@ public class GetCommands {
     }
 
     /**
+     * Creates a list of all titles a player owns. Returns a list with an error message if the player doesn't have any titles.
+     * @param config ConfigurationSection that holds the mappings.
+     * @param player Player whose owned titles are queried.
+     * @return List of all owned titles of a player.
+     */
+    public static List<String> getMapping(ConfigurationSection config, OfflinePlayer player) {
+        List<String> titles = config.getStringList(player.getUniqueId().toString() + ".Owned");
+        if (titles.isEmpty()) titles.add("That player doesn't own any titles.");
+        return titles;
+    }
+
+    /**
      * Returns a list of all categories in a config.
      * @param config ConfigurationSection that holds the categories.
      * @return List of all categories.

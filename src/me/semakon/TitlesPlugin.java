@@ -58,10 +58,20 @@ public class TitlesPlugin extends JavaPlugin {
             String type = args[0];
             switch (type) {
                 case "set":
-                    //TODO: implement
-                    break;
+                    if (!setExecutor.execute(sender, args)) {
+                        sender.sendMessage("/titles set title <title>");
+                    }
+                    return true;
                 case "get":
-                    sender.sendMessage(String.valueOf(getExecutor.execute(sender, args)));
+                    if (!getExecutor.execute(sender, args)) {
+                        sender.sendMessage("/titles get titles\n" +
+                                "/titles get titles <category>\n" +
+                                "/titles get title <title> description\n" +
+                                "/titles get title <title> category\n" +
+                                "/titles get request [user] [<user>]\n" +
+                                "/titles get requests\n" +
+                                "/titles get categories");
+                    }
                     return true;
                 case "create":
                     //TODO: implement
@@ -76,8 +86,12 @@ public class TitlesPlugin extends JavaPlugin {
                     //TODO: implement
                     break;
                 case "user":
-                    //TODO: implement
-                    break;
+                    if (!setExecutor.execute(sender, args)) {
+                        sender.sendMessage("/titles user <user> add <title>\n" +
+                                "/titles user <user> remove <title>\n" +
+                                "/titles user <user> set title <title>");
+                    }
+                    return true;
                 case "request":
                     //TODO: implement
                     break;

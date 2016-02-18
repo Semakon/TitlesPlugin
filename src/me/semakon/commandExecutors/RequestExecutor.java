@@ -54,6 +54,19 @@ public class RequestExecutor implements CommandExecutor {
                 }
             } else player.sendMessage(ChatColor.RED + "You don't have permission to perform this action!");
         }
+        //                  /titles request submit <title> [<comments>]
+//                if (player == null) break;
+//                if (args.length == 1) {
+//                    UUID uuid = player.getUniqueId();
+//                    String title = args[0];
+//                    System.out.println("uuid: " + uuid + "\ntitle: " + title);
+//                    if (!config.contains(Utils.REQUESTS + uuid)) {
+//                        config.set(Utils.REQUESTS + uuid, title.toLowerCase());
+//                        player.sendMessage("Title request submitted.");
+//                        plugin.saveConfig();
+//                        return true;
+//                    } else player.sendMessage(ChatColor.RED + "You've already submitted a title request.");
+//                }
         return false;
     }
 }

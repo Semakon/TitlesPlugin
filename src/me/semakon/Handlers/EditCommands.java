@@ -73,7 +73,7 @@ public class EditCommands {
     public static boolean editCategory(TitlesPlugin plugin, String title, String category) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
         if (config.contains(title)) {
-            config.set(title + Utils.CAT, category);
+            config.set(title + Utils.CAT, category.toLowerCase());
             plugin.saveConfig();
             return true;
         }

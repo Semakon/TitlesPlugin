@@ -1,14 +1,14 @@
 TitlesPlugin - Abstract Command List
-------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
 
-/titles get titles 										- Print all available titles.
-/titles get titles <category> 							- Print all available titles from <category>.
+/titles get titles [category] [<category>] 				- Print all available titles or all available titles from <category>.
+/titles get titles user <user>                          - Print all available titles of a user.
 /titles get title <title> description 					- Print description of <title>.
 /titles get title <title> category 						- Print category of <title>.
 /titles get request [user] [<user>]						- Print pending request.
 /titles get requests 									- Print all pending requests.
 /titles get categories                                  - Print all categories.
-	
+
 /titles create title <name> <description> <category>	- Create a new title called <name> with <description> and <category>.
 /titles create category <name> 							- Create a new category called <name>.
 /titles remove title <title>							- Completely remove <title> from TitlesPlugin.
@@ -18,12 +18,17 @@ TitlesPlugin - Abstract Command List
 /titles rename title <title> <newName> 					- Rename <title> to <newName>.
 /titles rename category <category> <newName> 			- Rename <category> to <newName>.
 	
-/titles user <user> add <title> 						- Add <title> to owned list of <user>.
-/titles user <user> remove <title> 						- Remove <title> from owned list of <user>.
+/titles user <user> add title <title> 				    - Add <title> to owned list of <user>.
+/titles user <user> remove title <title> 				- Remove <title> from owned list of <user>.
 /titles user <user> set title <title> 					- Sets current title of <user> to <title>.
 /titles set title <title> 								- Sets current title to <title>.
+/titles set title                                       - Disable current title.
 	
 /titles request approve <user> 							- Approve title request of <user>.
 /titles request deny <user> 							- Deny title request of <user>.
 /titles request submit <title> [<comments>] 			- Submit title request for <title> with optional <comments>.
 /titles request retract 								- Retract title request.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Reserved:
+/titles                                                 - Open GUI for viewing titles and selecting current title.

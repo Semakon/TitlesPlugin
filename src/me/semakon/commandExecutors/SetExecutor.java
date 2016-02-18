@@ -1,17 +1,12 @@
 package me.semakon.commandExecutors;
 
-import me.semakon.Handlers.GetCommands;
 import me.semakon.Handlers.SetCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Author:  Martijn
@@ -29,32 +24,54 @@ public class SetExecutor {
         Player player = null;
         if (sender instanceof Player) player = (Player) sender;
 
-        SetCommands sh = new SetCommands(plugin);
+        String type = args[0];
+        switch (type) {
+            case "set":
+                // /titles set title <title>
+                if (player != null) {
+                    // set title <title>
+                    String response = "";
+                    if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
+                       String title = args[2];
+                       response = SetCommands.setTitle(plugin, player, title);
 
-        //test
-        if (player != null && args.length == 1) {
-            String title = args[0];
-            sh.setTitle(player, title);
-            return true;
+                    // set title
+                    } else if (args.length == 2 && args[1].equalsIgnoreCase("title")) {
+                       response = SetCommands.disableTitle(plugin, player);
+                    }
+                    player.sendMessage(String.format(response, ChatColor.ITALIC, ChatColor.RESET));
+                } else Utils.consolePrint("Only players can use the \"set\" command.");
+                return true;
+            case "user":
+                String user = args[1];
+                OfflinePlayer offlinePlayer = Utils.getOfflinePlayer(user);
+                // check if player exists
+                if (offlinePlayer == null) {
+                    if (player == null) Utils.consolePrint("Player can't be found.");
+                    else Utils.sendError(player, "Player can't be found.");
+                    return true;
+                }
+                // /titles user <user> [add:remove] <title>
+                if (args.length == 5) {
+                    if (args[3].equalsIgnoreCase("title")) {
+                        String title = args[4];
+                        String response = "%s%s";
+                        if (args[2].equalsIgnoreCase("add")) {                                      // user <user> add title <title>
+                            response = SetCommands.addTitle(plugin, offlinePlayer, title);
+                        } else if (args[2].equalsIgnoreCase("remove")) {                            // user <user> remove title <title>
+                            response = SetCommands.removeTitle(plugin, offlinePlayer, title);
+                        } else if (args[2].equalsIgnoreCase("set")) {                               // user <user> set title <title>
+                            Player p = offlinePlayer.getPlayer();
+                            if (p != null) {
+                                response = SetCommands.setTitle(plugin, p, title);
+                            } else response = "Player is not online.";
+                        }
+                        if (player == null) Utils.consolePrint(String.format(response, "", ""));
+                        else player.sendMessage(String.format(response, ChatColor.ITALIC, ChatColor.RESET));
+                    }
+                }
+                return true;
         }
-
-
-            //TODO: implement RequestHandler on case below
-//                  /titles request submit <title> [<comments>]
-//                if (player == null) break;
-//                if (args.length == 1) {
-//                    UUID uuid = player.getUniqueId();
-//                    String title = args[0];
-//                    System.out.println("uuid: " + uuid + "\ntitle: " + title);
-//                    if (!config.contains(Utils.REQUESTS + uuid)) {
-//                        config.set(Utils.REQUESTS + uuid, title.toLowerCase());
-//                        player.sendMessage("Title request submitted.");
-//                        plugin.saveConfig();
-//                        return true;
-//                    } else player.sendMessage(ChatColor.RED + "You've already submitted a title request.");
-//                }
-//
-
 
         return false;
     }
