@@ -21,6 +21,11 @@ public class EditTitleExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
+    public boolean execute(CommandSender sender, String[] args) {
+
+        return false;
+    }
+
     /**
      * Called when a command is executed.
      * @param sender Sender of the command.
@@ -36,7 +41,7 @@ public class EditTitleExecutor implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        if (player == null || player.hasPermission(plugin.pm)) {
+        if (player == null || player.hasPermission(plugin.editTitlesPerm)) {
             switch (cmd.getName()) {
 
                 case Utils.CREATE_NEW_TITLE:

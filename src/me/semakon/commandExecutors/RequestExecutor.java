@@ -37,41 +37,59 @@ public class RequestExecutor {
         if (sender instanceof Player) player = (Player) sender;
 
         if (player != null) {
-            if (args[1].equalsIgnoreCase("retract")) {
-                System.out.println(RequestCommands.retractRequest(plugin, player));
+            if (sender.hasPermission(plugin.makeRequestsPerm)) {
+                String response;
+
+                // /titles request submit title <title> <comments>
+                if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
+                    String title = args[3];
+                    if (RequestCommands.submitRequest(plugin, player, title, args[4])) response = "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.";
+                    else response = "You already have a pending request or that title doesn't exist.";
+                    Utils.sendMsg(sender, response);
+                    return true;
+                }
+
+                // /titles request retract
+                if (args.length == 2 && args[1].equalsIgnoreCase("retract")) {
+                    if (RequestCommands.retractRequest(plugin, player)) response = "Your request has successfully been retracted.";
+                    else response = "You don't have a pending request.";
+                    Utils.sendMsg(sender, response);
+                    return true;
+                }
+
+            } else {
+                Utils.sendError(sender, "You don't have permission to do that.");
                 return true;
             }
         }
-//            if (player.hasPermission(plugin.pm2)) {
-//
-//                FileConfiguration config = plugin.getConfig();
-//
-//                switch (cmd.getName()) {
-//                    case Utils.VIEW_REQUESTS:
-//                        String requests = String.format("%sPending requests:\n%s", ChatColor.GOLD, ChatColor.RESET);
-//                        for (String key : config.getConfigurationSection("Requests").getKeys(false)) {
-//                            OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(key));
-//                            String name = op.getName();
-//                            requests += String.format("(%s) %s: %s\n", key, name, config.getString(Utils.REQUESTS + key));
-//                        }
-//                        player.sendMessage(requests);
-//                        return true;
-//                }
-//            } else player.sendMessage(ChatColor.RED + "You don't have permission to perform this action!");
-//        }
-        //                  /titles request submit <title> [<comments>]
-//                if (player == null) break;
-//                if (args.length == 1) {
-//                    UUID uuid = player.getUniqueId();
-//                    String title = args[0];
-//                    System.out.println("uuid: " + uuid + "\ntitle: " + title);
-//                    if (!config.contains(Utils.REQUESTS + uuid)) {
-//                        config.set(Utils.REQUESTS + uuid, title.toLowerCase());
-//                        player.sendMessage("Title request submitted.");
-//                        plugin.saveConfig();
-//                        return true;
-//                    } else player.sendMessage(ChatColor.RED + "You've already submitted a title request.");
-//                }
+        if (sender.hasPermission(plugin.handelRequestsPerm)) {
+            if (args.length == 4) {
+                OfflinePlayer user = Utils.getOfflinePlayer(args[3]);
+                String type = args[1];
+                if (user != null) {
+                    String response;
+
+                    // /titles request deny user <user>
+                    if (type.equalsIgnoreCase("deny")) {
+                        if (RequestCommands.denyRequest(plugin, user)) response = "Request has been denied.";
+                        else response = "That player doesn't have a pending request.";
+                        Utils.sendMsg(sender, response);
+                        return true;
+
+                    // /titles request deny user <user>
+                    } else if (type.equalsIgnoreCase("approve")) {
+                        if (RequestCommands.approveRequest(plugin, user)) response = "Request has been approved.";
+                        else response = "That player doesn't have a pending request.";
+                        Utils.sendMsg(sender, response);
+                        return true;
+                    }
+
+                } else Utils.sendError(sender, "That player doesn't exist.");
+            }
+        } else {
+            Utils.sendError(sender, "You don't have permission to do that.");
+            return true;
+        }
         return false;
     }
 }

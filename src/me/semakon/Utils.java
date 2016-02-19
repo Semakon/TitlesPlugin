@@ -3,8 +3,11 @@ package me.semakon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,8 +29,6 @@ public class Utils {
     public static final String CREATE_NEW_TITLE = "create";
     public static final String REMOVE_TITLE = "remove";
     public static final String EDIT_DESCRIPTION = "edit_description";
-
-    public static final String VIEW_REQUESTS = "view_requests";
 
     /**
      * YAML file conventions:
@@ -107,11 +108,26 @@ public class Utils {
 
     /**
      * Sends an error message to the player.
-     * @param p The player.
+     * @param sender The sender of the command. They are also receiver.
      * @param msg The error message.
      */
-    public static void sendError(Player p, String msg) {
-        p.sendMessage(ChatColor.RED + "ERROR: " + msg);
+    public static void sendError(CommandSender sender, String msg) {
+        if (sender instanceof Player) msg = ChatColor.RED + msg;
+        sender.sendMessage(msgPrefix(sender, msg));
+    }
+
+    /**
+     * Sends an error message to the player.
+     * @param sender The sender of the command. They are also receiver.
+     * @param msg The error message.
+     */
+    public static void sendMsg(CommandSender sender, String msg, ChatColor... colors) {
+        if (sender instanceof Player && colors != null) {
+            for (ChatColor color : colors) {
+                msg = color + msg;
+            }
+        }
+        sender.sendMessage(msgPrefix(sender, msg));
     }
 
     /**
@@ -120,6 +136,44 @@ public class Utils {
      */
     public static void consolePrint(String msg) {
         System.out.println("[TitlesPlugin] " + msg);
+    }
+
+    /**
+     * Adds a prefix to a message. If the sender is a player, the prefix will have colors.
+     * @param sender Sender of a command.
+     * @param msg Message that gets the prefix.
+     * @return Message with added prefix.
+     */
+    public static String msgPrefix(CommandSender sender, String msg) {
+        String prefix = "%s[%sTP%s]%s";
+        prefix = sender instanceof Player ? String.format(prefix, ChatColor.GRAY, ChatColor.DARK_AQUA, ChatColor.GRAY, ChatColor.RESET) :
+                String.format(prefix, "", "", "", "");
+        return (prefix + " " + msg);
+    }
+
+    /**
+     * Takes an array of arguments. Arguments between two <"> are made into one String.
+     * @param args Arguments that are reformatted.
+     * @return An array with reformatted arguments.
+     */
+    public static String[] inQuotes(String[] args) {
+        List<String> finish = new ArrayList<>();
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].startsWith("\"")) {
+                String string = args[i].substring(1, args[i].length());
+                for (int k = i + 1; k < args.length; k++) {
+                    if (args[k].endsWith("\"")) {
+                        string += " " + args[k].substring(0, args[k].length() - 1);
+                        finish.add(string);
+                        i = k;
+                        break;
+                    } else string += " " + args[k];
+                }
+            } else {
+                finish.add(args[i]);
+            }
+        }
+        return finish.toArray(new String[0]);
     }
 
 }
