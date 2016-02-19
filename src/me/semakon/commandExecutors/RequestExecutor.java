@@ -41,7 +41,7 @@ public class RequestExecutor {
                 String response;
 
                 // /titles request submit title <title> <comments>
-                if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
+                if (args.length == 5 && args[1].equalsIgnoreCase("submit")) {
                     String title = args[3];
                     if (RequestCommands.submitRequest(plugin, player, title, args[4])) response = "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.";
                     else response = "You already have a pending request or that title doesn't exist.";

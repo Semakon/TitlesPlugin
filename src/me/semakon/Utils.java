@@ -107,6 +107,14 @@ public class Utils {
     }
 
     /**
+     * Prints a message to the console.
+     * @param msg Message to be printed.
+     */
+    public static void consolePrint(String msg) {
+        System.out.println("[TitlesPlugin] " + msg);
+    }
+
+    /**
      * Sends an error message to the player.
      * @param sender The sender of the command. They are also receiver.
      * @param msg The error message.
@@ -131,24 +139,27 @@ public class Utils {
     }
 
     /**
-     * Prints a message to the console.
-     * @param msg Message to be printed.
-     */
-    public static void consolePrint(String msg) {
-        System.out.println("[TitlesPlugin] " + msg);
-    }
-
-    /**
      * Adds a prefix to a message. If the sender is a player, the prefix will have colors.
      * @param sender Sender of a command.
      * @param msg Message that gets the prefix.
      * @return Message with added prefix.
      */
-    public static String msgPrefix(CommandSender sender, String msg) {
+    private static String msgPrefix(CommandSender sender, String msg) {
         String prefix = "%s[%sTP%s]%s";
         prefix = sender instanceof Player ? String.format(prefix, ChatColor.GRAY, ChatColor.DARK_AQUA, ChatColor.GRAY, ChatColor.RESET) :
                 String.format(prefix, "", "", "", "");
         return (prefix + " " + msg);
+    }
+
+    /**
+     * Sends all Strings in a String array to the sender.
+     * @param sender Sender of commands.
+     * @param array Array to be sent.
+     */
+    public static void sendArray(CommandSender sender, String[] array) {
+        for (String msg : array) {
+            Utils.sendMsg(sender, msg);
+        }
     }
 
     /**

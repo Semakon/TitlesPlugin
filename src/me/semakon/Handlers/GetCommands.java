@@ -1,11 +1,13 @@
 package me.semakon.Handlers;
 
 import me.semakon.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -77,9 +79,9 @@ public class GetCommands {
     public static List<String> getRequests(ConfigurationSection config) {
         List<String> requests = new ArrayList<>();
         for (String key : config.getKeys(false)) {
-            String player = config.getConfigurationSection(key).getString("Name");
+            UUID uuid = UUID.fromString(key);
             String title = config.getConfigurationSection(key).getString("Title");
-            requests.add(player + ": " + title);
+            requests.add(Bukkit.getOfflinePlayer(uuid).getName() + ": " + title);
         }
         if (requests.isEmpty()) requests.add("There are no pending requests.");
         return requests;

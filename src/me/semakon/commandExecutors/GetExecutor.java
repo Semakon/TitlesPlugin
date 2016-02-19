@@ -58,16 +58,20 @@ public class GetExecutor {
                     // get titles user <user>
                     } else if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
                         OfflinePlayer user = Utils.getOfflinePlayer(args[3]);
+                        if (user == null) {
+                            Utils.sendError(sender, "That user doesn't exist.");
+                            return true;
+                        }
                         topLine = String.format("%sAvailable titles of %s:\n%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
                         titles = GetCommands.getMapping(mappingsConfig, user);
                     } else return false;
 
                     // send topLine
-                    sender.sendMessage(Utils.msgPrefix(sender, topLine));
+                    Utils.sendMsg(sender, topLine);
 
                     // send titles
                     for (String title : titles) {
-                        sender.sendMessage(Utils.msgPrefix(sender, "- " + title));
+                        Utils.sendMsg(sender, "- " + title);
                     }
 
                     return true;
@@ -78,11 +82,11 @@ public class GetExecutor {
                         topLine = String.format("%sPending requests:%s", ChatColor.GOLD, ChatColor.RESET);
 
                         // send topLine
-                        sender.sendMessage(Utils.msgPrefix(sender, topLine));
+                        Utils.sendMsg(sender, topLine);
 
                         // send requests
                         for (String request : GetCommands.getRequests(requestsConfig)) {
-                            sender.sendMessage(Utils.msgPrefix(sender, "- " + request));
+                            Utils.sendMsg(sender, "- " + request);
                         }
                         return true;
                     } else return false;
@@ -93,11 +97,11 @@ public class GetExecutor {
                         topLine = String.format("%sCategories:%s", ChatColor.GOLD, ChatColor.RESET);
 
                         // send topLine
-                        sender.sendMessage(Utils.msgPrefix(sender, topLine));
+                        Utils.sendMsg(sender, topLine);
 
                         // send categories
                         for (String category : GetCommands.getCategories(titlesConfig)) {
-                            sender.sendMessage(Utils.msgPrefix(sender, "- " + category));
+                            Utils.sendMsg(sender, "- " + category);
                         }
                         return true;
                     } else return false;
@@ -117,13 +121,13 @@ public class GetExecutor {
                         OfflinePlayer user = Utils.getOfflinePlayer(args[3]);
                         // check if player was found.
                         if (user == null) {
-                            sender.sendMessage(Utils.msgPrefix(sender, "The server doesn't know that player."));
+                            Utils.sendError(sender, "The server doesn't know that player.");
                             return false;
                         }
                         request = GetCommands.getRequest(requestsConfig, user);
                     } else return false;
 
-                    sender.sendMessage(Utils.msgPrefix(sender, request));
+                    Utils.sendMsg(sender, request);
 
                     return true;
 
@@ -144,16 +148,9 @@ public class GetExecutor {
                         } else return false;
 
                         // if title wasn't found send an error message, otherwise send the description.
-                        if (fromTitle == null) {
-                            sender.sendMessage(Utils.msgPrefix(sender, "That title doesn't exist."));
-                            if (player == null) Utils.consolePrint(ChatColor.RED + "That title doesn't exist.");
-                            else Utils.sendError(player, "That title doesn't exist.");
-                            return true;
-                        } else {
-                            if (player == null) Utils.consolePrint(fromTitle);
-                            else player.sendMessage(fromTitle);
-                            return true;
-                        }
+                        if (fromTitle == null) Utils.sendError(sender, "That title doesn't exist.");
+                        else Utils.sendMsg(sender, fromTitle);
+                        return true;
 
                     } else return false;
             }

@@ -30,20 +30,22 @@ public class SetExecutor {
                 // /titles set title <title>
                 if (player != null) {
                     // set title <title>
-                    String response = "";
+                    String response;
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
                        String title = args[2];
                         if (SetCommands.setTitle(plugin, player, title)) {
                             response = "Title set to %s" + title + "%s.";
                         } else response = "You don't own that title or it doesn't exist.";
+                        Utils.sendMsg(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET));
 
                     // set title
                     } else if (args.length == 2 && args[1].equalsIgnoreCase("title")) {
                         if (SetCommands.disableTitle(plugin, player)) {
                             response = "Title disabled.";
                         } else response = "Player doesn't have that title active.";
-                    }
-                    player.sendMessage(Utils.msgPrefix(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET)));
+                        Utils.sendMsg(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET));
+                    } else return false;
+
                 } else Utils.consolePrint("Only players can use the \"set\" command.");
                 return true;
             case "user":
@@ -51,7 +53,7 @@ public class SetExecutor {
                 OfflinePlayer offlinePlayer = Utils.getOfflinePlayer(user);
                 // check if player exists
                 if (offlinePlayer == null) {
-                    if (player == null) Utils.consolePrint(Utils.msgPrefix(sender, "Player can't be found."));
+                    if (player == null) Utils.sendError(sender, "Player can't be found.");
                     else Utils.sendError(player, "Player can't be found.");
                     return true;
                 }
@@ -80,7 +82,7 @@ public class SetExecutor {
                             } else response = "Player is not online.";
                         }
                         if (player == null) Utils.consolePrint(String.format(response, "", ""));
-                        else player.sendMessage(Utils.msgPrefix(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET)));
+                        else Utils.sendMsg(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET));
                     }
                 }
                 return true;

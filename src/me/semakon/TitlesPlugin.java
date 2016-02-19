@@ -4,6 +4,7 @@ import me.semakon.commandExecutors.EditTitleExecutor;
 import me.semakon.commandExecutors.GetExecutor;
 import me.semakon.commandExecutors.RequestExecutor;
 import me.semakon.commandExecutors.SetExecutor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
@@ -53,78 +54,94 @@ public class TitlesPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 1) {
+        args = Utils.inQuotes(args);
+        Utils.sendArray(sender, args);
+        if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 2) {
             String type = args[0];
             switch (type) {
 
                 case "set":
                     if (sender.hasPermission(setTitlePerm)) {
                         if (!setExecutor.execute(sender, args)) {
-                            Utils.sendMsg(sender, "Did you mean:");
-
-                            sender.sendMessage("/titles set title [<title>]");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles set title [<title>]"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "get":
                     if (!getExecutor.execute(sender, args)) {
-                        sender.sendMessage("/titles get titles\n" + "/titles get titles <category>\n" +
-                                "/titles get title <title> description\n" + "/titles get title <title> category\n" +
-                                "/titles get request [user] [<user>]\n" + "/titles get requests\n" + "/titles get categories");
+                        Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                        String[] commands = {"/titles get titles", "/titles get titles category <category>",
+                                "/titles get title <title> description", "/titles get title <title> category",
+                                "/titles get request [user] [<user>]", "/titles get requests", "/titles get categories"};
+                        Utils.sendArray(sender, commands);
                     }
                     return true;
 
                 case "create":
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (!editTitleExecutor.execute(sender, args)) {
-                            sender.sendMessage("/titles create title <name> <description> <category>\n" + "/titles create category <name>");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles create title <name> <description> <category>", "/titles create category <name>"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "remove":
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (!editTitleExecutor.execute(sender, args)) {
-                            sender.sendMessage("/titles remove title <title>\n" + "/titles remove category <category>");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles remove title <title>", "/titles remove category <category>"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "edit":
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (!editTitleExecutor.execute(sender, args)) {
-                            sender.sendMessage("/titles edit <title> description <description>\n" + "/titles edit <title> category <category>");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles edit title <title> description <description>", "/titles edit title <title> category <category>"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "rename":
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (!editTitleExecutor.execute(sender, args)) {
-                            sender.sendMessage("/titles rename title <title> <newName>\n" + "/titles rename category <category> <newName>");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles rename title <title> <newName>", "/titles rename category <category> <newName>"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "user":
                     if (sender.hasPermission(editUserTitlesPerm)) {
                         if (!setExecutor.execute(sender, args)) {
-                            sender.sendMessage("/titles user <user> [add:remove:set] title <title>\n");
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles user <user> [add:remove:set] title <title>"};
+                            Utils.sendArray(sender, commands);
                         }
-                    } else sender.sendMessage(Utils.msgPrefix(sender, "You don't have permission to do that."));
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
                     return true;
 
                 case "request":
                     // permissions handled in execute(...) method.
                     if (!requestExecutor.execute(sender, args)) {
-                        sender.sendMessage("/titles request approve <user>\n" + "/titles request deny <user\n" +
-                                "/titles request submit <title> [<comments>]\n" + "/titles request retract");
+                        Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                        String[] commands = {"/titles request approve user <user>", "/titles request deny user <user>",
+                                "/titles request submit title <title> [<comments>]", "/titles request retract"};
+                        Utils.sendArray(sender, commands);
                     }
                     return true;
             }
         }
-        sender.sendMessage(Utils.msgPrefix(sender, "Unknown command."));
+        Utils.sendError(sender, "Unknown command.");
         return true;
     }
 
