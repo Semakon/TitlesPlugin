@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,16 +43,22 @@ public class GetExecutor {
                     String topLine;
                     List<String> titles;
 
+                    // If config is empty.
+                    if (titlesConfig == null) {
+                        Utils.sendError(sender, "There are no titles available yet.");
+                        return true;
+                    }
+
                     // get titles
                     if (args.length == 2) {
-                        topLine = String.format("%sAvailable titles:\n%s", ChatColor.GOLD, ChatColor.RESET);
+                        topLine = String.format("%sAvailable titles:%s", ChatColor.GOLD, ChatColor.RESET);
                         titles = GetCommands.getTitles(titlesConfig);
 
                     // get titles category <category>
                     } else if (args.length == 4 && args[2].equalsIgnoreCase("category")) {
                         String category = args[3];
                         if (args[2].equalsIgnoreCase("category")) {
-                            topLine = String.format("%sAvailable titles in %s:\n%s", ChatColor.GOLD, category, ChatColor.RESET);
+                            topLine = String.format("%sAvailable titles in %s:%s", ChatColor.GOLD, category, ChatColor.RESET);
                             titles = GetCommands.getTitlesFromCategory(titlesConfig, category);
                         } else return false;
 
@@ -61,8 +68,11 @@ public class GetExecutor {
                         if (user == null) {
                             Utils.sendError(sender, "That user doesn't exist.");
                             return true;
+                        } else if (mappingsConfig == null) {
+                            Utils.sendError(sender, "That user doesn't have any titles yet.");
+                            return true;
                         }
-                        topLine = String.format("%sAvailable titles of %s:\n%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
+                        topLine = String.format("%sAvailable titles of %s:%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
                         titles = GetCommands.getMapping(mappingsConfig, user);
                     } else return false;
 
@@ -78,6 +88,13 @@ public class GetExecutor {
 
                 // /titles get requests
                 case "requests":
+
+                    // If config is empty
+                    if (requestsConfig == null) {
+                        Utils.sendError(sender, "There are no pending requests.");
+                        return true;
+                    }
+
                     if (args.length == 2) {
                         topLine = String.format("%sPending requests:%s", ChatColor.GOLD, ChatColor.RESET);
 
@@ -93,6 +110,13 @@ public class GetExecutor {
 
                 // /titles get categories
                 case "categories":
+
+                    // If config is empty
+                    if (titlesConfig == null) {
+                        Utils.sendError(sender, "There are no categories yet.");
+                        return true;
+                    }
+
                     if (args.length == 2) {
                         topLine = String.format("%sCategories:%s", ChatColor.GOLD, ChatColor.RESET);
 
@@ -108,6 +132,13 @@ public class GetExecutor {
 
                 // /titles get request [user] [<user>]
                 case "request":
+
+                    // If config is empty
+                    if (requestsConfig == null) {
+                        Utils.sendError(sender, "There are no pending requests.");
+                        return true;
+                    }
+
                     String request;
 
                     // get request
@@ -133,6 +164,13 @@ public class GetExecutor {
 
                 // /titles get title <title> [description:category]
                 case "title":
+
+                    // If config is empty
+                    if (titlesConfig == null) {
+                        Utils.sendError(sender, "There are no titles available yet.");
+                        return true;
+                    }
+
                     if (args.length == 4) {
 
                         String title = args[2].toLowerCase();

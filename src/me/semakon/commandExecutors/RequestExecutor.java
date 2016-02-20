@@ -63,7 +63,8 @@ public class RequestExecutor {
             }
         }
         if (sender.hasPermission(plugin.handelRequestsPerm)) {
-            if (args.length == 4) {
+            if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
+
                 OfflinePlayer user = Utils.getOfflinePlayer(args[3]);
                 String type = args[1];
                 if (user != null) {

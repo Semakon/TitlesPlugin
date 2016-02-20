@@ -35,7 +35,7 @@ public class SetExecutor {
                        String title = args[2];
                         if (SetCommands.setTitle(plugin, player, title)) {
                             response = "Title set to %s" + title + "%s.";
-                        } else response = "You don't own that title or it doesn't exist.";
+                        } else response = "Player doesn't own that title or it doesn't exist.";
                         Utils.sendMsg(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET));
 
                     // set title
@@ -84,6 +84,8 @@ public class SetExecutor {
                         if (player == null) Utils.consolePrint(String.format(response, "", ""));
                         else Utils.sendMsg(sender, String.format(response, ChatColor.ITALIC, ChatColor.RESET));
                     }
+                } else {
+                    return false;
                 }
                 return true;
         }

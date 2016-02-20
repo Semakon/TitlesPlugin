@@ -172,14 +172,16 @@ public class Utils {
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("\"")) {
                 String string = args[i].substring(1, args[i].length());
-                for (int k = i + 1; k < args.length; k++) {
+                boolean add = false;
+                for (int k = i + 1; k < args.length && !add; k++) {
                     if (args[k].endsWith("\"")) {
                         string += " " + args[k].substring(0, args[k].length() - 1);
                         finish.add(string);
                         i = k;
-                        break;
+                        add = true;
                     } else string += " " + args[k];
                 }
+                if (!add) finish.add(args[i]);
             } else {
                 finish.add(args[i]);
             }

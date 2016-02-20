@@ -13,8 +13,8 @@ TitlesPlugin - Abstract Command List
 /titles create category <name> 							- Create a new category called <name>.
 /titles remove title <title>							- Completely remove <title> from TitlesPlugin.
 /titles remove category <category> 						- Completely remove <category> from TitlesPlugin.
-/titles edit title <title> description <description> 			- Edit description of <title>.
-/titles edit title <title> category <category> 				- Change category of <title> to <category>.
+/titles edit title <title> description <description> 	- Edit description of <title>.
+/titles edit title <title> category <category> 			- Change category of <title> to <category>.
 /titles rename title <title> <newName> 					- Rename <title> to <newName>.
 /titles rename category <category> <newName> 			- Rename <category> to <newName>.
 	

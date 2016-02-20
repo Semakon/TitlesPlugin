@@ -27,6 +27,12 @@ public class SetCommands {
      */
     public static boolean setTitle(TitlesPlugin plugin, Player player, String title) {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
+
+        // if config is empty.
+        if (mapConfig == null) {
+            return false;
+        }
+
         String uuid = player.getUniqueId().toString();
 
         // if player has the title and it exists, set player's current title to (parameter)title.
@@ -55,6 +61,12 @@ public class SetCommands {
      */
     public static boolean disableTitle(TitlesPlugin plugin, OfflinePlayer player) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Mappings");
+
+        // if config is empty.
+        if (config == null) {
+            return false;
+        }
+
         String uuid = player.getUniqueId().toString();
 
         // if the player has the title enabled, disable it.
@@ -78,6 +90,12 @@ public class SetCommands {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
 
+        // if config is empty.
+        if (mapConfig == null || titlesConfig == null) {
+            return false;
+        }
+
+
         // if title exists and player doesn't already have title, add title to player's owned list.
         if (titlesConfig.contains(title.toLowerCase()) && !mapConfig.getString("Owned").contains(title.toLowerCase())) {
             List<String> stringList = mapConfig.getStringList("Owned");
@@ -99,6 +117,12 @@ public class SetCommands {
     public static boolean removeTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
+
+        // if config is empty.
+        if (mapConfig == null) {
+            return false;
+        }
+
 
         // if player owns the title, remove it.
         if (mapConfig.getStringList("Owned").contains(title.toLowerCase())) {

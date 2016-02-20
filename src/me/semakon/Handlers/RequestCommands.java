@@ -21,6 +21,11 @@ public class RequestCommands {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Requests");
 
+        // if config is empty.
+        if (config == null) {
+            return false;
+        }
+
         // if the player has a request.
         if (config.getKeys(false).contains(uuid)) {
             config.set(uuid, null);
@@ -39,6 +44,11 @@ public class RequestCommands {
     public static boolean approveRequest(TitlesPlugin plugin, OfflinePlayer player) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Requests");
+
+        // if config is empty.
+        if (config == null) {
+            return false;
+        }
 
         // if the player has a request.
         if (config.getKeys(false).contains(uuid)) {
@@ -64,6 +74,11 @@ public class RequestCommands {
         ConfigurationSection requestsConfig = plugin.getConfig().getConfigurationSection("Requests");
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
 
+        // if config is empty.
+        if (requestsConfig == null || titlesConfig == null) {
+            return false;
+        }
+
         // if player doesn't already have a pending request and the title exists, add request to requests.
         if (!requestsConfig.getKeys(false).contains(uuid) && titlesConfig.getKeys(false).contains(title.toLowerCase())){
             requestsConfig.set(uuid + ".Title", title);
@@ -83,6 +98,11 @@ public class RequestCommands {
     public static boolean retractRequest(TitlesPlugin plugin, Player player) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Requests");
+
+        // if config is empty.
+        if (config == null) {
+            return false;
+        }
 
         // if player has a pending request, delete data
         if (config.getKeys(false).contains(uuid)) {

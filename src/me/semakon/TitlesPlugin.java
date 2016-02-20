@@ -55,14 +55,13 @@ public class TitlesPlugin extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         args = Utils.inQuotes(args);
-        Utils.sendArray(sender, args);
-        if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 2) {
+        if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 1) {
             String type = args[0];
             switch (type) {
 
                 case "set":
                     if (sender.hasPermission(setTitlePerm)) {
-                        if (!setExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !setExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles set title [<title>]"};
                             Utils.sendArray(sender, commands);
@@ -71,7 +70,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "get":
-                    if (!getExecutor.execute(sender, args)) {
+                    if (args.length == 1 || !getExecutor.execute(sender, args)) {
                         Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                         String[] commands = {"/titles get titles", "/titles get titles category <category>",
                                 "/titles get title <title> description", "/titles get title <title> category",
@@ -82,7 +81,7 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "create":
                     if (sender.hasPermission(editTitlesPerm)) {
-                        if (!editTitleExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles create title <name> <description> <category>", "/titles create category <name>"};
                             Utils.sendArray(sender, commands);
@@ -92,7 +91,7 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "remove":
                     if (sender.hasPermission(editTitlesPerm)) {
-                        if (!editTitleExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles remove title <title>", "/titles remove category <category>"};
                             Utils.sendArray(sender, commands);
@@ -102,7 +101,7 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "edit":
                     if (sender.hasPermission(editTitlesPerm)) {
-                        if (!editTitleExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles edit title <title> description <description>", "/titles edit title <title> category <category>"};
                             Utils.sendArray(sender, commands);
@@ -112,7 +111,7 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "rename":
                     if (sender.hasPermission(editTitlesPerm)) {
-                        if (!editTitleExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles rename title <title> <newName>", "/titles rename category <category> <newName>"};
                             Utils.sendArray(sender, commands);
@@ -122,7 +121,7 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "user":
                     if (sender.hasPermission(editUserTitlesPerm)) {
-                        if (!setExecutor.execute(sender, args)) {
+                        if (args.length == 1 || !setExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles user <user> [add:remove:set] title <title>"};
                             Utils.sendArray(sender, commands);
@@ -132,14 +131,17 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "request":
                     // permissions handled in execute(...) method.
-                    if (!requestExecutor.execute(sender, args)) {
+                    if (args.length == 1 || !requestExecutor.execute(sender, args)) {
                         Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                         String[] commands = {"/titles request approve user <user>", "/titles request deny user <user>",
-                                "/titles request submit title <title> [<comments>]", "/titles request retract"};
+                                "/titles request submit title <title> <comments>", "/titles request retract"};
                         Utils.sendArray(sender, commands);
                     }
                     return true;
             }
+        } else if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length == 0) {
+            Utils.sendError(sender, "Incomplete command.");
+            return true;
         }
         Utils.sendError(sender, "Unknown command.");
         return true;
