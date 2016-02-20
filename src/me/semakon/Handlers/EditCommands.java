@@ -19,11 +19,13 @@ public class EditCommands {
      * @return True if the new title was created successfully.
      */
     public static boolean createTitle(TitlesPlugin plugin, String title, String description, String category) {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
-        if (!config.contains(title.toLowerCase())) {
-            config.set(title.toLowerCase() + Utils.NAME, title);
-            config.set(title.toLowerCase() + Utils.DESC, description);
-            config.set(title.toLowerCase() + Utils.CAT, category);
+        ConfigurationSection config = plugin.getConfig();
+
+        // If configurationSection Titles doesn't exist or it doesn't contain this title yet, add it to Titles.
+        if (config.getConfigurationSection("Titles") == null || !config.contains(title.toLowerCase())) {
+            config.set(Utils.TITLES + title.toLowerCase() + Utils.NAME, title);
+            config.set(Utils.TITLES + title.toLowerCase() + Utils.DESC, description);
+            config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category);
             plugin.saveConfig();
             return true;
         }
@@ -38,7 +40,9 @@ public class EditCommands {
      */
     public static boolean removeTitle(TitlesPlugin plugin, String title) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
-        if (config.contains(title.toLowerCase())) {
+
+        // If config exists and it contains the title, remove it.
+        if (config != null && config.contains(title.toLowerCase())) {
             config.set(title.toLowerCase(), null);
             plugin.saveConfig();
             return true;
@@ -55,7 +59,9 @@ public class EditCommands {
      */
     public static boolean editDescription(TitlesPlugin plugin, String title, String description) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
-        if (config.contains(title)) {
+
+        // If config exists and it contains the title, change the description.
+        if (config != null && config.contains(title)) {
             config.set(title + Utils.DESC, description);
             plugin.saveConfig();
             return true;
@@ -72,9 +78,26 @@ public class EditCommands {
      */
     public static boolean editCategory(TitlesPlugin plugin, String title, String category) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
-        if (config.contains(title)) {
+
+        // If config exists and it contains the title, change the category.
+        if (config != null && config.contains(title)) {
             config.set(title + Utils.CAT, category.toLowerCase());
             plugin.saveConfig();
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean removeCategory(TitlesPlugin plugin, String category) {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+
+        // If config exists and the category exists.
+        if (config != null) {
+            for (String key : config.getKeys(false)) {
+                if (config.getString(key + Utils.CAT).equalsIgnoreCase(category)) {
+                    config.set(key + Utils.CAT, Utils.DEFAULT_CATEGORY);
+                }
+            }
             return true;
         }
         return false;

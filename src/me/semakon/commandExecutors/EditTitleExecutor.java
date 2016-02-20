@@ -76,7 +76,7 @@ public class EditTitleExecutor implements CommandExecutor {
                         if (player != null) {
                             if (result) {
                                 player.sendMessage(String.format("Changed description of %s%s%s to %s%s%s", ChatColor.ITALIC, args[0],
-                                        ChatColor.RESET, ChatColor.ITALIC, Utils.addSpaces(args[1]), ChatColor.RESET));
+                                        ChatColor.RESET, ChatColor.ITALIC, args[1], ChatColor.RESET));
                             } else {
                                 Utils.sendError(player, "That title doesn't exist.");
                             }

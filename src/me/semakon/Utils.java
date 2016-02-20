@@ -23,6 +23,8 @@ public class Utils {
      */
     public static final String TITLES_COMMAND = "titles";
 
+    public static final String DEFAULT_CATEGORY = "General";
+
     /**
      * OP user commands:
      */

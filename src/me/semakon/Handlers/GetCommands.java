@@ -22,9 +22,10 @@ public class GetCommands {
      * @return List of all titles.
      */
     public static List<String> getTitles(ConfigurationSection config) {
-        List<String> titles = config.getKeys(false).stream().map(title ->
-                config.getString(title + Utils.NAME)).collect(Collectors.toList());
-        if (titles.isEmpty()) titles.add("There are no available titles");
+        List<String> titles = new ArrayList<>();
+        for (String title : config.getKeys(false)) {
+            titles.add(config.getString(title + Utils.NAME));
+        }
         return titles;
     }
 
@@ -35,10 +36,10 @@ public class GetCommands {
      * @return List of all titles from a specified category.
      */
     public static List<String> getTitlesFromCategory(ConfigurationSection config, String category) {
-        List<String> titles = config.getKeys(false).stream().filter(title ->
-                config.getString(title + Utils.CAT).equalsIgnoreCase(category)).map(title ->
-                config.getString(title + Utils.NAME)).collect(Collectors.toList());
-        if (titles.isEmpty()) titles.add("That category doesn't exist.");
+        List<String> titles = new ArrayList<>();
+        for (String title : config.getKeys(false)) {
+            if (config.getString(title + Utils.CAT).equalsIgnoreCase(category)) config.getString(title + Utils.NAME);
+        }
         return titles;
     }
 
@@ -49,9 +50,7 @@ public class GetCommands {
      * @return List of all owned titles of a player.
      */
     public static List<String> getMapping(ConfigurationSection config, OfflinePlayer player) {
-        List<String> titles = config.getStringList(player.getUniqueId().toString() + ".Owned");
-        if (titles.isEmpty()) titles.add("That player doesn't own any titles.");
-        return titles;
+        return config.getStringList(player.getUniqueId().toString() + ".Owned");
     }
 
     /**
@@ -67,7 +66,6 @@ public class GetCommands {
                 categories.add(cat);
             }
         }
-        if (categories.isEmpty()) categories.add("There are no categories.");
         return categories;
     }
 
@@ -83,7 +81,6 @@ public class GetCommands {
             String title = config.getConfigurationSection(key).getString("Title");
             requests.add(Bukkit.getOfflinePlayer(uuid).getName() + ": " + title);
         }
-        if (requests.isEmpty()) requests.add("There are no pending requests.");
         return requests;
     }
 
@@ -116,7 +113,7 @@ public class GetCommands {
                 return title + " - " + comments;
             }
         }
-        return "That player doesn't have a pending request.";
+        return null;
     }
 
 }

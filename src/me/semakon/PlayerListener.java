@@ -26,7 +26,7 @@ public class PlayerListener implements Listener {
             String title = plugin.getConfig().getString(Utils.MAPPINGS + player.getUniqueId().toString() + ".Current");
             if (title != null) {
                 String titleName = plugin.getConfig().getString(Utils.TITLES + title + Utils.NAME);
-                name = ChatColor.ITALIC + Utils.addSpaces(titleName) + " " + ChatColor.RESET + player.getName();
+                name = ChatColor.ITALIC + titleName + " " + ChatColor.RESET + player.getName();
             } else name = player.getName();
         } else name = player.getName();
 

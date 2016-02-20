@@ -76,14 +76,15 @@ public class GetExecutor {
                         titles = GetCommands.getMapping(mappingsConfig, user);
                     } else return false;
 
-                    // send topLine
-                    Utils.sendMsg(sender, topLine);
+                    if (!titles.isEmpty()) {
+                        // send topLine
+                        Utils.sendMsg(sender, topLine);
 
-                    // send titles
-                    for (String title : titles) {
-                        Utils.sendMsg(sender, "- " + title);
-                    }
-
+                        // send titles
+                        for (String title : titles) {
+                            Utils.sendMsg(sender, "- " + title);
+                        }
+                    } else Utils.sendError(sender, "There are no titles available yet.");
                     return true;
 
                 // /titles get requests
@@ -97,14 +98,17 @@ public class GetExecutor {
 
                     if (args.length == 2) {
                         topLine = String.format("%sPending requests:%s", ChatColor.GOLD, ChatColor.RESET);
+                        List<String> requests = GetCommands.getRequests(requestsConfig);
 
-                        // send topLine
-                        Utils.sendMsg(sender, topLine);
+                        if (!requests.isEmpty()) {
+                            // send topLine
+                            Utils.sendMsg(sender, topLine);
 
-                        // send requests
-                        for (String request : GetCommands.getRequests(requestsConfig)) {
-                            Utils.sendMsg(sender, "- " + request);
-                        }
+                            // send requests
+                            for (String request : requests) {
+                                Utils.sendMsg(sender, "- " + request);
+                            }
+                        } else Utils.sendError(sender, "There are no pending requests.");
                         return true;
                     } else return false;
 
@@ -119,14 +123,17 @@ public class GetExecutor {
 
                     if (args.length == 2) {
                         topLine = String.format("%sCategories:%s", ChatColor.GOLD, ChatColor.RESET);
+                        List<String> categories = GetCommands.getCategories(titlesConfig);
 
-                        // send topLine
-                        Utils.sendMsg(sender, topLine);
+                        if (!categories.isEmpty()) {
+                            // send topLine
+                            Utils.sendMsg(sender, topLine);
 
-                        // send categories
-                        for (String category : GetCommands.getCategories(titlesConfig)) {
-                            Utils.sendMsg(sender, "- " + category);
-                        }
+                            // send categories
+                            for (String category : categories) {
+                                Utils.sendMsg(sender, "- " + category);
+                            }
+                        } else Utils.sendError(sender, "There are no categories yet.");
                         return true;
                     } else return false;
 
@@ -157,8 +164,8 @@ public class GetExecutor {
                         }
                         request = GetCommands.getRequest(requestsConfig, user);
                     } else return false;
-
-                    Utils.sendMsg(sender, request);
+                    if (request != null) Utils.sendMsg(sender, request);
+                    else Utils.sendError(sender, "That player does not have a pending request.");
 
                     return true;
 
