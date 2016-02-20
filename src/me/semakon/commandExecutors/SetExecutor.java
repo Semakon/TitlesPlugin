@@ -78,7 +78,7 @@ public class SetExecutor {
                             if (p != null) {
                                 if (SetCommands.setTitle(plugin, p, title)) {
                                     response = "Title set to %s" + title + "%s.";
-                                } else response = "You don't own that title or it doesn't exist.";
+                                } else response = "Player doesn't own that title or it doesn't exist.";
                             } else response = "Player is not online.";
                         }
                         if (player == null) Utils.consolePrint(String.format(response, "", ""));

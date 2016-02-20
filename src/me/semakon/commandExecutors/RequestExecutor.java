@@ -3,16 +3,10 @@ package me.semakon.commandExecutors;
 import me.semakon.Handlers.RequestCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 /**
  * Author:  Martijn
@@ -36,14 +30,17 @@ public class RequestExecutor {
         Player player = null;
         if (sender instanceof Player) player = (Player) sender;
 
+        //TODO:
+
         if (player != null) {
             if (sender.hasPermission(plugin.makeRequestsPerm)) {
                 String response;
 
                 // /titles request submit title <title> <comments>
-                if (args.length == 5 && args[1].equalsIgnoreCase("submit")) {
+                //TODO: remove comments
+                if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
                     String title = args[3];
-                    if (RequestCommands.submitRequest(plugin, player, title, args[4])) response = "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.";
+                    if (RequestCommands.submitRequest(plugin, player, title)) response = "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.";
                     else response = "You already have a pending request or that title doesn't exist.";
                     Utils.sendMsg(sender, response);
                     return true;
@@ -62,7 +59,7 @@ public class RequestExecutor {
                 return true;
             }
         }
-        if (sender.hasPermission(plugin.handelRequestsPerm)) {
+        if (sender.hasPermission(plugin.handleRequestsPerm)) {
             if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
 
                 OfflinePlayer user = Utils.getOfflinePlayer(args[3]);

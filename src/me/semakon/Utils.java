@@ -42,6 +42,11 @@ public class Utils {
     public static final String DESC = ".Description";
     public static final String CAT = ".Category";
 
+    public static String getNickName(OfflinePlayer player) {
+        //TODO: Essentials nickname: /Essentials/userdata/<uuid>.yml --> getString(nickname)
+        return null;
+    }
+
     /**
      * Replaces all underscores ("_") with spaces (" ") in a String.
      * @param string Original String.

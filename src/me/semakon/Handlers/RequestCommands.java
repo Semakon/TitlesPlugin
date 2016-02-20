@@ -1,6 +1,7 @@
 package me.semakon.Handlers;
 
 import me.semakon.TitlesPlugin;
+import me.semakon.Utils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -66,23 +67,29 @@ public class RequestCommands {
      * @param plugin This plugin.
      * @param player The player who is making the request.
      * @param title The title that is requested.
-     * @param comments Comments by the player (why they deserve this title).
      * @return True if the request has been submitted successfully.
      */
-    public static boolean submitRequest(TitlesPlugin plugin, Player player, String title, String comments) {
+    public static boolean submitRequest(TitlesPlugin plugin, Player player, String title) {
         String uuid = player.getUniqueId().toString();
         ConfigurationSection requestsConfig = plugin.getConfig().getConfigurationSection("Requests");
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
 
         // if config is empty.
-        if (requestsConfig == null || titlesConfig == null) {
+        if (titlesConfig == null) {
             return false;
+        }
+
+        // if requests is not yet in the config.
+        if (requestsConfig == null) {
+            if (titlesConfig.contains(title.toLowerCase())) {
+                plugin.getConfig().set(Utils.REQUESTS + uuid + ".Title", title.toLowerCase());
+                return true;
+            } else return false;
         }
 
         // if player doesn't already have a pending request and the title exists, add request to requests.
         if (!requestsConfig.getKeys(false).contains(uuid) && titlesConfig.getKeys(false).contains(title.toLowerCase())){
-            requestsConfig.set(uuid + ".Title", title);
-            requestsConfig.set(uuid + ".Comments", comments);
+            requestsConfig.set(uuid + ".Title", title.toLowerCase());
             plugin.saveConfig();
             return true;
         }

@@ -8,6 +8,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class SetCommands {
                 owned.add(mapConfig.getString(uuid + ".Owned"));
             }
             for (String t : owned) {
-                if (t.equalsIgnoreCase(title)) {
+                if (t.equalsIgnoreCase(title.toLowerCase())) {
                     mapConfig.getConfigurationSection(uuid).set("Current", title);
                     plugin.saveConfig();
                     return true;
@@ -91,10 +92,20 @@ public class SetCommands {
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
 
         // if config is empty.
-        if (mapConfig == null || titlesConfig == null) {
+        if (titlesConfig == null) {
             return false;
         }
-
+        // if mappings is not yet in the config.
+        if (mapConfig == null) {
+            if (titlesConfig.contains(title.toLowerCase())) {
+                List<String> owned = new ArrayList<>();
+                owned.add(title.toLowerCase());
+                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Owned", owned);
+                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Current", title.toLowerCase());
+                plugin.saveConfig();
+                return true;
+            } else return false;
+        }
 
         // if title exists and player doesn't already have title, add title to player's owned list.
         if (titlesConfig.contains(title.toLowerCase()) && !mapConfig.getString("Owned").contains(title.toLowerCase())) {
@@ -122,7 +133,6 @@ public class SetCommands {
         if (mapConfig == null) {
             return false;
         }
-
 
         // if player owns the title, remove it.
         if (mapConfig.getStringList("Owned").contains(title.toLowerCase())) {

@@ -1,6 +1,6 @@
 package me.semakon.commandExecutors;
 
-import me.semakon.Handlers.EditCommands;
+import me.semakon.Handlers.EditTitleCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.ChatColor;
@@ -46,7 +46,7 @@ public class EditTitleExecutor implements CommandExecutor {
 
                 case Utils.CREATE_NEW_TITLE:
                     if (args.length == 3) {
-                        result = EditCommands.createTitle(plugin, args[0], args[1], args[2]);
+                        result = EditTitleCommands.createTitle(plugin, args[0], args[1], args[2]);
                         if (player != null) {
                             if (result) {
                                 player.sendMessage(String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[0], ChatColor.RESET));
@@ -59,7 +59,7 @@ public class EditTitleExecutor implements CommandExecutor {
 
                 case Utils.REMOVE_TITLE:
                     if (args.length == 1) {
-                        result = EditCommands.removeTitle(plugin, args[0]);
+                        result = EditTitleCommands.removeTitle(plugin, args[0]);
                         if (player != null) {
                             if (result) {
                                 player.sendMessage(String.format("Removed %s%s%s.", ChatColor.ITALIC, args[0], ChatColor.RESET));
@@ -72,7 +72,7 @@ public class EditTitleExecutor implements CommandExecutor {
 
                 case Utils.EDIT_DESCRIPTION:
                     if (args.length == 2) {
-                        result = EditCommands.editDescription(plugin, args[0], args[1]);
+                        result = EditTitleCommands.editDescription(plugin, args[0], args[1]);
                         if (player != null) {
                             if (result) {
                                 player.sendMessage(String.format("Changed description of %s%s%s to %s%s%s", ChatColor.ITALIC, args[0],

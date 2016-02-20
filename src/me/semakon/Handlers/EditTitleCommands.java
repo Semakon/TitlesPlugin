@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
  * Author:  Martijn
  * Date:    11-2-2016
  */
-public class EditCommands {
+public class EditTitleCommands {
 
     /**
      * Creates a new title with a name, description and category. It is then saved to the config.
@@ -45,6 +45,27 @@ public class EditCommands {
         if (config != null && config.contains(title.toLowerCase())) {
             config.set(title.toLowerCase(), null);
             plugin.saveConfig();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Removes a category and turns all
+     * @param plugin
+     * @param category
+     * @return
+     */
+    public static boolean removeCategory(TitlesPlugin plugin, String category) {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+
+        // If config exists and the category exists.
+        if (config != null) {
+            for (String key : config.getKeys(false)) {
+                if (config.getString(key + Utils.CAT).equalsIgnoreCase(category)) {
+                    config.set(key + Utils.CAT, Utils.DEFAULT_CATEGORY);
+                }
+            }
             return true;
         }
         return false;
@@ -88,14 +109,43 @@ public class EditCommands {
         return false;
     }
 
-    public static boolean removeCategory(TitlesPlugin plugin, String category) {
+    /**
+     * Gives a title a new name.
+     * @param plugin This TitlesPlugin.
+     * @param title The title to be renamed.
+     * @param name The new name of the title.
+     * @return True if the title was renamed successfully.
+     */
+    public static boolean renameTitle(TitlesPlugin plugin, String title, String name) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
 
-        // If config exists and the category exists.
+        // If config exists and it contains the title, create new title with same category and description,
+        // and the correct name. Also, delete previous title.
+        if (config != null && config.contains(title)) {
+            config.set(name.toLowerCase() + Utils.CAT, config.getString(title + Utils.CAT));
+            config.set(name.toLowerCase() + Utils.DESC, config.getString(title + Utils.DESC));
+            config.set(name.toLowerCase() + Utils.NAME, name);
+            config.set(title, null);
+            plugin.saveConfig();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gives a category a new name and changes all titles with that category to fit.
+     * @param plugin This TitlesPlugin.
+     * @param category Category that is to be renamed.
+     * @param name New name of the category.
+     * @return True if the category was renamed successfully.
+     */
+    public static boolean renameCategory(TitlesPlugin plugin, String category, String name) {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+
         if (config != null) {
             for (String key : config.getKeys(false)) {
                 if (config.getString(key + Utils.CAT).equalsIgnoreCase(category)) {
-                    config.set(key + Utils.CAT, Utils.DEFAULT_CATEGORY);
+                    config.set(key + Utils.CAT, name);
                 }
             }
             return true;

@@ -8,7 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Author:  Martijn
@@ -61,7 +60,7 @@ public class GetCommands {
     public static List<String> getCategories(ConfigurationSection config) {
         List<String> categories = new ArrayList<>();
         for (String title : config.getKeys(false)) {
-            String cat = config.getConfigurationSection(title).getString(Utils.CAT);
+            String cat = config.getConfigurationSection(title.toLowerCase()).getString(Utils.CAT);
             if (!categories.contains(cat)) {
                 categories.add(cat);
             }
@@ -109,8 +108,7 @@ public class GetCommands {
         for (String key : config.getKeys(false)) {
             if (uuid.equalsIgnoreCase(key)) {
                 String title = config.getString(key + ".Title");
-                String comments = config.getString(key + ".Comments");
-                return title + " - " + comments;
+                return player.getName() + ": " + title;
             }
         }
         return null;

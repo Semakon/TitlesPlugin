@@ -10,7 +10,6 @@ TitlesPlugin - Abstract Command List
 /titles get categories                                  - Print all categories.
 
 /titles create title <name> <description> <category>	- Create a new title called <name> with <description> and <category>.
-/titles create category <name> 							- Create a new category called <name>.
 /titles remove title <title>							- Completely remove <title> from TitlesPlugin.
 /titles remove category <category> 						- Completely remove <category> from TitlesPlugin.
 /titles edit title <title> description <description> 	- Edit description of <title>.
@@ -26,9 +25,12 @@ TitlesPlugin - Abstract Command List
 	
 /titles request approve user <user> 					- Approve title request of <user>.
 /titles request deny user <user> 						- Deny title request of <user>.
-/titles request submit <title> [<comments>] 			- Submit title request for <title> with optional <comments>.
+/titles request submit title <title>			        - Submit title request for <title>.
 /titles request retract 								- Retract title request.
 
 -----------------------------------------------------------------------------------------------------------------------------------
 Reserved:
+
 /titles                                                 - Open GUI for viewing titles and selecting current title.
+
+/titles create category <name> 							- Create a new category called <name>.

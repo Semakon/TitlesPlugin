@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class TitlesPlugin extends JavaPlugin {
 
     public Permission editTitlesPerm = new Permission("titles.editTitles");
-    public Permission handelRequestsPerm = new Permission("titles.handleRequests");
+    public Permission handleRequestsPerm = new Permission("titles.handleRequests");
     public Permission editUserTitlesPerm = new Permission("titles.editUserTitles");
     public Permission makeRequestsPerm = new Permission("titles.makeRequests");
     public Permission setTitlePerm = new Permission("titles.setTitle");
