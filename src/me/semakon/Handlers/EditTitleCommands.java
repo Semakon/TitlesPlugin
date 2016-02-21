@@ -22,12 +22,10 @@ public class EditTitleCommands {
         ConfigurationSection config = plugin.getConfig();
 
         // If configurationSection Titles doesn't exist or it doesn't contain this title yet, add it to Titles.
-        if (config.getConfigurationSection("Titles") == null || !config.contains(title.toLowerCase())) {
+        if (config != null && (config.getConfigurationSection("Titles") == null || !config.getKeys(false).contains(title.toLowerCase()))) {
             config.set(Utils.TITLES + title.toLowerCase() + Utils.NAME, title);
             config.set(Utils.TITLES + title.toLowerCase() + Utils.DESC, description);
-            if (category != null) {
-                config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category);
-            } else config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, "General");
+            config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category != null ? category : "General");
             plugin.saveConfig();
             return true;
         }

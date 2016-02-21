@@ -22,20 +22,13 @@ import java.util.UUID;
 public class Utils {
 
     /**
-     * Commands:
+     * Some useful constants:
      */
     public static final String TITLES_COMMAND = "titles";
 
     public static final String DEFAULT_CATEGORY = "General";
 
     public static final String ESSENTIALS_USERDATA_FOLDER = "/../Essentials/userdata/";
-
-    /**
-     * OP user commands:
-     */
-    public static final String CREATE_NEW_TITLE = "create";
-    public static final String REMOVE_TITLE = "remove";
-    public static final String EDIT_DESCRIPTION = "edit_description";
 
     /**
      * YAML file conventions:
@@ -50,18 +43,16 @@ public class Utils {
     /**
      * Replaces all target Strings with replacement Strings in a String.
      * @param string Original String.
-     * @param target Target String to be replaced.
-     * @param replacement String that replaces the target String.
      * @return String with all target Strings replaced by replacement Strings.
      */
-    public static String replace(String string, String target, String replacement) {
-        if (string.contains(target)) {
-            String[] split = string.split(target);
+    public static String replaceDot(String string) {
+        if (string.contains(".")) {
+            String[] split = string.split("\\.");
             String res = "";
             for (String s : split) {
-                res += s + replacement;
+                res += s;
             }
-            return res.substring(0, res.length() - 1);
+            return res;
         } else return string;
     }
 
@@ -159,22 +150,26 @@ public class Utils {
      * @return An array with reformatted arguments.
      */
     public static String[] inQuotes(String[] args) {
-        List<String> finish = new ArrayList<>();
+        String[] temps = new String[args.length];
         for (int i = 0; i < args.length; i++) {
-            if (args[i].startsWith("\"")) {
-                String string = args[i].substring(1, args[i].length());
+            temps[i] = replaceDot(args[i]);
+        }
+        List<String> finish = new ArrayList<>();
+        for (int i = 0; i < temps.length; i++) {
+            if (temps[i].startsWith("\"")) {
+                String string = temps[i].substring(1, temps[i].length());
                 boolean add = false;
-                for (int k = i + 1; k < args.length && !add; k++) {
-                    if (args[k].endsWith("\"")) {
-                        string += " " + args[k].substring(0, args[k].length() - 1);
+                for (int k = i + 1; k < temps.length && !add; k++) {
+                    if (temps[k].endsWith("\"")) {
+                        string += " " + temps[k].substring(0, temps[k].length() - 1);
                         finish.add(string);
                         i = k;
                         add = true;
-                    } else string += " " + args[k];
+                    } else string += " " + temps[k];
                 }
-                if (!add) finish.add(args[i]);
+                if (!add) finish.add(temps[i]);
             } else {
-                finish.add(args[i]);
+                finish.add(temps[i]);
             }
         }
         return finish.toArray(new String[0]);

@@ -6,6 +6,7 @@ commands:
     description: Provides access to the Titles commands.
     usage: |
            Usage:
+           /<command> - Opens the GUI for easy title selecting.
            /<command> set title <title> - Sets current title to <title>.
            /<command> set title - Disable current title.
            /<command> get titles [category] [<category>] - Print all available titles or all available titles from <category>.

@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -145,7 +146,8 @@ public class TitlesPlugin extends JavaPlugin {
             }
         } else if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length == 0) {
             if (sender instanceof Player) {
-                ((Player)sender).openInventory(InventoryListener.constructInventory(this, (Player)sender, null));
+                Inventory inv = InventoryListener.constructInventory(this, (Player) sender, null);
+                if (inv != null) ((Player) sender).openInventory(inv);
                 return true;
             } else Utils.sendError(sender, "Only players can access this command.");
         }

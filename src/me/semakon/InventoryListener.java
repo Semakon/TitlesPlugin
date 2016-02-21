@@ -38,14 +38,14 @@ public class InventoryListener implements Listener {
         Inventory inv = null;
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
         // if there are titles, construct category inventory
-        if (config != null) {
+        if (config != null && !config.getKeys(false).isEmpty()) {
             List<String> categories = GetCommands.getCategories(config);
             List<ItemStack> clickables = new ArrayList<>();
 
             // get inventory with categories.
             if (cat == null) {
                 for (String category : categories) {
-                    ItemStack is = new ItemStack(Material.WOOL, 1, DyeColor.GRAY.getData());
+                    ItemStack is = new ItemStack(Material.WOOL, 1, DyeColor.ORANGE.getData());
                     ItemMeta meta = is.getItemMeta();
                     meta.setDisplayName(category);
                     is.setItemMeta(meta);
@@ -73,14 +73,14 @@ public class InventoryListener implements Listener {
                             is = new ItemStack(Material.WOOL, 1, DyeColor.LIME.getData());
                             status = "Current";
                         } else {
-                            is = new ItemStack(Material.WOOL, 1, DyeColor.SILVER.getData());
+                            is = new ItemStack(Material.WOOL, 1, DyeColor.GREEN.getData());
                             status = "Owned";
                         }
                     } else {
                         ConfigurationSection reqConfig = plugin.getConfig().getConfigurationSection(Utils.REQUESTS + uuid);
                         if (reqConfig != null && reqConfig.getString("Title") != null
                                 && reqConfig.getString("Title").equalsIgnoreCase(title)) {
-                            is = new ItemStack(Material.WOOL, 1, DyeColor.GRAY.getData());
+                            is = new ItemStack(Material.WOOL, 1, DyeColor.ORANGE.getData());
                             status = "Pending";
                         } else {
                             is = new ItemStack(Material.WOOL, 1, DyeColor.RED.getData());
@@ -110,19 +110,25 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        e.setCancelled(true);
         Player player = (Player) e.getWhoClicked();
 
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || !e.getCurrentItem().hasItemMeta()) {
-            player.closeInventory();
-            return;
-        }
-
         if (ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase("Title categories")) {
+            e.setCancelled(true);
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || !e.getCurrentItem().hasItemMeta()) {
+                player.closeInventory();
+                return;
+            }
+
             if (e.getCurrentItem().getData() instanceof Wool) {
                 player.openInventory(constructInventory(plugin, player, e.getCurrentItem().getItemMeta().getDisplayName()));
             }
         } else if (ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase("Titles in category")) {
+            e.setCancelled(true);
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || !e.getCurrentItem().hasItemMeta()) {
+                player.closeInventory();
+                return;
+            }
+
             String category = null;
             String[] split = e.getCurrentItem().getItemMeta().getLore().get(1).split(" ");
             if (split.length == 2) category = split[1];
@@ -140,7 +146,7 @@ public class InventoryListener implements Listener {
                         if (player.hasPermission(plugin.makeRequestsPerm)) {
                             if (RequestCommands.submitRequest(plugin, player, title)) {
                                 Utils.sendMsg(player, "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.");
-                                handleBlock(inv, im, DyeColor.GRAY, "Pending", slot);
+                                handleBlock(inv, im, DyeColor.ORANGE, "Pending", slot);
                             }
                             else Utils.sendError(player, "You already have a pending request or that title doesn't exist.");
                         }
@@ -150,12 +156,12 @@ public class InventoryListener implements Listener {
                         if (player.hasPermission(plugin.setTitlePerm)) {
                             if (SetCommands.disableTitle(plugin, player)) {
                                 Utils.sendMsg(player, "Title disabled.");
-                                handleBlock(inv, im, DyeColor.SILVER, "Owned", slot);
+                                handleBlock(inv, im, DyeColor.GREEN, "Owned", slot);
                             }
                             else Utils.sendError(player, "Player doesn't have that title active.");
                         }
                         break;
-                    case SILVER:
+                    case GREEN:
                         // Set title as current.
                         if (player.hasPermission(plugin.setTitlePerm)) {
                             if (SetCommands.setTitle(plugin, player, title)) {
@@ -167,7 +173,7 @@ public class InventoryListener implements Listener {
                             } else Utils.sendError(player, "Player doesn't own that title or it doesn't exist.");
                         }
                         break;
-                    case GRAY:
+                    case ORANGE:
                         // Retract request.
                         if (player.hasPermission(plugin.makeRequestsPerm)) {
                             if (RequestCommands.retractRequest(plugin, player)) {
