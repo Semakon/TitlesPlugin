@@ -37,7 +37,7 @@ public class SetCommands {
         String uuid = player.getUniqueId().toString();
 
         // if player has the title and it exists, set player's current title to (parameter)title.
-        if (mapConfig.contains(uuid) && plugin.getConfig().getConfigurationSection("Titles").contains(title)) {
+        if (mapConfig.contains(uuid) && plugin.getConfig().getConfigurationSection("Titles").contains(title.toLowerCase())) {
 
             List<String> owned = mapConfig.getConfigurationSection(uuid).getStringList("Owned");
             if (owned.isEmpty()) {

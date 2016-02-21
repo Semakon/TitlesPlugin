@@ -40,6 +40,7 @@ public class EditTitleCommands {
      */
     public static boolean removeTitle(TitlesPlugin plugin, String title) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+        //TODO: change current titles in Mappings
 
         // If config exists and it contains the title, remove it.
         if (config != null && config.contains(title.toLowerCase())) {
@@ -82,7 +83,7 @@ public class EditTitleCommands {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
 
         // If config exists and it contains the title, change the description.
-        if (config != null && config.contains(title)) {
+        if (config != null && config.contains(title.toLowerCase())) {
             config.set(title + Utils.DESC, description);
             plugin.saveConfig();
             return true;
@@ -101,7 +102,7 @@ public class EditTitleCommands {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
 
         // If config exists and it contains the title, change the category.
-        if (config != null && config.contains(title)) {
+        if (config != null && config.contains(title.toLowerCase())) {
             config.set(title + Utils.CAT, category.toLowerCase());
             plugin.saveConfig();
             return true;
@@ -118,6 +119,8 @@ public class EditTitleCommands {
      */
     public static boolean renameTitle(TitlesPlugin plugin, String title, String name) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+        title = title.toLowerCase();
+        //TODO: change current titles in Mappings
 
         // If config exists and it contains the title, create new title with same category and description,
         // and the correct name. Also, delete previous title.
