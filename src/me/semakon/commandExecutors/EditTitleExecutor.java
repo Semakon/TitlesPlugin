@@ -90,7 +90,7 @@ public class EditTitleExecutor {
                             if (EditTitleCommands.renameTitle(plugin, typeValue, newName)) {
                                 Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
                                         ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
-                            }
+                            } else Utils.sendError(sender, "That title doesn't exist.");
                             return true;
 
                         // /titles rename category <category> <newName>
@@ -98,7 +98,7 @@ public class EditTitleExecutor {
                             if (EditTitleCommands.renameCategory(plugin, typeValue, newName)) {
                                 Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
                                         ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
-                            }
+                            } else Utils.sendError(sender, "That category doesn't exist."); // Real reason: There are no titles in the config.
                             return true;
                         }
                     }

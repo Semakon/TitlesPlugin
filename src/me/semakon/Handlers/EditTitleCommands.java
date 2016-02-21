@@ -39,12 +39,21 @@ public class EditTitleCommands {
      * @return True if the title was removed successfully.
      */
     public static boolean removeTitle(TitlesPlugin plugin, String title) {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
-        //TODO: change current titles in Mappings
+        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
+        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
 
         // If config exists and it contains the title, remove it.
-        if (config != null && config.contains(title.toLowerCase())) {
-            config.set(title.toLowerCase(), null);
+        if (titlesConfig != null && titlesConfig.contains(title.toLowerCase())) {
+            titlesConfig.set(title.toLowerCase(), null);
+
+            if (mapConfig != null) {
+                for (String player : mapConfig.getKeys(false)) {
+                    if (mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
+                        mapConfig.set(player + ".Current", null);
+                    }
+                }
+            }
+
             plugin.saveConfig();
             return true;
         }
@@ -118,17 +127,26 @@ public class EditTitleCommands {
      * @return True if the title was renamed successfully.
      */
     public static boolean renameTitle(TitlesPlugin plugin, String title, String name) {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
+        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
+        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
         title = title.toLowerCase();
-        //TODO: change current titles in Mappings
 
         // If config exists and it contains the title, create new title with same category and description,
         // and the correct name. Also, delete previous title.
-        if (config != null && config.contains(title)) {
-            config.set(name.toLowerCase() + Utils.CAT, config.getString(title + Utils.CAT));
-            config.set(name.toLowerCase() + Utils.DESC, config.getString(title + Utils.DESC));
-            config.set(name.toLowerCase() + Utils.NAME, name);
-            config.set(title, null);
+        if (titlesConfig != null && titlesConfig.contains(title)) {
+            titlesConfig.set(name.toLowerCase() + Utils.CAT, titlesConfig.getString(title + Utils.CAT));
+            titlesConfig.set(name.toLowerCase() + Utils.DESC, titlesConfig.getString(title + Utils.DESC));
+            titlesConfig.set(name.toLowerCase() + Utils.NAME, name);
+
+            if (mapConfig != null) {
+                for (String player : mapConfig.getKeys(false)) {
+                    if (mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
+                        mapConfig.set(player + ".Current", title);
+                    }
+                }
+            }
+
+            titlesConfig.set(title, null);
             plugin.saveConfig();
             return true;
         }

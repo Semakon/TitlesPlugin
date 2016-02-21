@@ -32,8 +32,8 @@ public class PlayerListener implements Listener {
             if (title != null) {
                 String titleName = plugin.getConfig().getString(Utils.TITLES + title + Utils.NAME);
                 name = ChatColor.RESET + "" + ChatColor.ITALIC + titleName + " " + ChatColor.RESET + getNickName(player);
-            } else name = player.getName();
-        } else name = player.getDisplayName();
+            } else name = ChatColor.RESET + getNickName(player);
+        } else name = ChatColor.RESET + player.getDisplayName();
 
         player.setDisplayName(name);
     }

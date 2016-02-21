@@ -30,7 +30,6 @@ public class GetExecutor {
 
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
         ConfigurationSection requestsConfig = plugin.getConfig().getConfigurationSection("Requests");
-        ConfigurationSection mappingsConfig = plugin.getConfig().getConfigurationSection("Mappings");
 
         String type = args[0];
         String selector = args[1];
@@ -68,12 +67,12 @@ public class GetExecutor {
                         if (user == null) {
                             Utils.sendError(sender, "That user doesn't exist.");
                             return true;
-                        } else if (mappingsConfig == null) {
-                            Utils.sendError(sender, "That user doesn't have any titles yet.");
-                            return true;
-                        }
+                        } //else if (mappingsConfig == null) {
+//                            Utils.sendError(sender, "That user doesn't have any titles yet.");
+//                            return true;
+//                        }
                         topLine = String.format("%sAvailable titles of %s:%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
-                        titles = GetCommands.getMapping(mappingsConfig, user);
+                        titles = GetCommands.getMapping(plugin, user);
                     } else return false;
 
                     if (!titles.isEmpty()) {

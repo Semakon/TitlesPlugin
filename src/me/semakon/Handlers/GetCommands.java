@@ -1,5 +1,6 @@
 package me.semakon.Handlers;
 
+import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -47,12 +48,27 @@ public class GetCommands {
 
     /**
      * Creates a list of all titles a player owns. Returns a list with an error message if the player doesn't have any titles.
-     * @param config ConfigurationSection that holds the mappings.
+     * @param plugin This TitlesPlugin used to get the configs.
      * @param player Player whose owned titles are queried.
      * @return List of all owned titles of a player.
      */
-    public static List<String> getMapping(ConfigurationSection config, OfflinePlayer player) {
-        return config.getStringList(player.getUniqueId().toString() + ".Owned");
+    public static List<String> getMapping(TitlesPlugin plugin, OfflinePlayer player) {
+        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
+        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
+        String uuid = player.getUniqueId().toString();
+        List<String> titles = new ArrayList<>();
+
+        if (mapConfig == null || titlesConfig == null) return titles;
+        if (mapConfig.contains(uuid)) {
+            for (String owned : mapConfig.getStringList(uuid + ".Owned")) {
+                for (String title : titlesConfig.getKeys(false)) {
+                    if (owned.equalsIgnoreCase(title)) {
+                        titles.add(titlesConfig.getString(title + ".Name"));
+                    }
+                }
+            }
+        }
+        return titles;
     }
 
     /**

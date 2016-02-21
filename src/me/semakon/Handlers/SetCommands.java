@@ -28,6 +28,7 @@ public class SetCommands {
      */
     public static boolean setTitle(TitlesPlugin plugin, Player player, String title) {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
+        title = title.toLowerCase();
 
         // if config is empty.
         if (mapConfig == null) {
@@ -37,14 +38,14 @@ public class SetCommands {
         String uuid = player.getUniqueId().toString();
 
         // if player has the title and it exists, set player's current title to (parameter)title.
-        if (mapConfig.contains(uuid) && plugin.getConfig().getConfigurationSection("Titles").contains(title.toLowerCase())) {
+        if (mapConfig.contains(uuid) && plugin.getConfig().getConfigurationSection("Titles").contains(title)) {
 
             List<String> owned = mapConfig.getConfigurationSection(uuid).getStringList("Owned");
             if (owned.isEmpty()) {
                 owned.add(mapConfig.getString(uuid + ".Owned"));
             }
             for (String t : owned) {
-                if (t.equalsIgnoreCase(title.toLowerCase())) {
+                if (t.equalsIgnoreCase(title)) {
                     mapConfig.getConfigurationSection(uuid).set("Current", title);
                     plugin.saveConfig();
                     return true;
@@ -88,6 +89,7 @@ public class SetCommands {
      */
     public static boolean addTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
         String uuid = player.getUniqueId().toString();
+        title = title.toLowerCase();
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
 
@@ -97,20 +99,20 @@ public class SetCommands {
         }
         // if mappings is not yet in the config.
         if (mapConfig == null) {
-            if (titlesConfig.contains(title.toLowerCase())) {
+            if (titlesConfig.contains(title)) {
                 List<String> owned = new ArrayList<>();
-                owned.add(title.toLowerCase());
+                owned.add(title);
                 plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Owned", owned);
-                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Current", title.toLowerCase());
+                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Current", title);
                 plugin.saveConfig();
                 return true;
             } else return false;
         }
 
         // if title exists and player doesn't already have title, add title to player's owned list.
-        if (titlesConfig.contains(title.toLowerCase()) && !mapConfig.getString("Owned").contains(title.toLowerCase())) {
+        if (titlesConfig.contains(title) && !mapConfig.getString("Owned").contains(title)) {
             List<String> stringList = mapConfig.getStringList("Owned");
-            stringList.add(title.toLowerCase());
+            stringList.add(title);
             mapConfig.set("Owned", stringList);
             plugin.saveConfig();
             return true;
