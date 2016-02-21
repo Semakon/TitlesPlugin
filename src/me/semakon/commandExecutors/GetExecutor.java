@@ -59,6 +59,10 @@ public class GetExecutor {
                         if (args[2].equalsIgnoreCase("category")) {
                             topLine = String.format("%sAvailable titles in %s:%s", ChatColor.GOLD, category, ChatColor.RESET);
                             titles = GetCommands.getTitlesFromCategory(titlesConfig, category);
+                            if (titles.isEmpty()) {
+                                Utils.sendError(sender, "That category doesn't exist.");
+                                return true;
+                            }
                         } else return false;
 
                     // get titles user <user>

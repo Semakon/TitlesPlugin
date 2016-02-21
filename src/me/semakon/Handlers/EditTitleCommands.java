@@ -48,7 +48,7 @@ public class EditTitleCommands {
 
             if (mapConfig != null) {
                 for (String player : mapConfig.getKeys(false)) {
-                    if (mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
+                    if (mapConfig.getString(player + ".Current") != null && mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
                         mapConfig.set(player + ".Current", null);
                     }
                 }
@@ -131,22 +131,26 @@ public class EditTitleCommands {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
         title = title.toLowerCase();
 
-        // If config exists and it contains the title, create new title with same category and description,
-        // and the correct name. Also, delete previous title.
+        // If config exists and it contains the title, delete previous title and
+        // create new title with same category and description and new name.
         if (titlesConfig != null && titlesConfig.contains(title)) {
-            titlesConfig.set(name.toLowerCase() + Utils.CAT, titlesConfig.getString(title + Utils.CAT));
-            titlesConfig.set(name.toLowerCase() + Utils.DESC, titlesConfig.getString(title + Utils.DESC));
+            String category = titlesConfig.getString(title + Utils.CAT);
+            String description = titlesConfig.getString(title + Utils.DESC);
+
+            titlesConfig.set(title, null);
+
+            titlesConfig.set(name.toLowerCase() + Utils.CAT, category);
+            titlesConfig.set(name.toLowerCase() + Utils.DESC, description);
             titlesConfig.set(name.toLowerCase() + Utils.NAME, name);
 
             if (mapConfig != null) {
                 for (String player : mapConfig.getKeys(false)) {
-                    if (mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
-                        mapConfig.set(player + ".Current", title);
+                    if (mapConfig.getString(player + ".Current") != null && mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
+                        mapConfig.set(player + ".Current", name);
                     }
                 }
             }
 
-            titlesConfig.set(title, null);
             plugin.saveConfig();
             return true;
         }

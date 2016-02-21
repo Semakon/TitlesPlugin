@@ -45,7 +45,7 @@ public class InventoryListener implements Listener {
             // get inventory with categories.
             if (cat == null) {
                 for (String category : categories) {
-                    ItemStack is = new ItemStack(Material.WOOL, 1, DyeColor.ORANGE.getData());
+                    ItemStack is = new ItemStack(Material.WOOL, 1, DyeColor.GRAY.getData());
                     ItemMeta meta = is.getItemMeta();
                     meta.setDisplayName(category);
                     is.setItemMeta(meta);
