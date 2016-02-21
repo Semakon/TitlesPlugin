@@ -25,7 +25,9 @@ public class EditTitleCommands {
         if (config.getConfigurationSection("Titles") == null || !config.contains(title.toLowerCase())) {
             config.set(Utils.TITLES + title.toLowerCase() + Utils.NAME, title);
             config.set(Utils.TITLES + title.toLowerCase() + Utils.DESC, description);
-            config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category);
+            if (category != null) {
+                config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category);
+            } else config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, "General");
             plugin.saveConfig();
             return true;
         }

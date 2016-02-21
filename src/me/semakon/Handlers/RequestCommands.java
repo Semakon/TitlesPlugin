@@ -106,6 +106,9 @@ public class RequestCommands {
         // if requests is not yet in the config.
         if (requestsConfig == null) {
             if (titlesConfig.contains(title.toLowerCase())) {
+
+                Utils.sendMsg(player, "titlesConfig contains title.toLowerCase");
+
                 plugin.getConfig().set(Utils.REQUESTS + uuid + ".Title", title.toLowerCase());
 
                 Location loc = player.getLocation();
@@ -124,10 +127,10 @@ public class RequestCommands {
             requestsConfig.set(uuid + ".Title", title.toLowerCase());
 
             Location loc = player.getLocation();
-            requestsConfig.set(Utils.REQUESTS + "Location.World", loc.getWorld().getName());
-            requestsConfig.set(Utils.REQUESTS + "Location.X", loc.getX());
-            requestsConfig.set(Utils.REQUESTS + "Location.Y", loc.getY());
-            requestsConfig.set(Utils.REQUESTS + "Location.Z", loc.getZ());
+            requestsConfig.set(uuid + ".Location.World", loc.getWorld().getName());
+            requestsConfig.set(uuid + ".Location.X", loc.getX());
+            requestsConfig.set(uuid + ".Location.Y", loc.getY());
+            requestsConfig.set(uuid + ".Location.Z", loc.getZ());
 
             plugin.saveConfig();
             return true;

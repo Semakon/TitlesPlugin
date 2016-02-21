@@ -52,7 +52,7 @@ public class GetCommands {
      * @param player Player whose owned titles are queried.
      * @return List of all owned titles of a player.
      */
-    public static List<String> getMapping(TitlesPlugin plugin, OfflinePlayer player) {
+    public static List<String> getMapping(TitlesPlugin plugin, OfflinePlayer player, boolean toLower) {
         ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
         ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
         String uuid = player.getUniqueId().toString();
@@ -63,7 +63,8 @@ public class GetCommands {
             for (String owned : mapConfig.getStringList(uuid + ".Owned")) {
                 for (String title : titlesConfig.getKeys(false)) {
                     if (owned.equalsIgnoreCase(title)) {
-                        titles.add(titlesConfig.getString(title + ".Name"));
+                        if (toLower) titles.add(title.toLowerCase());
+                        else titles.add(titlesConfig.getString(title + ".Name"));
                     }
                 }
             }
@@ -79,7 +80,7 @@ public class GetCommands {
     public static List<String> getCategories(ConfigurationSection config) {
         List<String> categories = new ArrayList<>();
         for (String title : config.getKeys(false)) {
-            String cat = config.getConfigurationSection(title.toLowerCase()).getString(Utils.CAT);
+            String cat = config.getString(title + ".Category");
             if (!categories.contains(cat)) {
                 categories.add(cat);
             }

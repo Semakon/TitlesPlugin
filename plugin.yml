@@ -15,7 +15,7 @@ commands:
            /<command> get request [user] [<user>] - Print pending request of self or <user>.
            /<command> get requests - Print all pending requests.
            /<command> get categories - Print all categories.
-           /<command> create title <name> <description> <category> - Create a new title called <name> with <description> and <category>.
+           /<command> create title <name> <description> [<category>] - Create a new title called <name> with <description> and <category>.
            /<command> create category <name> - Create a new category called <name>.
            /<command> remove title <title> - Completely remove <title> from TitlesPlugin.
            /<command> remove category <category> - Completely remove <category> from TitlesPlugin.

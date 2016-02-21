@@ -31,8 +31,13 @@ public class EditTitleExecutor {
             switch (args[0].toLowerCase()) {
 
                 case "create":
-                    // /titles create title <name> <description> <category>
-                    if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
+                    // /titles create title <name> <description> [<category>]
+                    if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
+                        if (EditTitleCommands.createTitle(plugin, args[2], args[3], null)) {
+                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[2], ChatColor.RESET));
+                        } else Utils.sendError(sender, "That title already exists.");
+                        return true;
+                    } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
                         if (EditTitleCommands.createTitle(plugin, args[2], args[3], args[4])) {
                             Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[2], ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");

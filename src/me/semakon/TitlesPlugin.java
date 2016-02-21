@@ -7,7 +7,9 @@ import me.semakon.commandExecutors.SetExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -28,8 +30,9 @@ public class TitlesPlugin extends JavaPlugin {
     private EditTitleExecutor editTitleExecutor;
 
     public void registerListeners() {
-        org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
+        PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(this), this);
+        pm.registerEvents(new InventoryListener(this), this);
     }
 
     /**
@@ -141,8 +144,10 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
             }
         } else if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length == 0) {
-            Utils.sendError(sender, "Incomplete command.");
-            return true;
+            if (sender instanceof Player) {
+                ((Player)sender).openInventory(InventoryListener.constructInventory(this, (Player)sender, null));
+                return true;
+            } else Utils.sendError(sender, "Only players can access this command.");
         }
         Utils.sendError(sender, "Unknown command.");
         return true;

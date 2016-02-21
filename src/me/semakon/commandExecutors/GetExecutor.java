@@ -67,12 +67,13 @@ public class GetExecutor {
                         if (user == null) {
                             Utils.sendError(sender, "That user doesn't exist.");
                             return true;
-                        } //else if (mappingsConfig == null) {
-//                            Utils.sendError(sender, "That user doesn't have any titles yet.");
-//                            return true;
-//                        }
+                        }
                         topLine = String.format("%sAvailable titles of %s:%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
-                        titles = GetCommands.getMapping(plugin, user);
+                        titles = GetCommands.getMapping(plugin, user, false);
+                        if (titles.isEmpty()) {
+                            Utils.sendError(sender, "That user doesn't have any titles yet.");
+                            return true;
+                        }
                     } else return false;
 
                     if (!titles.isEmpty()) {
@@ -116,7 +117,7 @@ public class GetExecutor {
 
                     // If config is empty
                     if (titlesConfig == null) {
-                        Utils.sendError(sender, "There are no categories yet.");
+                        Utils.sendError(sender, "There are no titles yet.");
                         return true;
                     }
 
@@ -180,20 +181,22 @@ public class GetExecutor {
                     if (args.length == 4) {
 
                         String title = args[2].toLowerCase();
-                        String fromTitle = args[3];
+                        String typeFromTitle = args[3];
+                        String fromTitle;
 
                         // get title <title> description
-                        if (fromTitle.equalsIgnoreCase("description")) {
+                        if (typeFromTitle.equalsIgnoreCase("description")) {
                             fromTitle = GetCommands.getFromTitle(titlesConfig, title, Utils.DESC);
 
                         // get title <title> category
-                        } else if (fromTitle.equalsIgnoreCase("category")) {
+                        } else if (typeFromTitle.equalsIgnoreCase("category")) {
                             fromTitle = GetCommands.getFromTitle(titlesConfig, title, Utils.CAT);
                         } else return false;
 
                         // if title wasn't found send an error message, otherwise send the description.
                         if (fromTitle == null) Utils.sendError(sender, "That title doesn't exist.");
-                        else Utils.sendMsg(sender, fromTitle);
+                        else Utils.sendMsg(sender, String.format("%s%s%s of %s%s%s: %s%s%s", ChatColor.GOLD, typeFromTitle, ChatColor.RESET,
+                                ChatColor.ITALIC, title, ChatColor.RESET, ChatColor.ITALIC, fromTitle, ChatColor.RESET));
                         return true;
 
                     } else return false;

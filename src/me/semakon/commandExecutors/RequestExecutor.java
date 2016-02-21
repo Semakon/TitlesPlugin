@@ -32,22 +32,21 @@ public class RequestExecutor {
 
         if (player != null) {
             if (sender.hasPermission(plugin.makeRequestsPerm)) {
-                String response;
 
                 // /titles request submit title <title>
                 if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
                     String title = args[3];
-                    if (RequestCommands.submitRequest(plugin, player, title)) response = "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.";
-                    else response = "You already have a pending request or that title doesn't exist.";
-                    Utils.sendMsg(sender, response);
+                    if (RequestCommands.submitRequest(plugin, player, title)) {
+                        Utils.sendMsg(sender, "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.");
+                    }
+                    else Utils.sendError(sender, "You already have a pending request or that title doesn't exist.");
                     return true;
                 }
 
                 // /titles request retract
                 if (args.length == 2 && args[1].equalsIgnoreCase("retract")) {
-                    if (RequestCommands.retractRequest(plugin, player)) response = "Your request has successfully been retracted.";
-                    else response = "You don't have a pending request.";
-                    Utils.sendMsg(sender, response);
+                    if (RequestCommands.retractRequest(plugin, player)) Utils.sendMsg(sender, "Your request has successfully been retracted.");
+                    else Utils.sendError(sender, "You don't have a pending request.");
                     return true;
                 }
 
