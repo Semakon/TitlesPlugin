@@ -26,6 +26,7 @@ commands:
            /<command> user <user> add title <title> - Add <title> to owned list of <user>.
            /<command> user <user> remove title <title> - Remove <title> from owned list of <user>.
            /<command> user <user> set title <title> - Sets current title of <user> to <title>.
+           /<command> request tp user <user> - Teleports the sender to the location where the request of <user> was submitted.
            /<command> request approve user <user> - Approve title request of <user>.
            /<command> request deny <user> - Deny title request of <user>.
            /<command> request submit title <title> - Submit title request for <title>.

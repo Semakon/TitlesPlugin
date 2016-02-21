@@ -134,8 +134,8 @@ public class TitlesPlugin extends JavaPlugin {
                     // permissions handled in execute(...) method.
                     if (args.length == 1 || !requestExecutor.execute(sender, args)) {
                         Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
-                        String[] commands = {"/titles request approve user <user>", "/titles request deny user <user>",
-                                "/titles request submit title <title> <comments>", "/titles request retract"};
+                        String[] commands = {"/titles request approve user <user>", "/titles request deny user <user>", "/titles request tp user <user>",
+                                "/titles request submit title <title>", "/titles request retract"};
                         Utils.sendArray(sender, commands);
                     }
                     return true;

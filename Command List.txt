@@ -22,7 +22,8 @@ TitlesPlugin - Abstract Command List
 /titles user <user> set title <title> 					- Sets current title of <user> to <title>.
 /titles set title <title> 								- Sets current title to <title>.
 /titles set title                                       - Disable current title.
-	
+
+/titles request tp user <user>                          - Teleports the sender to the location where the request of <user> was submitted.
 /titles request approve user <user> 					- Approve title request of <user>.
 /titles request deny user <user> 						- Deny title request of <user>.
 /titles request submit title <title>			        - Submit title request for <title>.
