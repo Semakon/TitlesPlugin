@@ -37,7 +37,10 @@ public class GetCommands {
     public static List<String> getTitlesFromCategory(ConfigurationSection config, String category) {
         List<String> titles = new ArrayList<>();
         for (String title : config.getKeys(false)) {
-            if (config.getString(title + Utils.CAT).equalsIgnoreCase(category)) config.getString(title + Utils.NAME);
+            if (config.getString(title + Utils.CAT).equalsIgnoreCase(category)) {
+                config.getString(title + Utils.NAME);
+                titles.add(title);
+            }
         }
         return titles;
     }
