@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * Author:  Martijn
  * Date:    10-2-2016
  */
-public class EditTitleExecutor implements CommandExecutor {
+public class EditTitleExecutor {
 
     private TitlesPlugin plugin;
 
@@ -21,72 +21,91 @@ public class EditTitleExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean execute(CommandSender sender, String[] args) {
-
-        return false;
-    }
-
     /**
      * Called when a command is executed.
      * @param sender Sender of the command.
-     * @param cmd Command executed.
-     * @param label Alias of the command which was used.
      * @param args Arguments given with the command.
      * @return True if the command has been executed successfully.
      */
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        boolean result = false;
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
-        if (player == null || player.hasPermission(plugin.editTitlesPerm)) {
-            switch (cmd.getName()) {
+    public boolean execute(CommandSender sender, String[] args) {
+            switch (args[0].toLowerCase()) {
 
-                case Utils.CREATE_NEW_TITLE:
-                    if (args.length == 3) {
-                        result = EditTitleCommands.createTitle(plugin, args[0], args[1], args[2]);
-                        if (player != null) {
-                            if (result) {
-                                player.sendMessage(String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[0], ChatColor.RESET));
-                            } else {
-                                Utils.sendError(player, "That title already exists.");
-                            }
+                case "create":
+                    // /titles create title <name> <description> <category>
+                    if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
+                        if (EditTitleCommands.createTitle(plugin, args[2], args[3], args[4])) {
+                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[2], ChatColor.RESET));
+                        } else Utils.sendError(sender, "That title already exists.");
+                        return true;
+                    }
+                    return false;
+                case "remove":
+                    // /titles remove title <title>
+                    if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
+                        if (EditTitleCommands.removeTitle(plugin, args[2])) {
+                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + args[2] + ".");
+                        } else Utils.sendError(sender, "That title doesn't exist.");
+                        return true;
+
+                    // /titles remove category <category>
+                    } else if (args.length == 3 && args[1].equalsIgnoreCase("category")) {
+                        if (EditTitleCommands.removeCategory(plugin, args[2])) {
+                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + args[2] + ".");
+                        } else Utils.sendError(sender, "That category doesn't exist.");
+                        return true;
+                    }
+                    return false;
+                case "edit":
+                    if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
+                        String title = args[2];
+                        String type = args[3];
+                        String typeValue = args[4];
+
+                        // /titles edit title <title> description <description>
+                        if (type.equalsIgnoreCase("description")) {
+                            if (EditTitleCommands.editDescription(plugin, title, typeValue)) {
+                                Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
+                                        ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
+                            } else Utils.sendError(sender, "That title doesn't exist.");
+                            return true;
+
+                        // /titles edit title <title> category <category>
+                        } else if (type.equalsIgnoreCase("category")) {
+                            if (EditTitleCommands.editCategory(plugin, title, typeValue)) {
+                                Utils.sendMsg(sender, String.format("Changed category of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
+                                        ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
+                            } else Utils.sendError(sender, "That title doesn't exist.");
+                            return true;
                         }
                     }
-                    break;
+                    return false;
+                case "rename":
+                    if (args.length == 4) {
+                        String type = args[1];
+                        String typeValue = args[2];
+                        String newName = args[3];
 
-                case Utils.REMOVE_TITLE:
-                    if (args.length == 1) {
-                        result = EditTitleCommands.removeTitle(plugin, args[0]);
-                        if (player != null) {
-                            if (result) {
-                                player.sendMessage(String.format("Removed %s%s%s.", ChatColor.ITALIC, args[0], ChatColor.RESET));
-                            } else {
-                                Utils.sendError(player, "That title already exists.");
+                        // /titles rename title <title> <newName>
+                        if (type.equalsIgnoreCase("title")) {
+                            if (EditTitleCommands.renameTitle(plugin, typeValue, newName)) {
+                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
+                                        ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
                             }
+                            return true;
+
+                        // /titles rename category <category> <newName>
+                        } else if (type.equalsIgnoreCase("category")) {
+                            if (EditTitleCommands.renameCategory(plugin, typeValue, newName)) {
+                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
+                                        ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
+                            }
+                            return true;
                         }
                     }
-                    break;
-
-                case Utils.EDIT_DESCRIPTION:
-                    if (args.length == 2) {
-                        result = EditTitleCommands.editDescription(plugin, args[0], args[1]);
-                        if (player != null) {
-                            if (result) {
-                                player.sendMessage(String.format("Changed description of %s%s%s to %s%s%s", ChatColor.ITALIC, args[0],
-                                        ChatColor.RESET, ChatColor.ITALIC, args[1], ChatColor.RESET));
-                            } else {
-                                Utils.sendError(player, "That title doesn't exist.");
-                            }
-                        }
-                    }
-                    break;
-
+                    return false;
             }
-        } else player.sendMessage(ChatColor.RED + "You don't have permission to perform this action!");
-        return result;
+
+        return false;
     }
 
 }

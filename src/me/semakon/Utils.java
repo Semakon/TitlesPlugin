@@ -4,8 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +28,8 @@ public class Utils {
 
     public static final String DEFAULT_CATEGORY = "General";
 
+    public static final String ESSENTIALS_USERDATA_FOLDER = "/../Essentials/userdata/";
+
     /**
      * OP user commands:
      */
@@ -41,27 +46,6 @@ public class Utils {
     public static final String NAME = ".Name";
     public static final String DESC = ".Description";
     public static final String CAT = ".Category";
-
-    public static String getNickName(OfflinePlayer player) {
-        //TODO: Essentials nickname: /Essentials/userdata/<uuid>.yml --> getString(nickname)
-        return null;
-    }
-
-    /**
-     * Replaces all underscores ("_") with spaces (" ") in a String.
-     * @param string Original String.
-     * @return String with all underscores replaced by spaces.
-     */
-    public static String addSpaces(String string) {
-        if (string.contains("_")) {
-            String[] split = string.split("_");
-            String res = "";
-            for (String s : split) {
-                res += s + " ";
-            }
-            return res.substring(0, res.length() - 1);
-        } else return string;
-    }
 
     /**
      * Replaces all target Strings with replacement Strings in a String.

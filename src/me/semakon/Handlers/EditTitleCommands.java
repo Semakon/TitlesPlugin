@@ -51,10 +51,10 @@ public class EditTitleCommands {
     }
 
     /**
-     * Removes a category and turns all
-     * @param plugin
-     * @param category
-     * @return
+     * Removes an existing category and replaces it with the DEFAULT_CATEGORY.
+     * @param plugin This TitlesPlugin.
+     * @param category Category that is to be removed.
+     * @return True if the category was removed successfully.
      */
     public static boolean removeCategory(TitlesPlugin plugin, String category) {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");

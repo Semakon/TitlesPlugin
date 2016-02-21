@@ -38,6 +38,7 @@ public class TitlesPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         registerListeners();
+
         getExecutor = new GetExecutor(this);
         setExecutor = new SetExecutor(this);
         requestExecutor = new RequestExecutor(this);
@@ -83,7 +84,7 @@ public class TitlesPlugin extends JavaPlugin {
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
-                            String[] commands = {"/titles create title <name> <description> <category>", "/titles create category <name>"};
+                            String[] commands = {"/titles create title <name> <description> <category>"}; // "/titles create category <name>"
                             Utils.sendArray(sender, commands);
                         }
                     } else Utils.sendError(sender, "You don't have permission to do that.");
