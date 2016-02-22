@@ -147,8 +147,7 @@ public class InventoryListener implements Listener {
                             if (RequestCommands.submitRequest(plugin, player, title)) {
                                 Utils.sendMsg(player, "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.");
                                 handleBlock(inv, im, DyeColor.ORANGE, "Pending", slot);
-                            }
-                            else Utils.sendError(player, "You already have a pending request or that title doesn't exist.");
+                            } else Utils.sendError(player, "You already have a pending request or that title doesn't exist.");
                         }
                         break;
                     case LIME:
