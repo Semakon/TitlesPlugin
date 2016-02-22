@@ -25,6 +25,10 @@ public class TitlesPlugin extends JavaPlugin {
     public Permission makeRequestsPerm = new Permission("titles.makeRequests");
     public Permission setTitlePerm = new Permission("titles.setTitle");
 
+    public Permission donatorSuffix1 = new Permission("suffix.donator1");
+    public Permission donatorSuffix2 = new Permission("suffix.donator2");
+    public Permission donatorSuffix3 = new Permission("suffix.donator3");
+
     private GetExecutor getExecutor;
     private SetExecutor setExecutor;
     private RequestExecutor requestExecutor;
@@ -41,6 +45,7 @@ public class TitlesPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        this.saveDefaultConfig();
         registerListeners();
 
         getExecutor = new GetExecutor(this);
@@ -86,6 +91,9 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "create":
                     if (sender.hasPermission(editTitlesPerm)) {
+                        System.out.println(sender);
+                        System.out.println(editTitleExecutor);
+                        System.out.println(args);
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles create title <name> <description> <category>"}; // "/titles create category <name>"

@@ -1,3 +1,35 @@
-Titles: {}
-Mappings: {}
-Requests: {}
+#########################################################################################################################
+#  _________   _     _      _                              ______      _                                _               #
+# |___   ___| |_|   | |    | |                            |  ____|_   | |                              |_|              #
+#     | |      _   _| |_   | |       _____        _____   | |    | |  | |     _      _                  _    ______     #
+#     | |     | | |_   _|  | |     _|_____|_    _|_____|  | |____|_|  | |    | |    | |     ______     | |  |  ____|_   #
+#     | |     | |   | |    | |    | |_____| |  |_|___     |  ____|    | |    | |    | |   _|______|_   | |  | |    | |  #
+#     | |     | |   | |    | |    |  _______|    |___|_   | |         | |    | |    | |  |_|______| |  | |  | |    | |  #
+#     | |     | |   |_|_   |_|_   |_|_______    _____|_|  | |         |_|_   |_|____| |    |______  |  | |  | |    | |  #
+#     |_|     |_|     |_|    |_|    |_______|  |_____|    |_|           |_|    |______|   ________|_|  |_|  |_|    |_|  #
+#                                                                                        |________|                     #
+#                                                                                                                       #
+#                                                                                                                       #
+# This config keeps track of the titles, the requests and the player data concerning the titles.                        #
+# It's strongly advised NOT to change this config manually, unless you know what you are doing.                         #
+# If you still wish to do so, here are some examples. Keep in mind that it's case sensitive                             #
+# and every new indent is 2 spaces, don't use tabs. If you don't already use it, I recommend Notepad++                  #
+# for editing yaml files.                                                                                               #
+#                                                                                                                       #
+# Titles:                                                                                                               #
+#   example title:                                                                                                      #
+#     Name: Example Title                                                                                               #
+#     Description: This is an example title.                                                                            #
+#     Category: General                                                                                                 #
+#                                                                                                                       #
+# Mappings:                                                                                                             #
+#   <uuid>:                                                                                                             #
+#     Owned:                                                                                                            #
+#     - example title                                                                                                   #
+#     - example title 2                                                                                                 #
+#     Current: example title                                                                                            #
+#                                                                                                                       #
+# Requests:                                                                                                             #
+#   <uuid>: example title 3                                                                                             #
+#                                                                                                                       #
+#########################################################################################################################
