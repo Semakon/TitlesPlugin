@@ -98,11 +98,13 @@ public class InventoryListener implements Listener {
                 inv = Bukkit.createInventory(null, size, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Titles in category");
             }
 
-            int i = 0;
-            for (ItemStack is : clickables) {
-                inv.setItem(i, is);
-                i++;
-            }
+            for (int i = 0; i < clickables.size(); i++) inv.setItem(i, clickables.get(i));
+
+            ItemStack is = new ItemStack(Material.WOOL, 1, DyeColor.GRAY.getData());
+            ItemMeta meta = is.getItemMeta();
+            meta.setDisplayName("Back");
+            is.setItemMeta(meta);
+            inv.setItem(inv.getSize() - 1, is);
 
         } else Utils.sendError(player, "There are no titles yet.");
         return inv;
@@ -180,6 +182,11 @@ public class InventoryListener implements Listener {
                                 handleBlock(inv, im, DyeColor.RED, "Not Owned", slot);
                             }
                             else Utils.sendError(player, "You don't have a pending request.");
+                        }
+                        break;
+                    case GRAY:
+                        if (e.getCurrentItem().getData() instanceof Wool) {
+                            player.openInventory(constructInventory(plugin, player, null));
                         }
                         break;
                 }

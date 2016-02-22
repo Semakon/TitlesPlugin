@@ -7,8 +7,7 @@ import me.semakon.Utils;
 public class Test {
 
     public static void main(String[] args) {
-        String string = "wie.wat.waar";
-        System.out.println(Utils.replaceDot(string));
+        System.out.println("\n" + Utils.setColors("&0Fucking &1Paladin &oBeer &r"));
     }
 
 }

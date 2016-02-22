@@ -32,15 +32,14 @@ public class PlayerListener implements Listener {
             if (title != null) {
                 String titleName = plugin.getConfig().getString(Utils.TITLES + title + Utils.NAME);
                 name = ChatColor.RESET + "" + ChatColor.ITALIC + titleName + " " + ChatColor.RESET + getNickName(player);
-
-                String suffix = "";
-                if (player.hasPermission(plugin.donatorSuffix1)) suffix = String.format("%s[%s$%s]%s", ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY, ChatColor.RESET);
-                if (player.hasPermission(plugin.donatorSuffix2)) suffix = String.format("%s[%s$$%s]%s", ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY, ChatColor.RESET);
-                if (player.hasPermission(plugin.donatorSuffix3)) suffix = String.format("%s[%s$$$%s]%s", ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY, ChatColor.RESET);
-                name += suffix;
-
             } else name = ChatColor.RESET + getNickName(player);
         } else name = ChatColor.RESET + player.getDisplayName();
+
+        String suffix = "";
+        if (player.hasPermission(plugin.donatorSuffix1)) suffix = String.format("%s [%s$%s]%s", ChatColor.DARK_GRAY, ChatColor.GREEN, ChatColor.DARK_GRAY, ChatColor.RESET);
+        if (player.hasPermission(plugin.donatorSuffix2)) suffix = String.format("%s [%s$$%s]%s", ChatColor.DARK_GRAY, ChatColor.GREEN, ChatColor.DARK_GRAY, ChatColor.RESET);
+        if (player.hasPermission(plugin.donatorSuffix3)) suffix = String.format("%s [%s$$$%s]%s", ChatColor.DARK_GRAY, ChatColor.GREEN, ChatColor.DARK_GRAY, ChatColor.RESET);
+        name += suffix;
 
         player.setDisplayName(name);
     }

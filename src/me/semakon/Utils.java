@@ -4,14 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Author:  Martijn
@@ -40,12 +35,77 @@ public class Utils {
     public static final String DESC = ".Description";
     public static final String CAT = ".Category";
 
+    public static Map<String, String> colors;
+
     /**
-     * Replaces all target Strings with replacement Strings in a String.
-     * @param string Original String.
-     * @return String with all target Strings replaced by replacement Strings.
+     * Initializes the Map <code>colors</code> with the correct values.
      */
-    public static String replaceDot(String string) {
+    public static void initColors() {
+        colors = new HashMap<>();
+        colors.put("&0", ChatColor.BLACK.toString());
+        colors.put("&1", ChatColor.DARK_BLUE.toString());
+        colors.put("&2", ChatColor.DARK_GREEN.toString());
+        colors.put("&3", ChatColor.DARK_AQUA.toString());
+        colors.put("&4", ChatColor.DARK_RED.toString());
+        colors.put("&5", ChatColor.DARK_PURPLE.toString());
+        colors.put("&6", ChatColor.GOLD.toString());
+        colors.put("&7", ChatColor.GRAY.toString());
+        colors.put("&8", ChatColor.DARK_GRAY.toString());
+        colors.put("&9", ChatColor.BLUE.toString());
+        colors.put("&a", ChatColor.GREEN.toString());
+        colors.put("&b", ChatColor.AQUA.toString());
+        colors.put("&c", ChatColor.RED.toString());
+        colors.put("&d", ChatColor.LIGHT_PURPLE.toString());
+        colors.put("&e", ChatColor.YELLOW.toString());
+        colors.put("&f", ChatColor.WHITE.toString());
+        colors.put("&l", ChatColor.BOLD.toString());
+        colors.put("&o", ChatColor.ITALIC.toString());
+        colors.put("&n", ChatColor.UNDERLINE.toString());
+        colors.put("&k", ChatColor.MAGIC.toString());
+        colors.put("&m", ChatColor.STRIKETHROUGH.toString());
+        colors.put("&r", ChatColor.RESET.toString());
+    }
+
+    /**
+     * Replaces all color symbols with usable color symbols in Minecraft in a title.
+     * @param title Title with wrong symbols.
+     * @return String with correct symbols.
+     */
+    public static String setColors(String title) {
+        String res = title;
+
+        for (String key : colors.keySet()) {
+            if (res.contains(key)) {
+                res = replace(res, key, colors.get(key));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Replaces all <code>target</code>'s with <code>newString</code> in <code>title</code>.
+     * @param title Title where parts are replaced.
+     * @param target String that is replaced by <code>newString</code>.
+     * @param newString String that replaces <code>target</code>.
+     * @return String with all <code>target</code>'s replaced by <code>newString</code> in <code>title</code>.
+     */
+    private static String replace(String title, String target, String newString) {
+        boolean atEnd = title.endsWith(target);
+        String[] split = title.split(target);
+        String res = "";
+        for (String part : split) {
+            res += part + newString;
+        }
+        if (!atEnd) res = res.substring(0, res.length() - newString.length());
+        return res;
+    }
+
+    /**
+     * Removes all dots from a string.
+     * @param string Original String.
+     * @return String with all dots removed.
+     */
+    public static String removeDots(String string) {
         if (string.contains(".")) {
             String[] split = string.split("\\.");
             String res = "";
@@ -128,7 +188,7 @@ public class Utils {
      */
     private static String msgPrefix(CommandSender sender, String msg) {
         String prefix = "%s[%sTP%s]%s";
-        prefix = sender instanceof Player ? String.format(prefix, ChatColor.GRAY, ChatColor.DARK_AQUA, ChatColor.GRAY, ChatColor.RESET) :
+        prefix = sender instanceof Player ? String.format(prefix, ChatColor.DARK_GRAY, ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.RESET) :
                 String.format(prefix, "", "", "", "");
         return (prefix + " " + msg);
     }
@@ -152,7 +212,7 @@ public class Utils {
     public static String[] inQuotes(String[] args) {
         String[] temps = new String[args.length];
         for (int i = 0; i < args.length; i++) {
-            temps[i] = replaceDot(args[i]);
+            temps[i] = removeDots(args[i]);
         }
         List<String> finish = new ArrayList<>();
         for (int i = 0; i < temps.length; i++) {

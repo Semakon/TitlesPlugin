@@ -25,9 +25,9 @@ public class TitlesPlugin extends JavaPlugin {
     public Permission makeRequestsPerm = new Permission("titles.makeRequests");
     public Permission setTitlePerm = new Permission("titles.setTitle");
 
-    public Permission donatorSuffix1 = new Permission("suffix.donator1");
-    public Permission donatorSuffix2 = new Permission("suffix.donator2");
-    public Permission donatorSuffix3 = new Permission("suffix.donator3");
+    public Permission donatorSuffix1 = new Permission("titles.suffix.donator1");
+    public Permission donatorSuffix2 = new Permission("titles.suffix.donator2");
+    public Permission donatorSuffix3 = new Permission("titles.suffix.donator3");
 
     private GetExecutor getExecutor;
     private SetExecutor setExecutor;
@@ -47,6 +47,7 @@ public class TitlesPlugin extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
         registerListeners();
+        Utils.initColors();
 
         getExecutor = new GetExecutor(this);
         setExecutor = new SetExecutor(this);
