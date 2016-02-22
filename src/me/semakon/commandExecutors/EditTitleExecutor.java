@@ -33,13 +33,15 @@ public class EditTitleExecutor {
                 case "create":
                     // /titles create title <name> <description> [<category>]
                     if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
-                        if (EditTitleCommands.createTitle(plugin, args[2], args[3], null)) {
-                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[2], ChatColor.RESET));
+                        String title = Utils.setColors(args[2]);
+                        if (EditTitleCommands.createTitle(plugin, title, args[3], null)) {
+                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");
                         return true;
                     } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
-                        if (EditTitleCommands.createTitle(plugin, args[2], args[3], args[4])) {
-                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, args[2], ChatColor.RESET));
+                        String title = Utils.setColors(args[2]);
+                        if (EditTitleCommands.createTitle(plugin, title, args[3], args[4])) {
+                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");
                         return true;
                     }
@@ -47,22 +49,24 @@ public class EditTitleExecutor {
                 case "remove":
                     // /titles remove title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
-                        if (EditTitleCommands.removeTitle(plugin, args[2])) {
-                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + args[2] + ".");
+                        String title = Utils.setColors(args[2]);
+                        if (EditTitleCommands.removeTitle(plugin, title)) {
+                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
                         } else Utils.sendError(sender, "That title doesn't exist.");
                         return true;
 
                     // /titles remove category <category>
                     } else if (args.length == 3 && args[1].equalsIgnoreCase("category")) {
-                        if (EditTitleCommands.removeCategory(plugin, args[2])) {
-                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + args[2] + ".");
+                        String title = Utils.setColors(args[2]);
+                        if (EditTitleCommands.removeCategory(plugin, title)) {
+                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
                         } else Utils.sendError(sender, "That category doesn't exist.");
                         return true;
                     }
                     return false;
                 case "edit":
                     if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
-                        String title = args[2];
+                        String title = Utils.setColors(args[2]);
                         String type = args[3];
                         String typeValue = args[4];
 
@@ -92,9 +96,11 @@ public class EditTitleExecutor {
 
                         // /titles rename title <title> <newName>
                         if (type.equalsIgnoreCase("title")) {
-                            if (EditTitleCommands.renameTitle(plugin, typeValue, newName)) {
-                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
-                                        ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
+                            String title = Utils.setColors(typeValue);
+                            String newTitle = Utils.setColors(newName);
+                            if (EditTitleCommands.renameTitle(plugin, title, newTitle)) {
+                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
+                                        ChatColor.RESET, ChatColor.ITALIC, newTitle, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title doesn't exist.");
                             return true;
 

@@ -31,7 +31,7 @@ public class SetExecutor {
                 if (player != null) {
                     // set title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
-                       String title = args[2];
+                        String title = Utils.setColors(args[2]);
                         if (SetCommands.setTitle(plugin, player, title)) {
                             Utils.sendMsg(sender, String.format("Title set to %s" + title + "%s.", ChatColor.ITALIC, ChatColor.RESET));
                         } else Utils.sendError(sender, "Player doesn't own that title or it doesn't exist.");
@@ -56,7 +56,7 @@ public class SetExecutor {
                 // /titles user <user> [add:remove:set] title <title>
                 if (args.length == 5) {
                     if (args[3].equalsIgnoreCase("title")) {
-                        String title = args[4];
+                        String title = Utils.setColors(args[4]);
 
                         if (args[2].equalsIgnoreCase("add")) {                                      // user <user> add title <title>
                             if (SetCommands.addTitle(plugin, offlinePlayer, title)) {

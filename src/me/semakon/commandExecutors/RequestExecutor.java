@@ -35,7 +35,7 @@ public class RequestExecutor {
 
                 // /titles request submit title <title>
                 if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
-                    String title = args[3];
+                    String title = Utils.setColors(args[3]);
                     if (RequestCommands.submitRequest(plugin, player, title)) {
                         Utils.sendMsg(sender, "Your request for " + ChatColor.ITALIC + title + ChatColor.RESET + " has been submitted.");
                     }

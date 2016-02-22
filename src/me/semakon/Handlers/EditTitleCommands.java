@@ -147,7 +147,10 @@ public class EditTitleCommands {
             if (mapConfig != null) {
                 for (String player : mapConfig.getKeys(false)) {
                     if (mapConfig.getString(player + ".Current") != null && mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
-                        mapConfig.set(player + ".Current", name);
+                        mapConfig.set(player + ".Current", name.toLowerCase());
+                    }
+                    if (mapConfig.getString(player + ".Owned") != null && mapConfig.getString(player + ".Owned").equalsIgnoreCase(title)) {
+                        mapConfig.set(player + ".Owned", name.toLowerCase());
                     }
                 }
             }

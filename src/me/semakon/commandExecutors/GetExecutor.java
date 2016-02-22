@@ -184,7 +184,7 @@ public class GetExecutor {
 
                     if (args.length == 4) {
 
-                        String title = args[2].toLowerCase();
+                        String title = Utils.setColors(args[2]).toLowerCase();
                         String typeFromTitle = args[3];
                         String fromTitle;
 
