@@ -60,7 +60,7 @@ public class InventoryListener implements Listener {
 
             // get inventory with titles from category.
             } else {
-                List<Title> titles = dataContainer.getTitlesFromCategory(cat);
+                List<Title> titles = dataContainer.getTitlesFromCategory(dataContainer.getCategory(cat));
                 List<Title> ownedTitles = dataContainer.getOwnedTitles(player);
 
                 for (Title title : titles) {

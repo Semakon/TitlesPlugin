@@ -7,11 +7,7 @@ package me.semakon.localStorage.Exceptions;
 public class InvalidTitleException extends Exception {
 
     public InvalidTitleException() {
-        super("The title is invalid."); //TODO: elaborate
-    }
-
-    public InvalidTitleException(String msg) {
-        super(msg);
+        super("No valid title was found.");
     }
 
 }

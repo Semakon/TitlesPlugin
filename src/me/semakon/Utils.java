@@ -28,9 +28,11 @@ public class Utils {
     /**
      * YAML file conventions:
      */
+    public static final String CATEGORIES = "Categories.";
     public static final String TITLES = "Titles.";
     public static final String MAPPINGS = "Mappings.";
     public static final String REQUESTS = "Requests.";
+
     public static final String NAME = ".Name";
     public static final String DESC = ".Description";
     public static final String CAT = ".Category";

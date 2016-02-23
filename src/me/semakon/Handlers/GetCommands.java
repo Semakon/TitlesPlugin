@@ -1,10 +1,7 @@
 package me.semakon.Handlers;
 
 import me.semakon.Utils;
-import me.semakon.localStorage.DataContainer;
-import me.semakon.localStorage.Mapping;
-import me.semakon.localStorage.Request;
-import me.semakon.localStorage.Title;
+import me.semakon.localStorage.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -34,11 +31,16 @@ public class GetCommands {
     /**
      * Returns a list of all titles in a specified category.
      * @param dc Container with all data.
-     * @param category Category where titles are to be listed from.
+     * @param id Category where titles are to be listed from.
      * @return List of all titles from a specified category.
      */
-    public static List<String> getTitlesFromCategory(DataContainer dc, String category) {
+    public static List<String> getTitlesFromCategory(DataContainer dc, String id) {
         List<String> titles = new ArrayList<>();
+
+        // get category object
+        Category category = dc.getCategory(id);
+        if (category == null) return titles;
+
         // for every available title from category, add its name to the list.
         for (Title title : dc.getTitlesFromCategory(category)) {
             titles.add(title.getName());
@@ -54,15 +56,8 @@ public class GetCommands {
      */
     public static List<String> getMapping(DataContainer dc, OfflinePlayer player) {
         List<String> titles = new ArrayList<>();
-        // for every mapping:
-        for (Mapping mapping : dc.getMappings()) {
-            // if correct player is found:
-            if (mapping.getUuid().equals(player.getUniqueId())) {
-                // for every title the player owns add it to the list.
-                for (Title title : mapping.getOwned()) {
-                    titles.add(title.getName());
-                }
-            }
+        for (Title title : dc.getOwnedTitles(player)) {
+            titles.add(title.getName());
         }
         return titles;
     }
@@ -74,10 +69,10 @@ public class GetCommands {
      */
     public static List<String> getCategories(DataContainer dc) {
         List<String> categories = new ArrayList<>();
-        // for every available title
-        for (Title title : dc.getTitles()) {
-            // get the category and add it to the list if it's not already in it.
-            if (!categories.contains(title.getCategory())) categories.add(title.getCategory());
+        // for every category
+        for (Category category : dc.getCategories()) {
+            // get the category's name and add it to the list.
+            categories.add(category.getName());
         }
         return categories;
     }
@@ -111,7 +106,7 @@ public class GetCommands {
             if (title.getId().equalsIgnoreCase(id)) {
                 // return key from title
                 if (key.equals(Utils.DESC)) return title.getDescription();
-                else if (key.equals(Utils.CAT)) return title.getCategory();
+                else if (key.equals(Utils.CAT)) return title.getCategory().getName();
             }
         }
         return null;

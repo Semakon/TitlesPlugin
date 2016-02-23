@@ -4,18 +4,16 @@ package me.semakon.localStorage;
  * Author:  Martijn
  * Date:    23-2-2016
  */
-public class Title {
+public class Category {
 
     private String id;
     private String name;
     private String description;
-    private Category category;
 
-    public Title(String id, String name, String description, Category category) {
+    public Category(String id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.category = category;
     }
 
     public String getId() {
@@ -30,10 +28,6 @@ public class Title {
         return description;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -46,12 +40,8 @@ public class Title {
         this.description = description;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public String toString() {
-        return "{" + id + ", " + name + ", " + category.getName() + "}";
+        return "{" + id + ", " + name + "}";
     }
 
 }

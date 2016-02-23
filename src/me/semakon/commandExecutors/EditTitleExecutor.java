@@ -4,6 +4,7 @@ import me.semakon.Handlers.EditTitleCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
+import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -58,9 +59,13 @@ public class EditTitleExecutor {
                     // /titles remove category <category>
                     } else if (args.length == 3 && args[1].equalsIgnoreCase("category")) {
                         String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.removeCategory(plugin, title)) {
-                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
-                        } else Utils.sendError(sender, "That category doesn't exist.");
+                        try {
+                            if (EditTitleCommands.removeCategory(dataContainer, title)) {
+                                Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
+                            } else Utils.sendError(sender, "That category doesn't exist.");
+                        } catch (CannotRemoveDefaultCategoryException e) {
+                            Utils.sendError(sender, e.getMessage());
+                        }
                         return true;
                     }
                     return false;
@@ -72,7 +77,7 @@ public class EditTitleExecutor {
 
                         // /titles edit title <title> description <description>
                         if (type.equalsIgnoreCase("description")) {
-                            if (EditTitleCommands.editDescription(plugin, title, typeValue)) {
+                            if (EditTitleCommands.editDescription(dataContainer, title, typeValue)) {
                                 Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
                                         ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title doesn't exist.");
@@ -80,7 +85,7 @@ public class EditTitleExecutor {
 
                         // /titles edit title <title> category <category>
                         } else if (type.equalsIgnoreCase("category")) {
-                            if (EditTitleCommands.editCategory(plugin, title, typeValue)) {
+                            if (EditTitleCommands.editCategory(dataContainer, title, typeValue)) {
                                 Utils.sendMsg(sender, String.format("Changed category of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
                                         ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title doesn't exist.");
@@ -98,7 +103,7 @@ public class EditTitleExecutor {
                         if (type.equalsIgnoreCase("title")) {
                             String title = Utils.setColors(typeValue);
                             String newTitle = Utils.setColors(newName);
-                            if (EditTitleCommands.renameTitle(plugin, title, newTitle)) {
+                            if (EditTitleCommands.renameTitle(dataContainer, title, newTitle)) {
                                 Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
                                         ChatColor.RESET, ChatColor.ITALIC, newTitle, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title doesn't exist.");
@@ -106,7 +111,7 @@ public class EditTitleExecutor {
 
                         // /titles rename category <category> <newName>
                         } else if (type.equalsIgnoreCase("category")) {
-                            if (EditTitleCommands.renameCategory(plugin, typeValue, newName)) {
+                            if (EditTitleCommands.renameCategory(dataContainer, typeValue, newName)) {
                                 Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, typeValue,
                                         ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
                             } else Utils.sendError(sender, "That category doesn't exist."); // Real reason: There are no titles in the config.

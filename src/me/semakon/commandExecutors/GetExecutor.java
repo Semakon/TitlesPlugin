@@ -62,7 +62,7 @@ public class GetExecutor {
                             Utils.sendError(sender, "That user doesn't exist.");
                             return true;
                         }
-                        topLine = String.format("%sAvailable titles of %s:%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
+                        topLine = String.format("%s%s's available titles:%s", ChatColor.GOLD, user.getName(), ChatColor.RESET);
                         titles = GetCommands.getMapping(dataContainer, user);
                         if (titles.isEmpty()) {
                             Utils.sendError(sender, "That user doesn't have any titles yet.");
