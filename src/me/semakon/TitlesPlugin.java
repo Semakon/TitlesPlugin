@@ -113,9 +113,6 @@ public class TitlesPlugin extends JavaPlugin {
 
                 case "create":
                     if (sender.hasPermission(editTitlesPerm)) {
-                        System.out.println(sender);
-                        System.out.println(editTitleExecutor);
-                        System.out.println(args);
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles create title <name> <description> <category>"}; // "/titles create category <name>"

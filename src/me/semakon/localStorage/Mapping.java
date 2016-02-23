@@ -48,7 +48,7 @@ public class Mapping {
         for (Title t : owned) {
             res += t.getName() + ",\n";
         }
-        if (current == null) return null;
+        if (current == null) return res + null + "}";
         return res + "(Current: " + current.getName() + ")}";
     }
 

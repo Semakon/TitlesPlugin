@@ -24,7 +24,7 @@ public class GetCommands {
      */
     public static List<String> getTitles(DataContainer dc) {
         List<String> titles = new ArrayList<>();
-        // for every available title add it to the list.
+        // for every available title add its name to the list.
         for (Title title : dc.getTitles()) {
             titles.add(title.getName());
         }
@@ -39,12 +39,9 @@ public class GetCommands {
      */
     public static List<String> getTitlesFromCategory(DataContainer dc, String category) {
         List<String> titles = new ArrayList<>();
-        // for every available title:
-        for (Title title : dc.getTitles()) {
-            // if the category of title is equal to parameter category, add it to the list.
-            if (title.getCategory().equalsIgnoreCase(category)) {
-                titles.add(title.getName());
-            }
+        // for every available title from category, add its name to the list.
+        for (Title title : dc.getTitlesFromCategory(category)) {
+            titles.add(title.getName());
         }
         return titles;
     }

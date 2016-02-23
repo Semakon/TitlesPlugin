@@ -3,6 +3,7 @@ package me.semakon.commandExecutors;
 import me.semakon.Handlers.EditTitleCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
+import me.semakon.localStorage.DataContainer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -13,9 +14,11 @@ import org.bukkit.command.CommandSender;
 public class EditTitleExecutor {
 
     private TitlesPlugin plugin;
+    private DataContainer dataContainer;
 
     public EditTitleExecutor(TitlesPlugin plugin) {
         this.plugin = plugin;
+        this.dataContainer = this.plugin.getDataContainer();
     }
 
     /**
@@ -31,13 +34,13 @@ public class EditTitleExecutor {
                     // /titles create title <name> <description> [<category>]
                     if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
                         String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.createTitle(plugin, title, args[3], null)) {
+                        if (EditTitleCommands.createTitle(dataContainer, title, args[3], null)) {
                             Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");
                         return true;
                     } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
                         String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.createTitle(plugin, title, args[3], args[4])) {
+                        if (EditTitleCommands.createTitle(dataContainer, title, args[3], args[4])) {
                             Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");
                         return true;
@@ -47,7 +50,7 @@ public class EditTitleExecutor {
                     // /titles remove title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
                         String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.removeTitle(plugin, title)) {
+                        if (EditTitleCommands.removeTitle(dataContainer, title)) {
                             Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
                         } else Utils.sendError(sender, "That title doesn't exist.");
                         return true;

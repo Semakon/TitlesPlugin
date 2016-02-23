@@ -4,6 +4,7 @@ import me.semakon.Handlers.GetCommands;
 import me.semakon.Handlers.RequestCommands;
 import me.semakon.Handlers.SetCommands;
 import me.semakon.localStorage.DataContainer;
+import me.semakon.localStorage.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -40,9 +41,8 @@ public class InventoryListener implements Listener {
     public static Inventory constructInventory(TitlesPlugin plugin, Player player, String cat) {
         DataContainer dataContainer = plugin.getDataContainer();
         Inventory inv = null;
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
         // if there are titles, construct category inventory
-        if (config != null && !config.getKeys(false).isEmpty()) {
+        if (!dataContainer.getTitles().isEmpty()) {
             List<String> categories = GetCommands.getCategories(dataContainer);
             List<ItemStack> clickables = new ArrayList<>();
 
@@ -60,20 +60,18 @@ public class InventoryListener implements Listener {
 
             // get inventory with titles from category.
             } else {
-                List<String> titles = GetCommands.getTitlesFromCategory(dataContainer, cat);
-                List<String> ownedTitles = GetCommands.getMapping(dataContainer, player);
+                List<Title> titles = dataContainer.getTitlesFromCategory(cat);
+                List<Title> ownedTitles = dataContainer.getOwnedTitles(player);
 
-                for (String title : titles) {
+                for (Title title : titles) {
                     ItemStack is;
-                    String name = config.getString(title + ".Name");
-                    String description = config.getString(title + ".Description");
+                    String name = title.getName();
+                    Utils.sendMsg(player, name);
+                    String description = title.getDescription();
                     String status;
-                    String uuid = player.getUniqueId().toString();
 
-                    if (ownedTitles.contains(title.toLowerCase())) {
-                        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
-                        if (mapConfig != null && mapConfig.getString("Current") != null
-                                && mapConfig.getString("Current").equalsIgnoreCase(title)) {
+                    if (ownedTitles.contains(title)) {
+                        if (dataContainer.getCurrentTitle(player).equals(title)) {
                             is = new ItemStack(Material.WOOL, 1, DyeColor.LIME.getData());
                             status = "Current";
                         } else {
@@ -81,9 +79,7 @@ public class InventoryListener implements Listener {
                             status = "Owned";
                         }
                     } else {
-                        ConfigurationSection reqConfig = plugin.getConfig().getConfigurationSection(Utils.REQUESTS + uuid);
-                        if (reqConfig != null && reqConfig.getString("Title") != null
-                                && reqConfig.getString("Title").equalsIgnoreCase(title)) {
+                        if (dataContainer.getRequest(player) != null && dataContainer.getRequest(player).equals(title)) {
                             is = new ItemStack(Material.WOOL, 1, DyeColor.ORANGE.getData());
                             status = "Pending";
                         } else {

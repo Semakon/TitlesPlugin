@@ -2,7 +2,13 @@ package me.semakon.Handlers;
 
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
+import me.semakon.localStorage.DataContainer;
+import me.semakon.localStorage.Mapping;
+import me.semakon.localStorage.Title;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author:  Martijn
@@ -11,53 +17,56 @@ import org.bukkit.configuration.ConfigurationSection;
 public class EditTitleCommands {
 
     /**
-     * Creates a new title with a name, description and category. It is then saved to the config.
-     * @param plugin This TitlesPlugin
-     * @param title Name of the new title.
+     * Constructs a new title with a name, description and category.
+     * @param dc Container with all data.
+     * @param name Name of the new title.
      * @param description Description of the new title.
      * @param category Category of the new title.
      * @return True if the new title was created successfully.
      */
-    public static boolean createTitle(TitlesPlugin plugin, String title, String description, String category) {
-        ConfigurationSection config = plugin.getConfig();
+    public static boolean createTitle(DataContainer dc, String name, String description, String category) {
+        Title title = new Title(Utils.strip(Utils.setColors(name.toLowerCase())), Utils.setColors(name), description, category != null ? category : "General");
 
-        // If configurationSection Titles doesn't exist or it doesn't contain this title yet, add it to Titles.
-        if (config != null && (config.getConfigurationSection("Titles") == null || !config.getKeys(false).contains(title.toLowerCase()))) {
-            config.set(Utils.TITLES + title.toLowerCase() + Utils.NAME, title);
-            config.set(Utils.TITLES + title.toLowerCase() + Utils.DESC, description);
-            config.set(Utils.TITLES + title.toLowerCase() + Utils.CAT, category != null ? category : "General");
-            plugin.saveConfig();
-            return true;
-        }
-        return false;
+        // debug
+        Utils.consolePrint("Id: " + title.getId());
+        Utils.consolePrint("Name: " + title.getName());
+
+        dc.createTitle(title);
+        Utils.consolePrint(dc.getTitles().toString());
+        return true;
     }
 
     /**
      * Removes an existing title from the config.
-     * @param plugin This TitlesPlugin.
-     * @param title The title to be removed.
+     * @param dc Container with all data.
+     * @param id ID of the title to be removed.
      * @return True if the title was removed successfully.
      */
-    public static boolean removeTitle(TitlesPlugin plugin, String title) {
-        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
-        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
-
-        // If config exists and it contains the title, remove it.
-        if (titlesConfig != null && titlesConfig.contains(title.toLowerCase())) {
-            titlesConfig.set(title.toLowerCase(), null);
-
-            if (mapConfig != null) {
-                for (String player : mapConfig.getKeys(false)) {
-                    if (mapConfig.getString(player + ".Current") != null && mapConfig.getString(player + ".Current").equalsIgnoreCase(title)) {
-                        mapConfig.set(player + ".Current", null);
-                    }
+    public static boolean removeTitle(DataContainer dc, String id) {
+        Title title = null;
+        for (Title t : dc.getTitles()) {
+            if (t.getId().equalsIgnoreCase(id)) {
+                title = t;
+                break;
+            }
+        }
+        if (title == null) return false;
+        List<Title> owned = new ArrayList<>();
+        for (Mapping mapping : dc.getMappings()) {
+            for (Title o : mapping.getOwned()) {
+                if (o.equals(title)) {
+                    owned = mapping.getOwned();
+                    break;
                 }
             }
-
-            plugin.saveConfig();
-            return true;
+            if (!owned.isEmpty()) {
+                owned.remove(title);
+                mapping.setOwned(owned);
+            }
+            if (mapping.getCurrent().equals(title)) mapping.setCurrent(null);
         }
-        return false;
+        dc.getTitles().remove(title);
+        return true;
     }
 
     /**
