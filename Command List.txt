@@ -1,5 +1,7 @@
 TitlesPlugin - Abstract Command List
------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+/titles                                                 - Open GUI for viewing titles and selecting current title.
 
 /titles get titles [category] [<category>] 				- Print all available titles or all available titles from <category>.
 /titles get titles user <user>                          - Print all available titles of a user.
@@ -29,9 +31,4 @@ TitlesPlugin - Abstract Command List
 /titles request submit title <title>			        - Submit title request for <title>.
 /titles request retract 								- Retract title request.
 
------------------------------------------------------------------------------------------------------------------------------------
-Reserved:
-
-/titles                                                 - Open GUI for viewing titles and selecting current title.
-
-/titles create category <name> 							- Create a new category called <name>.
+------------------------------------------------------------------------------------------------------------------------------------------

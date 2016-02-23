@@ -7,7 +7,13 @@ import me.semakon.Utils;
 public class Test {
 
     public static void main(String[] args) {
-        System.out.println("\n" + Utils.setColors("&0Fucking &1Paladin &oBeer &r"));
+        Utils.initColors();
+        String test = Utils.setColors("TitlesPlugin");
+        String res = Utils.setColors("&0Fucking &1Paladin &oBeer &r");
+        System.out.println(res);
+        System.out.println(test);
+        System.out.println(Utils.strip(res));
+        System.out.println(Utils.strip(test));
     }
 
 }

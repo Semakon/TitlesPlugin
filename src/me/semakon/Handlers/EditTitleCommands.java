@@ -2,7 +2,6 @@ package me.semakon.Handlers;
 
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**

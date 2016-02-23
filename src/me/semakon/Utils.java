@@ -66,14 +66,21 @@ public class Utils {
         colors.put("&r", ChatColor.RESET.toString());
     }
 
+    public static String strip(String string) {
+        String res = string;
+        for (String colorCode : colors.values()) {
+            res = replace(res, colorCode, "");
+        }
+        return res;
+    }
+
     /**
      * Replaces all color symbols with usable color symbols in Minecraft in a title.
-     * @param title Title with wrong symbols.
+     * @param string String with wrong symbols.
      * @return String with correct symbols.
      */
-    public static String setColors(String title) {
-        String res = title;
-
+    public static String setColors(String string) {
+        String res = string;
         for (String key : colors.keySet()) {
             if (res.contains(key)) {
                 res = replace(res, key, colors.get(key));

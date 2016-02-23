@@ -1,14 +1,15 @@
 package me.semakon.Handlers;
 
-import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
+import me.semakon.localStorage.DataContainer;
+import me.semakon.localStorage.Mapping;
+import me.semakon.localStorage.Request;
+import me.semakon.localStorage.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Author:  Martijn
@@ -17,55 +18,52 @@ import java.util.UUID;
 public class GetCommands {
 
     /**
-     * Creates a list of all titles in a config and returns them.
-     * @param config ConfigurationSection that holds the titles.
+     * Returns a list of all available titles.
+     * @param dc Container with all data.
      * @return List of all titles.
      */
-    public static List<String> getTitles(ConfigurationSection config) {
+    public static List<String> getTitles(DataContainer dc) {
         List<String> titles = new ArrayList<>();
-        for (String title : config.getKeys(false)) {
-            titles.add(config.getString(title + Utils.NAME));
+        // for every available title add it to the list.
+        for (Title title : dc.getTitles()) {
+            titles.add(title.getName());
         }
         return titles;
     }
 
     /**
-     * Creates a list of all titles in a specified category in a config.
-     * @param config ConfigurationSection that holds the titles.
+     * Returns a list of all titles in a specified category.
+     * @param dc Container with all data.
      * @param category Category where titles are to be listed from.
      * @return List of all titles from a specified category.
      */
-    public static List<String> getTitlesFromCategory(ConfigurationSection config, String category) {
+    public static List<String> getTitlesFromCategory(DataContainer dc, String category) {
         List<String> titles = new ArrayList<>();
-        for (String title : config.getKeys(false)) {
-            if (config.getString(title + Utils.CAT).equalsIgnoreCase(category)) {
-                config.getString(title + Utils.NAME);
-                titles.add(title);
+        // for every available title:
+        for (Title title : dc.getTitles()) {
+            // if the category of title is equal to parameter category, add it to the list.
+            if (title.getCategory().equalsIgnoreCase(category)) {
+                titles.add(title.getName());
             }
         }
         return titles;
     }
 
     /**
-     * Creates a list of all titles a player owns. Returns a list with an error message if the player doesn't have any titles.
-     * @param plugin This TitlesPlugin used to get the configs.
+     * Creates a list of all titles a player owns..
+     * @param dc Container with all data.
      * @param player Player whose owned titles are queried.
      * @return List of all owned titles of a player.
      */
-    public static List<String> getMapping(TitlesPlugin plugin, OfflinePlayer player, boolean toLower) {
-        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
-        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
-        String uuid = player.getUniqueId().toString();
+    public static List<String> getMapping(DataContainer dc, OfflinePlayer player) {
         List<String> titles = new ArrayList<>();
-
-        if (mapConfig == null || titlesConfig == null) return titles;
-        if (mapConfig.contains(uuid)) {
-            for (String owned : mapConfig.getStringList(uuid + ".Owned")) {
-                for (String title : titlesConfig.getKeys(false)) {
-                    if (owned.equalsIgnoreCase(title)) {
-                        if (toLower) titles.add(title.toLowerCase());
-                        else titles.add(titlesConfig.getString(title + ".Name"));
-                    }
+        // for every mapping:
+        for (Mapping mapping : dc.getMappings()) {
+            // if correct player is found:
+            if (mapping.getUuid().equals(player.getUniqueId())) {
+                // for every title the player owns add it to the list.
+                for (Title title : mapping.getOwned()) {
+                    titles.add(title.getName());
                 }
             }
         }
@@ -73,62 +71,67 @@ public class GetCommands {
     }
 
     /**
-     * Returns a list of all categories in a config.
-     * @param config ConfigurationSection that holds the categories.
+     * Returns a list of all categories.
+     * @param dc Container with all data.
      * @return List of all categories.
      */
-    public static List<String> getCategories(ConfigurationSection config) {
+    public static List<String> getCategories(DataContainer dc) {
         List<String> categories = new ArrayList<>();
-        for (String title : config.getKeys(false)) {
-            String cat = config.getString(title + ".Category");
-            if (!categories.contains(cat)) {
-                categories.add(cat);
-            }
+        // for every available title
+        for (Title title : dc.getTitles()) {
+            // get the category and add it to the list if it's not already in it.
+            if (!categories.contains(title.getCategory())) categories.add(title.getCategory());
         }
         return categories;
     }
 
     /**
-     * Returns a list of all pending requests in a config.
-     * @param config ConfigurationSection that holds the pending requests.
+     * Returns a list of all pending requests.
+     * @param dc Container with all data.
      * @return List of all pending requests.
      */
-    public static List<String> getRequests(ConfigurationSection config) {
+    public static List<String> getRequests(DataContainer dc) {
         List<String> requests = new ArrayList<>();
-        for (String key : config.getKeys(false)) {
-            UUID uuid = UUID.fromString(key);
-            String title = config.getConfigurationSection(key).getString("Title");
-            requests.add(Bukkit.getOfflinePlayer(uuid).getName() + ": " + title);
+        // for every pending request:
+        for (Request request : dc.getRequests()) {
+            // add the name of the player of the request and the title's name to the list.
+            requests.add(Bukkit.getOfflinePlayer(request.getUuid()).getName() + ": " + request.getTitle().getName());
         }
         return requests;
     }
 
     /**
-     * Returns the key's value from a title in a config.
-     * @param config ConfigurationSection that holds the title.
-     * @param title Title where key's value is to be returned from.
+     * Returns the key's value from a title.
+     * @param dc Container with all data.
+     * @param id Id of title where key's value is to be returned from.
      * @param key Key with value.
      * @return A specified key's value from a specified title.
      */
-    public static String getFromTitle(ConfigurationSection config, String title, String key) {
-        if (config.contains(title)) {
-            Utils.consolePrint(config.getString(title + key));
-            return config.getString(title + key);
-        } else return null;
+    public static String getFromTitle(DataContainer dc, String id, String key) {
+        // for every available title:
+        for (Title title : dc.getTitles()) {
+            // if correct title is found:
+            if (title.getId().equalsIgnoreCase(id)) {
+                // return key from title
+                if (key.equals(Utils.DESC)) return title.getDescription();
+                else if (key.equals(Utils.CAT)) return title.getCategory();
+            }
+        }
+        return null;
     }
 
     /**
-     * Returns the pending request of the player from a config.
-     * @param config ConfigurationSection that holds the requests.
+     * Returns the pending request of the player.
+     * @param dc Container with all data.
      * @param player Player whose request is queried.
      * @return The pending request of a player.
      */
-    public static String getRequest(ConfigurationSection config, OfflinePlayer player) {
-        String uuid = player.getUniqueId().toString();
-        for (String key : config.getKeys(false)) {
-            if (uuid.equalsIgnoreCase(key)) {
-                String title = config.getString(key + ".Title");
-                return player.getName() + ": " + title;
+    public static String getRequest(DataContainer dc, OfflinePlayer player) {
+        // for every pending request:
+        for (Request request : dc.getRequests()) {
+            // if the request of the player is found, return the player's name and the title
+            if (request.getUuid().equals(player.getUniqueId())) {
+                return player.getName() + ": " + request.getTitle().getName();
             }
         }
         return null;

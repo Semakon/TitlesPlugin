@@ -2,9 +2,7 @@ package me.semakon.Handlers;
 
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 

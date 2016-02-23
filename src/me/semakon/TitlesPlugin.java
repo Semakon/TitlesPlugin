@@ -4,6 +4,7 @@ import me.semakon.commandExecutors.EditTitleExecutor;
 import me.semakon.commandExecutors.GetExecutor;
 import me.semakon.commandExecutors.RequestExecutor;
 import me.semakon.commandExecutors.SetExecutor;
+import me.semakon.localStorage.DataContainer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,20 +35,22 @@ public class TitlesPlugin extends JavaPlugin {
     private RequestExecutor requestExecutor;
     private EditTitleExecutor editTitleExecutor;
 
-    public void registerListeners() {
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new PlayerListener(this), this);
-        pm.registerEvents(new InventoryListener(this), this);
+    private DataContainer dataContainer;
+
+    public DataContainer getDataContainer() {
+        return this.dataContainer;
     }
 
     /**
-     * Called when the plugin is enabled. Registers Listeners.
+     * Called when the plugin is enabled. Initiates classes and values.
      */
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
         registerListeners();
         Utils.initColors();
+        dataContainer = new DataContainer(this);
+        dataContainer.loadStorage();
 
         getExecutor = new GetExecutor(this);
         setExecutor = new SetExecutor(this);
@@ -56,13 +59,31 @@ public class TitlesPlugin extends JavaPlugin {
     }
 
     /**
+     * Registers all listeners with the plugin manager of this plugin.
+     */
+    public void registerListeners() {
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new PlayerListener(this), this);
+        pm.registerEvents(new InventoryListener(this), this);
+    }
+
+    /**
      * Called when the plugin is disabled. Saves the config.
      */
     @Override
     public void onDisable() {
-        saveConfig();
+        dataContainer.saveStorage();
     }
 
+    /**
+     * Called when a command is issued. Sends it to the appropriate executor or sends an error message to the sender.
+     * This method should always return true, since errors should result in an error message to the sender.
+     * @param sender Sender of the command.
+     * @param cmd The command that is sent.
+     * @param label Alias of the command.
+     * @param args Arguments given with the command.
+     * @return True.
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         args = Utils.inQuotes(args);

@@ -4,10 +4,7 @@ import me.semakon.Handlers.EditTitleCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * Author:  Martijn
