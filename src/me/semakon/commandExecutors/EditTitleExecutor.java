@@ -37,16 +37,23 @@ public class EditTitleExecutor {
                         String title = Utils.setColors(args[2]);
                         if (EditTitleCommands.createTitle(dataContainer, title, args[3], null)) {
                             Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
-                        } else Utils.sendError(sender, "That title already exists.");
-                        return true;
+                        } else Utils.sendError(sender, "That title already exists, or that category doesn't exist.");
+
                     } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
                         String title = Utils.setColors(args[2]);
                         if (EditTitleCommands.createTitle(dataContainer, title, args[3], args[4])) {
                             Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                         } else Utils.sendError(sender, "That title already exists.");
-                        return true;
-                    }
-                    return false;
+
+                    // /titles create category <name> <description>
+                    } else if (args.length == 4 && args[1].equalsIgnoreCase("category")) {
+                        String category = Utils.setColors(args[2]);
+                        if (EditTitleCommands.createCategory(dataContainer, category, args[3])) {
+                            Utils.sendMsg(sender, String.format("Added new category: %s%s%s.", ChatColor.ITALIC, category, ChatColor.RESET));
+                        } else Utils.sendError(sender, "That category already exists.");
+                    } else return false;
+                    return true;
+
                 case "remove":
                     // /titles remove title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {

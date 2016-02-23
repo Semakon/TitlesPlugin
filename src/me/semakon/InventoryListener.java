@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,11 +29,9 @@ import java.util.List;
 public class InventoryListener implements Listener {
 
     private TitlesPlugin plugin;
-    private DataContainer dataContainer;
 
     public InventoryListener(TitlesPlugin plugin) {
         this.plugin = plugin;
-        this.dataContainer = plugin.getDataContainer();
     }
 
     @SuppressWarnings("deprecation")
@@ -123,7 +120,7 @@ public class InventoryListener implements Listener {
             }
 
             if (e.getCurrentItem().getData() instanceof Wool) {
-                player.openInventory(constructInventory(plugin, player, e.getCurrentItem().getItemMeta().getDisplayName()));
+                player.openInventory(constructInventory(plugin, player, Utils.strip(Utils.setColors(e.getCurrentItem().getItemMeta().getDisplayName()))));
             }
         } else if (ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase("Titles in category")) {
             e.setCancelled(true);

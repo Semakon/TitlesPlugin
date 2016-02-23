@@ -318,12 +318,6 @@ public class DataContainer {
             e.getStackTrace();
             Bukkit.getPluginManager().disablePlugin(plugin); // too drastic?
         }
-
-        // debug
-        Utils.consolePrint("Categories: " + categories);
-        Utils.consolePrint("Titles: " + titles);
-        Utils.consolePrint("Requests: " + requests);
-        Utils.consolePrint("Mappings: " + mappings);
     }
 
     /**
@@ -333,7 +327,11 @@ public class DataContainer {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Categories");
         if (config != null) {
             for (String key : config.getKeys(false)) {
-                if (key.equalsIgnoreCase(defaultCategory.getId())) continue;
+                if (key.equalsIgnoreCase(defaultCategory.getId())) {
+                    defaultCategory.setName(config.getString(key + ".Name"));
+                    defaultCategory.setDescription(config.getString(key + ".Description"));
+                    continue;
+                }
                 // key is identifier.
                 String name = config.getString(key + ".Name");
                 String description = config.getString(key + ".Description");
@@ -453,7 +451,7 @@ public class DataContainer {
     private void saveCategories() {
         Configuration config = plugin.getConfig();
         for (Category category : categories) {
-            if (category.equals(defaultCategory)) continue;
+//            if (category.equals(defaultCategory)) continue;
             config.set(Utils.CATEGORIES + category.getId() + ".Name", category.getName());
             config.set(Utils.CATEGORIES + category.getId() + ".Description", category.getDescription());
         }

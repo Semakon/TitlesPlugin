@@ -15,32 +15,45 @@ public class EditTitleCommands {
     /**
      * Constructs a new title with a name, description and category.
      * @param dc Container with all data.
-     * @param name Name of the new title.
+     * @param titleName Name of the new title.
      * @param description Description of the new title.
-     * @param id Category of the new title.
+     * @param categoryId Category of the new title.
      * @return True if the new title was created successfully.
      */
-    public static boolean createTitle(DataContainer dc, String name, String description, String id) {
+    public static boolean createTitle(DataContainer dc, String titleName, String description, String categoryId) {
         // get category object
         Category category;
-        if (id == null) {
+        if (categoryId == null) {
             category = dc.getDefaultCategory();
         } else {
-            category = dc.getCategory(id);
+            category = dc.getCategory(categoryId);
         }
         if (category == null) return false;
 
-        Title title = new Title(Utils.strip(Utils.setColors(name.toLowerCase())), Utils.setColors(name), description, category);
-
-        // debug
-        Utils.consolePrint("Id: " + title.getId());
-        Utils.consolePrint("Name: " + title.getName());
-        Utils.consolePrint("Category: " + title.getCategory().getName());
-
+        // get title object
+        String titleId = Utils.strip(Utils.setColors(titleName.toLowerCase()));
+        for (Title title : dc.getTitles()) {
+            if (title.getId().equalsIgnoreCase(titleId)) return false;
+        }
+        Title title = new Title(titleId, Utils.setColors(titleName), description, category);
         dc.addTitle(title);
+        return true;
+    }
 
-        // debug
-        Utils.consolePrint(dc.getTitles().toString());
+    /**
+     * Constructs a new category with a name and a description.
+     * @param dc Container with all data.
+     * @param categoryName Name of the new category.
+     * @param description Description of the new category.
+     * @return True if the new category was created successfully.
+     */
+    public static boolean createCategory(DataContainer dc, String categoryName, String description) {
+        String categoryId = Utils.strip(Utils.setColors(categoryName.toLowerCase()));
+        for (Category category : dc.getCategories()) {
+            if (category.getId().equalsIgnoreCase(categoryId)) return false;
+        }
+        Category category = new Category(categoryId, categoryName, description);
+        dc.addCategory(category);
         return true;
     }
 
