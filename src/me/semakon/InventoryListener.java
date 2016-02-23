@@ -3,6 +3,7 @@ package me.semakon;
 import me.semakon.Handlers.GetCommands;
 import me.semakon.Handlers.RequestCommands;
 import me.semakon.Handlers.SetCommands;
+import me.semakon.localStorage.DataContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -28,18 +29,21 @@ import java.util.List;
 public class InventoryListener implements Listener {
 
     private TitlesPlugin plugin;
+    private DataContainer dataContainer;
 
     public InventoryListener(TitlesPlugin plugin) {
         this.plugin = plugin;
+        this.dataContainer = plugin.getDataContainer();
     }
 
     @SuppressWarnings("deprecation")
     public static Inventory constructInventory(TitlesPlugin plugin, Player player, String cat) {
+        DataContainer dataContainer = plugin.getDataContainer();
         Inventory inv = null;
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
         // if there are titles, construct category inventory
         if (config != null && !config.getKeys(false).isEmpty()) {
-            List<String> categories = GetCommands.getCategories(config);
+            List<String> categories = GetCommands.getCategories(dataContainer);
             List<ItemStack> clickables = new ArrayList<>();
 
             // get inventory with categories.
@@ -56,8 +60,8 @@ public class InventoryListener implements Listener {
 
             // get inventory with titles from category.
             } else {
-                List<String> titles = GetCommands.getTitlesFromCategory(config, cat);
-                List<String> ownedTitles = GetCommands.getMapping(plugin, player, true);
+                List<String> titles = GetCommands.getTitlesFromCategory(dataContainer, cat);
+                List<String> ownedTitles = GetCommands.getMapping(dataContainer, player);
 
                 for (String title : titles) {
                     ItemStack is;
