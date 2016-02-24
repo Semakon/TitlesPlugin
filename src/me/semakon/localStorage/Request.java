@@ -13,11 +13,20 @@ public class Request {
     private UUID uuid;
     private Title title;
     private Location location;
+    private RequestStatus status;
+
+    public Request(UUID uuid, Title title, Location location, RequestStatus status) {
+        this.uuid = uuid;
+        this.title = title;
+        this.location = location;
+        this.status = status;
+    }
 
     public Request(UUID uuid, Title title, Location location) {
         this.uuid = uuid;
         this.title = title;
         this.location = location;
+        this.status = RequestStatus.pending;
     }
 
     public UUID getUuid() {
@@ -32,6 +41,10 @@ public class Request {
         return location;
     }
 
+    public RequestStatus getStatus() {
+        return status;
+    }
+
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
@@ -42,6 +55,10 @@ public class Request {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 
     public String toString() {

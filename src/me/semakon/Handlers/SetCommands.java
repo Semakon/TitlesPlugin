@@ -1,12 +1,11 @@
 package me.semakon.Handlers;
 
-import me.semakon.TitlesPlugin;
-import me.semakon.Utils;
+import me.semakon.localStorage.DataContainer;
+import me.semakon.localStorage.Mapping;
+import me.semakon.localStorage.Title;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,34 +19,20 @@ public class SetCommands {
     /**
      * Sets the current title of a player to <code>title</code>. If the player does not own the title or if it
      * doesn't exist, an error will be sent.
+     * @param dc Container with all data.
      * @param player The player who will get the title.
-     * @param title The title the player will get.
+     * @param id The ID of the title the player will get.
      * @return True if the title has been set.
      */
-    public static boolean setTitle(TitlesPlugin plugin, Player player, String title) {
-        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection("Mappings");
-        title = title.toLowerCase();
+    public static boolean setTitle(DataContainer dc, Player player, String id) {
+        // get title
+        Title title = dc.getTitle(id);
+        if (title == null) return false;
 
-        // if config is empty.
-        if (mapConfig == null) {
-            return false;
-        }
-
-        String uuid = player.getUniqueId().toString();
-
-        // if player has the title and it exists, set player's current title to (parameter)title.
-        if (mapConfig.contains(uuid) && plugin.getConfig().getConfigurationSection("Titles").contains(title)) {
-
-            List<String> owned = mapConfig.getConfigurationSection(uuid).getStringList("Owned");
-            if (owned.isEmpty()) {
-                owned.add(mapConfig.getString(uuid + ".Owned"));
-            }
-            for (String t : owned) {
-                if (t.equalsIgnoreCase(title)) {
-                    mapConfig.getConfigurationSection(uuid).set("Current", title);
-                    plugin.saveConfig();
-                    return true;
-                }
+        for (Title t : dc.getOwnedTitles(player)) {
+            if (title.equals(t)) {
+                dc.setCurrentTitle(player, t);
+                return true;
             }
         }
         return false;
@@ -55,64 +40,35 @@ public class SetCommands {
 
     /**
      * Disables the player's current title if they have one.
-     * @param plugin This plugin.
+     * @param dc Container with all data.
      * @param player Player whose title will be disabled.
      * @return True if the title has been disabled.
      */
-    public static boolean disableTitle(TitlesPlugin plugin, OfflinePlayer player) {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Mappings");
-
-        // if config is empty.
-        if (config == null) {
-            return false;
-        }
-
-        String uuid = player.getUniqueId().toString();
-
-        // if the player has the title enabled, disable it.
-        if (config.contains(uuid)) {
-            config.getConfigurationSection(uuid).set("Current", null);
-            plugin.saveConfig();
-            return true;
+    public static boolean disableTitle(DataContainer dc, OfflinePlayer player) {
+        for (Mapping mapping : dc.getMappings()) {
+            if (mapping.getUuid().equals(player.getUniqueId())) {
+                mapping.setCurrent(null);
+                return true;
+            }
         }
         return false;
     }
 
     /**
      * Adds a title to a player's list of owned titles.
-     * @param plugin This plugin.
+     * @param dc Container with all data.
      * @param player Player who will receive a new title.
-     * @param title Title that will be added.
+     * @param id The ID of the Title that will be added.
      * @return True if the title has been added.
      */
-    public static boolean addTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
-        String uuid = player.getUniqueId().toString();
-        title = title.toLowerCase();
-        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
-        ConfigurationSection titlesConfig = plugin.getConfig().getConfigurationSection("Titles");
+    public static boolean addTitle(DataContainer dc, OfflinePlayer player, String id) {
+        // get title
+        Title title = dc.getTitle(id);
+        if (title == null) return false;
 
-        // if config is empty.
-        if (titlesConfig == null) {
-            return false;
-        }
-        // if mappings is not yet in the config.
-        if (mapConfig == null) {
-            if (titlesConfig.contains(title)) {
-                List<String> owned = new ArrayList<>();
-                owned.add(title);
-                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Owned", owned);
-                plugin.getConfig().set(Utils.MAPPINGS + uuid + ".Current", title);
-                plugin.saveConfig();
-                return true;
-            } else return false;
-        }
-
-        // if title exists and player doesn't already have title, add title to player's owned list.
-        if (titlesConfig.contains(title) && !mapConfig.getString("Owned").contains(title)) {
-            List<String> stringList = mapConfig.getStringList("Owned");
-            stringList.add(title);
-            mapConfig.set("Owned", stringList);
-            plugin.saveConfig();
+        List <Title> owned = dc.getOwnedTitles(player);
+        if (!owned.contains(title)) {
+            owned.add(title);
             return true;
         }
         return false;
@@ -120,32 +76,24 @@ public class SetCommands {
 
     /**
      * Removes a title from a player's list of owned titles.
-     * @param plugin This plugin.
+     * @param dc Container with all data.
      * @param player Player whose title will be removed.
-     * @param title Title that will be removed.
+     * @param id The ID of the Title that will be removed.
      * @return True if the title has been removed.
      */
-    public static boolean removeTitle(TitlesPlugin plugin, OfflinePlayer player, String title) {
-        String uuid = player.getUniqueId().toString();
-        ConfigurationSection mapConfig = plugin.getConfig().getConfigurationSection(Utils.MAPPINGS + uuid);
+    public static boolean removeTitle(DataContainer dc, OfflinePlayer player, String id) {
+        // get title
+        Title title = dc.getTitle(id);
+        if (title == null) return false;
 
-        // if config is empty.
-        if (mapConfig == null) {
-            return false;
-        }
-
-        // if player owns the title, remove it.
-        if (mapConfig.getStringList("Owned").contains(title.toLowerCase())) {
-            List<String> stringList = mapConfig.getStringList("Owned");
-            stringList.remove(title.toLowerCase());
-            mapConfig.set("Owned", stringList);
-            if (mapConfig.getString("Current").equalsIgnoreCase(title)) {
-                disableTitle(plugin, player);
+        List <Title> owned = dc.getOwnedTitles(player);
+        for (Title t : owned) {
+            if (title.equals(t)) {
+                owned.remove(t); //TODO: verify that this works
             }
-            plugin.saveConfig();
-            return true;
         }
-        return false;
+        if (dc.getCurrentTitle(player).equals(title)) dc.setCurrentTitle(player, null);
+        return true;
     }
 
 

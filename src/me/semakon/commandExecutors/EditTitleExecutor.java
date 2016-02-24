@@ -14,12 +14,10 @@ import org.bukkit.command.CommandSender;
  */
 public class EditTitleExecutor {
 
-    private TitlesPlugin plugin;
     private DataContainer dataContainer;
 
-    public EditTitleExecutor(TitlesPlugin plugin) {
-        this.plugin = plugin;
-        this.dataContainer = this.plugin.getDataContainer();
+    public EditTitleExecutor(DataContainer dataContainer) {
+        this.dataContainer = dataContainer;
     }
 
     /**

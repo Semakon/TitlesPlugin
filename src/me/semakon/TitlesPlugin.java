@@ -52,10 +52,10 @@ public class TitlesPlugin extends JavaPlugin {
         dataContainer = new DataContainer(this);
         dataContainer.loadStorage();
 
-        getExecutor = new GetExecutor(this);
-        setExecutor = new SetExecutor(this);
+        getExecutor = new GetExecutor(dataContainer);
+        setExecutor = new SetExecutor(dataContainer);
         requestExecutor = new RequestExecutor(this);
-        editTitleExecutor = new EditTitleExecutor(this);
+        editTitleExecutor = new EditTitleExecutor(dataContainer);
     }
 
     /**

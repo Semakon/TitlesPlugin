@@ -17,12 +17,10 @@ import java.util.List;
  */
 public class GetExecutor {
 
-    private TitlesPlugin plugin;
     private DataContainer dataContainer;
 
-    public GetExecutor(TitlesPlugin plugin) {
-        this.plugin = plugin;
-        dataContainer = plugin.getDataContainer();
+    public GetExecutor(DataContainer dataContainer) {
+        this.dataContainer = dataContainer;
     }
 
     public boolean execute(CommandSender sender, String[] args) {

@@ -76,7 +76,7 @@ public class InventoryListener implements Listener {
                             status = "Owned";
                         }
                     } else {
-                        if (dataContainer.getRequest(player) != null && dataContainer.getRequest(player).equals(title)) {
+                        if (dataContainer.getRequestedTitle(player) != null && dataContainer.getRequestedTitle(player).equals(title)) {
                             is = new ItemStack(Material.WOOL, 1, DyeColor.ORANGE.getData());
                             status = "Pending";
                         } else {

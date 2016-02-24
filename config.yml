@@ -16,6 +16,11 @@
 # and every new indent is 2 spaces, don't use tabs. If you don't already use it, I recommend Notepad++                  #
 # for editing yaml files.                                                                                               #
 #                                                                                                                       #
+# Categories:                                                                                                           #
+#   gemeral:                                                                                                            #
+#     Name: General                                                                                                     #
+#     Description: This is the default category.                                                                        #
+#                                                                                                                       #
 # Titles:                                                                                                               #
 #   example title:                                                                                                      #
 #     Name: Example Title                                                                                               #
@@ -30,6 +35,13 @@
 #     Current: example title                                                                                            #
 #                                                                                                                       #
 # Requests:                                                                                                             #
-#   <uuid>: example title 3                                                                                             #
+#   <uuid>:                                                                                                             #
+#     Title: example title 3                                                                                            #
+#     Status: pending                                                                                                   #
+#     Location:                                                                                                         #
+#       World: ExampleWorld                                                                                             #
+#       X: 0.0                                                                                                          #
+#       Y: 0.0                                                                                                          #
+#       Z: 0.0                                                                                                          #
 #                                                                                                                       #
 #########################################################################################################################

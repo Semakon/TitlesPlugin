@@ -225,12 +225,19 @@ public class DataContainer {
         return requests;
     }
 
+    public Request getRequest(OfflinePlayer player) {
+        for (Request request : requests) {
+            if (request.getUuid().equals(player.getUniqueId())) return request;
+        }
+        return null;
+    }
+
     /**
      * Gets the title that a player requested.
      * @param player The player that requested the title.
      * @return Title that is requested, or if it doesn't exist null.
      */
-    public Title getRequest(OfflinePlayer player) {
+    public Title getRequestedTitle(OfflinePlayer player) {
         for (Request request : requests) {
             if (request.getUuid().equals(player.getUniqueId())) return request.getTitle();
         }
@@ -261,6 +268,19 @@ public class DataContainer {
 
     public List<Mapping> getMappings() {
         return mappings;
+    }
+
+    /**
+     * Sets the current title of a player to <code>title</code> if the player owns that title.
+     * @param player The player whose title is set.
+     * @param title The title that is set.
+     */
+    public void setCurrentTitle(OfflinePlayer player, Title title) {
+        for (Mapping mapping : mappings) {
+            if (mapping.getUuid().equals(player.getUniqueId()) && getOwnedTitles(player).contains(title)) {
+                mapping.setCurrent(title);
+            }
+        }
     }
 
     /**
@@ -386,6 +406,9 @@ public class DataContainer {
                 }
                 if (title == null) throw new InvalidTitleException();
 
+                // status
+                RequestStatus status = RequestStatus.fromString(config.getString("Status"));
+
                 // location
                 World world = Bukkit.getWorld(config.getString(key + ".Location.World"));
                 double x = config.getDouble(uuid + ".Location.X");
@@ -393,7 +416,7 @@ public class DataContainer {
                 double z = config.getDouble(uuid + ".Location.Z");
                 Location loc = new Location(world, x, y, z);
 
-                requests.add(new Request(uuid, title, loc));
+                requests.add(new Request(uuid, title, loc, status));
             }
         }
     }
@@ -476,6 +499,7 @@ public class DataContainer {
         Configuration config = plugin.getConfig();
         for (Request request : requests) {
             config.set(Utils.REQUESTS + request.getUuid().toString() + ".Title", request.getTitle().getId());
+            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Status", request.getStatus());
 
             Location loc = request.getLocation();
             config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.World", loc.getWorld().getName());

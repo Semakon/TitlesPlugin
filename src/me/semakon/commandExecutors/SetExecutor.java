@@ -1,8 +1,8 @@
 package me.semakon.commandExecutors;
 
 import me.semakon.Handlers.SetCommands;
-import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
+import me.semakon.localStorage.DataContainer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -14,10 +14,10 @@ import org.bukkit.entity.Player;
  */
 public class SetExecutor {
 
-    private TitlesPlugin plugin;
+    private DataContainer dataContainer;
 
-    public SetExecutor(TitlesPlugin plugin) {
-        this.plugin = plugin;
+    public SetExecutor(DataContainer dataContainer) {
+        this.dataContainer = dataContainer;
     }
 
     public boolean execute(CommandSender sender, String[] args) {
@@ -32,14 +32,14 @@ public class SetExecutor {
                     // set title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
                         String title = Utils.setColors(args[2]);
-                        if (SetCommands.setTitle(plugin, player, title)) {
+                        if (SetCommands.setTitle(dataContainer, player, title)) {
                             Utils.sendMsg(sender, String.format("Title set to %s" + title + "%s.", ChatColor.ITALIC, ChatColor.RESET));
                         } else Utils.sendError(sender, "Player doesn't own that title or it doesn't exist.");
 
                     // set title
                     } else if (args.length == 2 && args[1].equalsIgnoreCase("title")) {
-                        if (SetCommands.disableTitle(plugin, player)) Utils.sendMsg(sender, "Title disabled.");
-                        else Utils.sendError(sender, "Player doesn't have that title active.");
+                        if (SetCommands.disableTitle(dataContainer, player)) Utils.sendMsg(sender, "Title disabled.");
+                        else Utils.sendError(sender, "You don't have an active title.");
                     } else return false;
 
                 } else Utils.consolePrint("Only players can use the \"set\" command.");
@@ -59,19 +59,19 @@ public class SetExecutor {
                         String title = Utils.setColors(args[4]);
 
                         if (args[2].equalsIgnoreCase("add")) {                                      // user <user> add title <title>
-                            if (SetCommands.addTitle(plugin, offlinePlayer, title)) {
+                            if (SetCommands.addTitle(dataContainer, offlinePlayer, title)) {
                                 Utils.sendMsg(sender, String.format("Added %s" + title + "%s to " + offlinePlayer.getName() + "'s owned titles.", ChatColor.ITALIC, ChatColor.RESET));
                             } else Utils.sendError(sender, "Title doesn't exist or player already has that title.");
 
                         } else if (args[2].equalsIgnoreCase("remove")) {                            // user <user> remove title <title>
-                            if (SetCommands.removeTitle(plugin, offlinePlayer, title)) {
+                            if (SetCommands.removeTitle(dataContainer, offlinePlayer, title)) {
                                 Utils.sendMsg(sender, String.format("Removed %s" + title + "%s from " + offlinePlayer.getName() + "'s owned titles.", ChatColor.ITALIC, ChatColor.RESET));
-                            } else Utils.sendError(sender, "Player doesn't own that title.");
+                            } else Utils.sendError(sender, "That title doesn't exist.");
 
                         } else if (args[2].equalsIgnoreCase("set")) {                               // user <user> set title <title>
                             Player p = offlinePlayer.getPlayer();
                             if (p != null) {
-                                if (SetCommands.setTitle(plugin, p, title)) {
+                                if (SetCommands.setTitle(dataContainer, p, title)) {
                                     Utils.sendMsg(sender, String.format("Title set to %s" + title + "%s.", ChatColor.ITALIC, ChatColor.RESET));
                                 } else Utils.sendError(sender, "Player doesn't own that title or it doesn't exist.");
                             } else Utils.sendError(sender, "Player is not online.");
