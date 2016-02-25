@@ -203,8 +203,12 @@ public class DataContainer {
      * @param newName New name of the title.
      */
     public void renameTitle(Title title, String newName) {
-        title.setId(Utils.strip(Utils.setColors(newName)).toLowerCase());
-        title.setName(newName);
+        for (Title t : titles) {
+            if (title.equals(t)) {
+                t.setId(Utils.strip(Utils.setColors(newName)).toLowerCase());
+                t.setName(newName);
+            }
+        }
     }
 
     /**
@@ -372,15 +376,18 @@ public class DataContainer {
             loadMappings();
             loadRequests();
         } catch (InvalidTitleException | InvalidCategoryException e) {
-            e.getStackTrace();
+            for (StackTraceElement ste : e.getStackTrace()) {
+                System.out.println(ste);
+            }
+            Utils.consolePrint("Problem with loading data from config.yml");
             Bukkit.getPluginManager().disablePlugin(plugin); // too drastic?
         }
 
         // debug
-        for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
-        for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
-        for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
-        for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
+//        for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
+//        for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
+//        for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
+//        for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
     }
 
     /**
@@ -450,8 +457,7 @@ public class DataContainer {
                 if (title == null) throw new InvalidTitleException();
 
                 // status
-                RequestStatus status = RequestStatus.fromString(config.getString(".Status"));
-                Utils.consolePrint("Status: " + status);
+                RequestStatus status = RequestStatus.fromString(config.getString(key + ".Status"));
 
                 // location
                 World world = Bukkit.getWorld(config.getString(key + ".Location.World"));
@@ -518,7 +524,6 @@ public class DataContainer {
     private void saveCategories() {
         Configuration config = plugin.getConfig();
         for (Category category : categories) {
-//            if (category.equals(defaultCategory)) continue;
             config.set(Utils.CATEGORIES + category.getId() + ".Name", category.getName());
             config.set(Utils.CATEGORIES + category.getId() + ".Description", category.getDescription());
         }
@@ -529,6 +534,7 @@ public class DataContainer {
      */
     private void saveTitles() {
         Configuration config = plugin.getConfig();
+        config.set("Titles", null);
         for (Title title : titles) {
             config.set(Utils.TITLES + title.getId() + ".Name", title.getName());
             config.set(Utils.TITLES + title.getId() + ".Description", title.getDescription());
@@ -542,14 +548,15 @@ public class DataContainer {
     private void saveRequests() {
         Configuration config = plugin.getConfig();
         for (Request request : requests) {
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Title", request.getTitle().getId());
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Status", request.getStatus().toString());
+            String uuid = request.getUuid().toString();
+            config.set(Utils.REQUESTS + uuid + ".Title", request.getTitle().getId());
+            config.set(Utils.REQUESTS + uuid + ".Status", request.getStatus().toString());
 
             Location loc = request.getLocation();
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.World", loc.getWorld().getName());
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.X", loc.getX());
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.Y", loc.getY());
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.Z", loc.getZ());
+            config.set(Utils.REQUESTS + uuid + ".Location.World", loc.getWorld().getName());
+            config.set(Utils.REQUESTS + uuid + ".Location.X", loc.getX());
+            config.set(Utils.REQUESTS + uuid + ".Location.Y", loc.getY());
+            config.set(Utils.REQUESTS + uuid + ".Location.Z", loc.getZ());
         }
     }
 
@@ -559,12 +566,19 @@ public class DataContainer {
     private void saveMappings() {
         Configuration config = plugin.getConfig();
         for (Mapping mapping : mappings) {
+            String uuid = mapping.getUuid().toString();
+
             List<String> owned = new ArrayList<>();
             for (Title title : mapping.getOwned()) {
                 owned.add(title.getId());
             }
-            config.set(Utils.MAPPINGS + mapping.getUuid().toString() + ".Owned", owned);
-            config.set(Utils.MAPPINGS + mapping.getUuid().toString() + ".Current", mapping.getCurrent().getId());
+            config.set(Utils.MAPPINGS + uuid + ".Owned", owned);
+
+            if (mapping.getCurrent() != null) {
+                config.set(Utils.MAPPINGS + uuid + ".Current", mapping.getCurrent().getId());
+            } else {
+                config.set(Utils.MAPPINGS + uuid + ".Current", null);
+            }
         }
     }
 

@@ -36,12 +36,11 @@ public class PlayerListener implements Listener {
         DataContainer dataContainer = plugin.getDataContainer();
 
         String name;
-        if (dataContainer.getCurrentTitle(player) != null) {
-            Title title = dataContainer.getCurrentTitle(player);
-            if (title != null) {
-                name = ChatColor.RESET + "" + ChatColor.ITALIC + title.getName() + " " + ChatColor.RESET + getNickName(player);
-            } else name = ChatColor.RESET + getNickName(player);
-        } else name = ChatColor.RESET + player.getDisplayName();
+
+        Title title = dataContainer.getCurrentTitle(player);
+        if (title != null) {
+            name = ChatColor.RESET + "" + ChatColor.ITALIC + title.getName() + " " + ChatColor.RESET + getNickName(player);
+        } else name = ChatColor.RESET + getNickName(player);
 
         if (Settings.getDonatorSuffixes()) {
             String suffix = "";

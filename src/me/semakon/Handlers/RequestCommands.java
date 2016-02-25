@@ -1,6 +1,5 @@
 package me.semakon.Handlers;
 
-import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Request;
 import me.semakon.localStorage.RequestStatus;

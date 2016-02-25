@@ -250,7 +250,7 @@ public class InventoryListener implements Listener {
                     }
 
                 } else if (name.equalsIgnoreCase("Unlocked Titles")) {
-                    switch (color) { //TODO: fix disabling
+                    switch (color) {
                         case LIME:
                             // Disable current title.
                             if (player.hasPermission(plugin.setTitlePerm)) {

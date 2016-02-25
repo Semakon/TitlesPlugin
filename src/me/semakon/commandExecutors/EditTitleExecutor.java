@@ -3,9 +3,11 @@ package me.semakon.commandExecutors;
 import me.semakon.Handlers.EditTitleCommands;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
+import me.semakon.localStorage.Category;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
 import me.semakon.localStorage.Exceptions.InvalidCategoryException;
+import me.semakon.localStorage.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -31,7 +33,7 @@ public class EditTitleExecutor {
             switch (args[0].toLowerCase()) {
 
                 case "create":
-                    // /titles create title <name> <description> [<category>]
+                    // /titles create title <name> <description>
                     try {
                         if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
                             String title = Utils.setColors(args[2]);
@@ -41,6 +43,7 @@ public class EditTitleExecutor {
                                 Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title already exists.");
 
+                        // /titles create title <name> <description> <category>
                         } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
                             String title = Utils.setColors(args[2]);
                             String description = Utils.setColors(args[3]);
@@ -67,18 +70,28 @@ public class EditTitleExecutor {
                 case "remove":
                     // /titles remove title <title>
                     if (args.length == 3 && args[1].equalsIgnoreCase("title")) {
-                        String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.removeTitle(dataContainer, title)) {
-                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
+
+                        // get title from string
+                        Title title = dataContainer.getTitle(Utils.strip(Utils.setColors(args[2])));
+
+                        // remove title or send error
+                        if (title != null) {
+                            dataContainer.removeTitle(title);
+                            Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title.getName() + ".");
                         } else Utils.sendError(sender, "That title doesn't exist.");
                         return true;
 
                     // /titles remove category <category>
                     } else if (args.length == 3 && args[1].equalsIgnoreCase("category")) {
-                        String title = Utils.setColors(args[2]);
+
+                        // get category from string
+                        Category category = dataContainer.getCategory(Utils.strip(Utils.setColors(args[2])));
+
+                        // remove category or send error
                         try {
-                            if (EditTitleCommands.removeCategory(dataContainer, title)) {
-                                Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + title + ".");
+                            if (category != null) {
+                                dataContainer.removeCategory(category);
+                                Utils.sendMsg(sender, "Removed " + ChatColor.ITALIC + category.getName() + ".");
                             } else Utils.sendError(sender, "That category doesn't exist.");
                         } catch (CannotRemoveDefaultCategoryException e) {
                             Utils.sendError(sender, e.getMessage());
@@ -88,41 +101,49 @@ public class EditTitleExecutor {
                     return false;
                 case "edit":
                     if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
-                        String title = Utils.setColors(args[2]);
+                        Title title = dataContainer.getTitle(Utils.strip(Utils.setColors(args[2])));
+                        if (title == null) {
+                            Utils.sendError(sender, "That title doesn't exist.");
+                            return true;
+                        }
+
                         String type = args[3];
-                        String typeValue = args[4];
+                        String typeValue = Utils.setColors(args[4]);
 
                         // /titles edit title <title> description <description>
                         if (type.equalsIgnoreCase("description")) {
-                            if (EditTitleCommands.editDescription(dataContainer, title, typeValue)) {
-                                Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
+                            dataContainer.editTitleDescription(title, typeValue);
+                            Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
                                         ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
-                            } else Utils.sendError(sender, "That title doesn't exist.");
-                            return true;
 
                         // /titles edit title <title> category <category>
                         } else if (type.equalsIgnoreCase("category")) {
-                            if (EditTitleCommands.editCategory(dataContainer, title, typeValue)) {
-                                Utils.sendMsg(sender, String.format("Changed category of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
-                                        ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
-                            } else Utils.sendError(sender, "That title doesn't exist.");
-                            return true;
+                            //
+                            Category category = dataContainer.getCategory(Utils.strip(typeValue));
+                            if (category != null) {
+                                dataContainer.editTitleCategory(title, category);
+                                Utils.sendMsg(sender, String.format("Changed category of %s%s%s to %s%s%s.", ChatColor.ITALIC, title.getName(),
+                                        ChatColor.RESET, ChatColor.ITALIC, category.getName(), ChatColor.RESET));
+                            } else Utils.sendError(sender, "That category doesn't exist.");
                         }
+                        return true;
                     }
                     return false;
+
                 case "rename":
                     if (args.length == 4) {
                         String type = args[1];
-                        String typeValue = args[2];
-                        String newName = args[3];
+                        String typeValue = Utils.strip(Utils.setColors(args[2]));
+                        String newName = Utils.setColors(args[3]);
 
                         // /titles rename title <title> <newName>
                         if (type.equalsIgnoreCase("title")) {
-                            String title = Utils.setColors(typeValue);
-                            String newTitle = Utils.setColors(newName);
-                            if (EditTitleCommands.renameTitle(dataContainer, title, newTitle)) {
-                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
-                                        ChatColor.RESET, ChatColor.ITALIC, newTitle, ChatColor.RESET));
+                            Title title = dataContainer.getTitle(typeValue);
+                            if (title != null) {
+                                String oldName = title.getName();
+                                dataContainer.renameTitle(title, newName);
+                                Utils.sendMsg(sender, String.format("Renamed %s%s%s to %s%s%s.", ChatColor.ITALIC, oldName,
+                                        ChatColor.RESET, ChatColor.ITALIC, newName, ChatColor.RESET));
                             } else Utils.sendError(sender, "That title doesn't exist.");
                             return true;
 
