@@ -1,5 +1,6 @@
 package me.semakon.Handlers;
 
+import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Request;
 import me.semakon.localStorage.RequestStatus;
@@ -96,7 +97,7 @@ public class RequestCommands {
     public static boolean retractRequest(DataContainer dc, Player player) {
         Request request = dc.getRequest(player);
         if (request != null && request.getStatus() == RequestStatus.pending) {
-            request.setStatus(null);
+            request.setStatus(RequestStatus.nonExistent);
             return true;
         }
         return false;

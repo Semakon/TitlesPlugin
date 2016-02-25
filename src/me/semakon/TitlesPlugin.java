@@ -115,7 +115,7 @@ public class TitlesPlugin extends JavaPlugin {
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
-                            String[] commands = {"/titles create title <name> <description> <category>"}; // "/titles create category <name>"
+                            String[] commands = {"/titles create title <name> <description> <category>", "/titles create category <name> <description>"};
                             Utils.sendArray(sender, commands);
                         }
                     } else Utils.sendError(sender, "You don't have permission to do that.");
@@ -173,7 +173,7 @@ public class TitlesPlugin extends JavaPlugin {
             }
         } else if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length == 0) {
             if (sender instanceof Player) {
-                Inventory inv = InventoryListener.constructInventory(this, (Player) sender, null);
+                Inventory inv = InventoryListener.constructInventory(this, (Player) sender, null, false);
                 if (inv != null) ((Player) sender).openInventory(inv);
                 return true;
             } else Utils.sendError(sender, "Only players can access this command.");

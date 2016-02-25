@@ -226,6 +226,10 @@ public class Utils {
         List<String> finish = new ArrayList<>();
         for (int i = 0; i < temps.length; i++) {
             if (temps[i].startsWith("\"")) {
+                if (temps[i].endsWith("\"")) {
+                    finish.add(temps[i].substring(1, temps[i].length() - 1));
+                    continue;
+                }
                 String string = temps[i].substring(1, temps[i].length());
                 boolean add = false;
                 for (int k = i + 1; k < temps.length && !add; k++) {

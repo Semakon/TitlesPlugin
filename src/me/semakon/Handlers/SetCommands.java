@@ -1,9 +1,11 @@
 package me.semakon.Handlers;
 
+import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Mapping;
 import me.semakon.localStorage.Title;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -68,7 +70,11 @@ public class SetCommands {
 
         List <Title> owned = dc.getOwnedTitles(player);
         if (!owned.contains(title)) {
-            owned.add(title);
+            Utils.consolePrint("Before:");
+            for (Title t : owned) Utils.consolePrint("Owned: " + t);
+            dc.addToOwnedTitles(player, title);
+            Utils.consolePrint("After:");
+            for (Title t : owned) Utils.consolePrint("Owned: " + t);
             return true;
         }
         return false;
@@ -86,12 +92,13 @@ public class SetCommands {
         Title title = dc.getTitle(id);
         if (title == null) return false;
 
-        List <Title> owned = dc.getOwnedTitles(player);
-        for (Title t : owned) {
-            if (title.equals(t)) {
-                owned.remove(t); //TODO: verify that this works
-            }
-        }
+        // if player doesn't own that title
+        if (!dc.getOwnedTitles(player).contains(title)) return false;
+
+        // remove title from player's owned list
+        dc.removeFromOwnedTitles(player, title);
+
+        // if title is equipped, unequip it.
         if (dc.getCurrentTitle(player).equals(title)) dc.setCurrentTitle(player, null);
         return true;
     }

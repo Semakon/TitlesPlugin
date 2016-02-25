@@ -49,8 +49,7 @@ public class SetExecutor {
                 OfflinePlayer offlinePlayer = Utils.getOfflinePlayer(user);
                 // check if player exists
                 if (offlinePlayer == null) {
-                    if (player == null) Utils.sendError(sender, "Player can't be found.");
-                    else Utils.sendError(player, "Player can't be found.");
+                    Utils.sendError(sender, "Player can't be found.");
                     return true;
                 }
                 // /titles user <user> [add:remove:set] title <title>

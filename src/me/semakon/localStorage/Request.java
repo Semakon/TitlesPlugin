@@ -62,7 +62,7 @@ public class Request {
     }
 
     public String toString() {
-        return "{" + uuid.toString() + ", " + title.getName() + ", " + location.toString() + "}";
+        return "{" + uuid.toString() + ", " + title.getName() + ", " + location.toString() + ", " + status + "}";
     }
 
 }

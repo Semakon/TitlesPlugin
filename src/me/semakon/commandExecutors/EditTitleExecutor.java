@@ -5,6 +5,7 @@ import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
+import me.semakon.localStorage.Exceptions.InvalidCategoryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -31,25 +32,36 @@ public class EditTitleExecutor {
 
                 case "create":
                     // /titles create title <name> <description> [<category>]
-                    if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
-                        String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.createTitle(dataContainer, title, args[3], null)) {
-                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
-                        } else Utils.sendError(sender, "That title already exists, or that category doesn't exist.");
+                    try {
+                        if (args.length == 4 && args[1].equalsIgnoreCase("title")) {
+                            String title = Utils.setColors(args[2]);
+                            String description = Utils.setColors(args[3]);
 
-                    } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
-                        String title = Utils.setColors(args[2]);
-                        if (EditTitleCommands.createTitle(dataContainer, title, args[3], args[4])) {
-                            Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
-                        } else Utils.sendError(sender, "That title already exists.");
+                            if (EditTitleCommands.createTitle(dataContainer, title, description, null)) {
+                                Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
+                            } else Utils.sendError(sender, "That title already exists.");
 
-                    // /titles create category <name> <description>
-                    } else if (args.length == 4 && args[1].equalsIgnoreCase("category")) {
-                        String category = Utils.setColors(args[2]);
-                        if (EditTitleCommands.createCategory(dataContainer, category, args[3])) {
-                            Utils.sendMsg(sender, String.format("Added new category: %s%s%s.", ChatColor.ITALIC, category, ChatColor.RESET));
-                        } else Utils.sendError(sender, "That category already exists.");
-                    } else return false;
+                        } else if (args.length == 5 && args[1].equalsIgnoreCase("title")) {
+                            String title = Utils.setColors(args[2]);
+                            String description = Utils.setColors(args[3]);
+                            String categoryId = Utils.strip(Utils.setColors(args[4]));
+
+                            if (EditTitleCommands.createTitle(dataContainer, title, description, categoryId)) {
+                                Utils.sendMsg(sender, String.format("Added new title: %s%s%s.", ChatColor.ITALIC, title, ChatColor.RESET));
+                            } else Utils.sendError(sender, "That title already exists.");
+
+                        // /titles create category <name> <description>
+                        } else if (args.length == 4 && args[1].equalsIgnoreCase("category")) {
+                            String category = Utils.setColors(args[2]);
+                            String description = Utils.setColors(args[3]);
+
+                            if (EditTitleCommands.createCategory(dataContainer, category, description)) {
+                                Utils.sendMsg(sender, String.format("Added new category: %s%s%s.", ChatColor.ITALIC, category, ChatColor.RESET));
+                            } else Utils.sendError(sender, "That category already exists.");
+                        } else return false;
+                    } catch (InvalidCategoryException e) {
+                        Utils.sendError(sender, "That category doesn't exist.");
+                    }
                     return true;
 
                 case "remove":

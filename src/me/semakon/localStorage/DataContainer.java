@@ -13,6 +13,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -310,6 +311,42 @@ public class DataContainer {
         return titles;
     }
 
+    /**
+     * Removes a title from a player's owned list.
+     * @param player The player that has their title removed.
+     * @param title The title that is removed.
+     */
+    public void removeFromOwnedTitles(OfflinePlayer player, Title title) {
+        for (Mapping mapping : mappings) {
+            if (mapping.getUuid().equals(player.getUniqueId())) {
+                List<Title> owned = mapping.getOwned();
+                owned.remove(title);
+                mapping.setOwned(owned);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Adds a title to a player's owned list.
+     * @param player The player that gets the title.
+     * @param title The title that the player gets.
+     */
+    public void addToOwnedTitles(OfflinePlayer player, Title title) {
+        for (Mapping mapping : mappings) {
+            if (mapping.getUuid().equals(player.getUniqueId())) {
+                List<Title> owned = mapping.getOwned();
+                owned.add(title);
+                mapping.setOwned(owned);
+                return;
+            }
+        }
+        List<Title> owned = new ArrayList<>();
+        owned.add(title);
+        Mapping mapping = new Mapping(player.getUniqueId(), owned, null);
+        mappings.add(mapping);
+    }
+
     //-------------------------------------------------------------- Loading ------------------------------------------------------------------------
 
     /**
@@ -338,6 +375,12 @@ public class DataContainer {
             e.getStackTrace();
             Bukkit.getPluginManager().disablePlugin(plugin); // too drastic?
         }
+
+        // debug
+        for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
+        for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
+        for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
+        for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
     }
 
     /**
@@ -407,7 +450,8 @@ public class DataContainer {
                 if (title == null) throw new InvalidTitleException();
 
                 // status
-                RequestStatus status = RequestStatus.fromString(config.getString("Status"));
+                RequestStatus status = RequestStatus.fromString(config.getString(".Status"));
+                Utils.consolePrint("Status: " + status);
 
                 // location
                 World world = Bukkit.getWorld(config.getString(key + ".Location.World"));
@@ -499,7 +543,7 @@ public class DataContainer {
         Configuration config = plugin.getConfig();
         for (Request request : requests) {
             config.set(Utils.REQUESTS + request.getUuid().toString() + ".Title", request.getTitle().getId());
-            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Status", request.getStatus());
+            config.set(Utils.REQUESTS + request.getUuid().toString() + ".Status", request.getStatus().toString());
 
             Location loc = request.getLocation();
             config.set(Utils.REQUESTS + request.getUuid().toString() + ".Location.World", loc.getWorld().getName());

@@ -1,5 +1,7 @@
 package me.semakon.localStorage;
 
+import org.bukkit.ChatColor;
+
 /**
  * Author:  Martijn
  * Date:    23-2-2016
@@ -51,7 +53,7 @@ public class Title {
     }
 
     public String toString() {
-        return "{" + id + ", " + name + ", " + category.getName() + "}";
+        return "{" + id + ", " + name + ", " + category.getName() + ChatColor.RESET + "}";
     }
 
 }

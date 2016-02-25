@@ -6,9 +6,10 @@ package me.semakon.localStorage;
  */
 public enum RequestStatus {
 
-    denied, approved, pending;
+    denied, approved, pending, nonExistent;
 
     public static RequestStatus fromString(String status) {
+        if (status == null) return nonExistent;
         switch(status.toLowerCase()) {
             case "denied":
                 return denied;
@@ -17,7 +18,7 @@ public enum RequestStatus {
             case "pending":
                 return pending;
             default:
-                return pending;
+                return nonExistent;
         }
     }
 

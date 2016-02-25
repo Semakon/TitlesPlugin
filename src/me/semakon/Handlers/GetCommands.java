@@ -31,15 +31,11 @@ public class GetCommands {
     /**
      * Returns a list of all titles in a specified category.
      * @param dc Container with all data.
-     * @param id Category where titles are to be listed from.
+     * @param category Category where titles are to be listed from.
      * @return List of all titles from a specified category.
      */
-    public static List<String> getTitlesFromCategory(DataContainer dc, String id) {
+    public static List<String> getTitlesFromCategory(DataContainer dc, Category category) {
         List<String> titles = new ArrayList<>();
-
-        // get category object
-        Category category = dc.getCategory(id);
-        if (category == null) return titles;
 
         // for every available title from category, add its name to the list.
         for (Title title : dc.getTitlesFromCategory(category)) {
@@ -86,30 +82,12 @@ public class GetCommands {
         List<String> requests = new ArrayList<>();
         // for every pending request:
         for (Request request : dc.getRequests()) {
-            // add the name of the player of the request and the title's name to the list.
-            requests.add(Bukkit.getOfflinePlayer(request.getUuid()).getName() + ": " + request.getTitle().getName());
-        }
-        return requests;
-    }
-
-    /**
-     * Returns the key's value from a title.
-     * @param dc Container with all data.
-     * @param id Id of title where key's value is to be returned from.
-     * @param key Key with value.
-     * @return A specified key's value from a specified title.
-     */
-    public static String getFromTitle(DataContainer dc, String id, String key) {
-        // for every available title:
-        for (Title title : dc.getTitles()) {
-            // if correct title is found:
-            if (title.getId().equalsIgnoreCase(id)) {
-                // return key from title
-                if (key.equals(Utils.DESC)) return title.getDescription();
-                else if (key.equals(Utils.CAT)) return title.getCategory().getName();
+            // if the request is pending add the name of the player of the request and the title's name to the list.
+            if (request.getStatus() == RequestStatus.pending) {
+                requests.add(Bukkit.getOfflinePlayer(request.getUuid()).getName() + ": " + request.getTitle().getName());
             }
         }
-        return null;
+        return requests;
     }
 
     /**
@@ -122,7 +100,7 @@ public class GetCommands {
         // for every pending request:
         for (Request request : dc.getRequests()) {
             // if the request of the player is found, return the player's name and the title
-            if (request.getUuid().equals(player.getUniqueId())) {
+            if (request.getUuid().equals(player.getUniqueId()) && request.getStatus() == RequestStatus.pending) {
                 return player.getName() + ": " + request.getTitle().getName();
             }
         }
