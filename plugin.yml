@@ -1,6 +1,6 @@
 name: TitlesPlugin
 main: me.semakon.TitlesPlugin
-version: 2.5.13b
+version: 2.1
 commands:
   titles:
     description: Provides access to the Titles commands.
