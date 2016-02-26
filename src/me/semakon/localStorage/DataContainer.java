@@ -203,12 +203,8 @@ public class DataContainer {
      * @param newName New name of the title.
      */
     public void renameTitle(Title title, String newName) {
-        for (Title t : titles) {
-            if (title.equals(t)) {
-                t.setId(Utils.strip(Utils.setColors(newName)).toLowerCase());
-                t.setName(newName);
-            }
-        }
+        title.setId(Utils.strip(Utils.setColors(newName)).toLowerCase());
+        title.setName(newName);
     }
 
     /**
