@@ -23,10 +23,7 @@ public class Request {
     }
 
     public Request(UUID uuid, Title title, Location location) {
-        this.uuid = uuid;
-        this.title = title;
-        this.location = location;
-        this.status = RequestStatus.pending;
+        this(uuid, title, location, RequestStatus.pending);
     }
 
     public UUID getUuid() {

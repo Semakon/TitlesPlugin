@@ -135,7 +135,8 @@ public class TitlesPlugin extends JavaPlugin {
                     if (sender.hasPermission(editTitlesPerm)) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
-                            String[] commands = {"/titles edit title <title> description <description>", "/titles edit title <title> category <category>"};
+                            String[] commands = {"/titles edit title <title> description <description>", "/titles edit title <title> category <category>",
+                                    "/titles edit title <title> unique <true|false>"};
                             Utils.sendArray(sender, commands);
                         }
                     } else Utils.sendError(sender, "You don't have permission to do that.");
@@ -155,7 +156,7 @@ public class TitlesPlugin extends JavaPlugin {
                     if (sender.hasPermission(editUserTitlesPerm)) {
                         if (args.length == 1 || !setExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
-                            String[] commands = {"/titles user <user> [add:remove:set] title <title>"};
+                            String[] commands = {"/titles user <user> [add|remove|set] title <title>"};
                             Utils.sendArray(sender, commands);
                         }
                     } else Utils.sendError(sender, "You don't have permission to do that.");

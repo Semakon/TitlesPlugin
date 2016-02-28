@@ -114,7 +114,7 @@ public class EditTitleExecutor {
                         if (type.equalsIgnoreCase("description")) {
                             dataContainer.editTitleDescription(title, typeValue);
                             Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
-                                        ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
+                                    ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
 
                         // /titles edit title <title> category <category>
                         } else if (type.equalsIgnoreCase("category")) {
@@ -125,6 +125,17 @@ public class EditTitleExecutor {
                                 Utils.sendMsg(sender, String.format("Changed category of %s%s%s to %s%s%s.", ChatColor.ITALIC, title.getName(),
                                         ChatColor.RESET, ChatColor.ITALIC, category.getName(), ChatColor.RESET));
                             } else Utils.sendError(sender, "That category doesn't exist.");
+
+                        // /titles edit title <title> unique <false|true> TODO: test
+                        } else if (type.equalsIgnoreCase("true")) {
+                            dataContainer.editTitleUnique(title, true);
+                            Utils.sendMsg(sender, String.format("Changed %s%s%s to a %sunique%s title.", ChatColor.ITALIC, title.getName(),
+                                    ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
+
+                        } else if (type.equalsIgnoreCase("false")) {
+                            dataContainer.editTitleUnique(title, false);
+                            Utils.sendMsg(sender, String.format("Changed %s%s%s to a %snormal%s title.", ChatColor.ITALIC, title.getName(),
+                                    ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
                         }
                         return true;
                     }

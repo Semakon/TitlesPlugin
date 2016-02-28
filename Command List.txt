@@ -32,3 +32,15 @@ TitlesPlugin - Abstract Command List
 /titles request retract 								- Retract title request.
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+Reserved for (potential) future updates:
+
+/titles requests                                        - Open GUI for dealing with title requests
+
+/titles edit title <title> unique <true:false>          - Set <title>'s unique option.
+
+/titles reload                                          - Reload all data from configuration. Overwrites current data.
+/titles save                                            - Save all current data to configuration. Overwrites configuration file.
+/titles autosave <on:off>                               - turn autosave on or off.
+/titles backup [<file>]                                 - Make a backup of the configuration file and saves it to the default configuration backup
+                                                          file. Entering another file name will save it to that file instead. If the file doesn't
+                                                          exist, it will be created.

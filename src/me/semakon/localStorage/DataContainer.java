@@ -13,7 +13,6 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -198,6 +197,15 @@ public class DataContainer {
     }
 
     /**
+     * Sets the boolean unique of a title to parameter unique.
+     * @param title Title that has its unique changed.
+     * @param unique New value of unique.
+     */
+    public void editTitleUnique(Title title, boolean unique) {
+        title.setUnique(unique);
+    }
+
+    /**
      * Changes the name of a title to newName and the ID to newName without the colors and in lower case.
      * @param title Title that is renamed.
      * @param newName New name of the title.
@@ -322,6 +330,7 @@ public class DataContainer {
                 List<Title> owned = mapping.getOwned();
                 owned.remove(title);
                 mapping.setOwned(owned);
+                if (title.isUnique()) title.setUniqueTo(null);
                 return;
             }
         }
@@ -338,6 +347,7 @@ public class DataContainer {
                 List<Title> owned = mapping.getOwned();
                 owned.add(title);
                 mapping.setOwned(owned);
+                if (title.isUnique()) title.setUniqueTo(player.getUniqueId());
                 return;
             }
         }
@@ -367,6 +377,7 @@ public class DataContainer {
     public void loadStorage() {
         categories.add(defaultCategory);
         try {
+            loadSettings();
             loadCategories();
             loadTitles();
             loadMappings();
@@ -380,10 +391,16 @@ public class DataContainer {
         }
 
         // debug
-//        for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
-//        for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
-//        for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
-//        for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
+        if (Settings.isDebugging()) {
+            for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
+            for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
+            for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
+            for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
+        }
+    }
+
+    private void loadSettings() {
+        //TODO: Implement
     }
 
     /**
@@ -507,6 +524,7 @@ public class DataContainer {
      * Saves all local data to the yaml file.
      */
     public void saveStorage() {
+        saveSettings();
         saveCategories();
         saveTitles();
         saveMappings();
@@ -514,11 +532,16 @@ public class DataContainer {
         plugin.saveConfig();
     }
 
+    private void saveSettings() {
+        //TODO: Implement
+    }
+
     /**
      * Saves all local data of the categories to the yaml file.
      */
     private void saveCategories() {
         Configuration config = plugin.getConfig();
+        config.set("Categories" ,null);
         for (Category category : categories) {
             config.set(Utils.CATEGORIES + category.getId() + ".Name", category.getName());
             config.set(Utils.CATEGORIES + category.getId() + ".Description", category.getDescription());

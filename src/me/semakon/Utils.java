@@ -1,5 +1,6 @@
 package me.semakon;
 
+import me.semakon.localStorage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -32,10 +33,6 @@ public class Utils {
     public static final String TITLES = "Titles.";
     public static final String MAPPINGS = "Mappings.";
     public static final String REQUESTS = "Requests.";
-
-    public static final String NAME = ".Name";
-    public static final String DESC = ".Description";
-    public static final String CAT = ".Category";
 
     public static Map<String, String> colors;
 
@@ -125,6 +122,14 @@ public class Utils {
         } else return string;
     }
 
+    public static void debugMsg(CommandSender receiver, String msg) {
+        if (Settings.isDebugging()) {
+            msg = "[TP Debug]" + msg;
+            if (receiver == null) System.out.println(msg);
+            else receiver.sendMessage(msg);
+        }
+    }
+
     /**
      * Converts a name of an offline player to their unique ID.
      * If the player can't be found, the name is returned instead.
@@ -182,8 +187,8 @@ public class Utils {
      */
     public static void sendMsg(CommandSender sender, String msg, ChatColor... colors) {
         if (sender instanceof Player && colors != null) {
-            for (ChatColor color : colors) {
-                msg = color + msg;
+            for (int i = colors.length - 1; i >= 0; i--) {
+                msg = colors[i] + msg;
             }
         }
         sender.sendMessage(msgPrefix(sender, msg));

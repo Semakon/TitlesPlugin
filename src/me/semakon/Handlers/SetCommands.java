@@ -1,11 +1,9 @@
 package me.semakon.Handlers;
 
-import me.semakon.Utils;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Mapping;
 import me.semakon.localStorage.Title;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -68,13 +66,12 @@ public class SetCommands {
         Title title = dc.getTitle(id);
         if (title == null) return false;
 
+        // if title is unique and already owned by another player
+        if (title.isUnique() && title.getUniqueTo() != null) return false;
+
         List <Title> owned = dc.getOwnedTitles(player);
         if (!owned.contains(title)) {
-            Utils.consolePrint("Before:");
-            for (Title t : owned) Utils.consolePrint("Owned: " + t);
             dc.addToOwnedTitles(player, title);
-            Utils.consolePrint("After:");
-            for (Title t : owned) Utils.consolePrint("Owned: " + t);
             return true;
         }
         return false;
