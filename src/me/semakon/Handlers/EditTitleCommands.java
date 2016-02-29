@@ -3,8 +3,7 @@ package me.semakon.Handlers;
 import me.semakon.Utils;
 import me.semakon.localStorage.Category;
 import me.semakon.localStorage.DataContainer;
-import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
-import me.semakon.localStorage.Exceptions.InvalidCategoryException;
+import me.semakon.localStorage.Exceptions.InvalidCategoryRuntimeException;
 import me.semakon.localStorage.Title;
 
 /**
@@ -21,7 +20,7 @@ public class EditTitleCommands {
      * @param categoryId Category of the new title.
      * @return True if the new title was created successfully.
      */
-    public static boolean createTitle(DataContainer dc, String titleName, String description, String categoryId) throws InvalidCategoryException {
+    public static boolean createTitle(DataContainer dc, String titleName, String description, String categoryId) throws InvalidCategoryRuntimeException {
         // get category object
         Category category;
         if (categoryId == null) {
@@ -29,7 +28,7 @@ public class EditTitleCommands {
         } else {
             category = dc.getCategory(categoryId);
         }
-        if (category == null) throw new InvalidCategoryException();
+        if (category == null) throw new InvalidCategoryRuntimeException();
 
         // get title object
         String titleId = Utils.strip(Utils.setColors(titleName.toLowerCase()));

@@ -34,6 +34,8 @@ public class Utils {
     public static final String MAPPINGS = "Mappings.";
     public static final String REQUESTS = "Requests.";
 
+    public static boolean save = true;
+
     public static Map<String, String> colors;
 
     /**

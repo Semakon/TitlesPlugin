@@ -72,7 +72,9 @@ public class TitlesPlugin extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        dataContainer.saveStorage();
+        if (Utils.save) {
+            dataContainer.saveStorage();
+        }
     }
 
     /**

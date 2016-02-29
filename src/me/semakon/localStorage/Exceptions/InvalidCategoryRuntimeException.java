@@ -4,9 +4,9 @@ package me.semakon.localStorage.Exceptions;
  * Author:  Martijn
  * Date:    23-2-2016
  */
-public class InvalidCategoryException extends Exception {
+public class InvalidCategoryRuntimeException extends RuntimeException {
 
-    public InvalidCategoryException() {
+    public InvalidCategoryRuntimeException() {
         super("No valid category was found.");
     }
 

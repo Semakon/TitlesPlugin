@@ -3,8 +3,8 @@ package me.semakon.localStorage;
 import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
-import me.semakon.localStorage.Exceptions.InvalidCategoryException;
-import me.semakon.localStorage.Exceptions.InvalidTitleException;
+import me.semakon.localStorage.Exceptions.InvalidCategoryRuntimeException;
+import me.semakon.localStorage.Exceptions.InvalidTitleRuntimeException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -382,12 +382,11 @@ public class DataContainer {
             loadTitles();
             loadMappings();
             loadRequests();
-        } catch (InvalidTitleException | InvalidCategoryException e) {
-            for (StackTraceElement ste : e.getStackTrace()) {
-                System.out.println(ste);
-            }
+        } catch (InvalidTitleRuntimeException | InvalidCategoryRuntimeException e) {
             Utils.consolePrint("Problem with loading data from config.yml");
-            Bukkit.getPluginManager().disablePlugin(plugin); // too drastic?
+            Utils.save = false;
+            plugin.getPluginLoader().disablePlugin(plugin);
+            e.printStackTrace();
         }
 
         // debug
@@ -426,13 +425,19 @@ public class DataContainer {
     /**
      * Loads the data of the titles from the yaml file.
      */
-    private void loadTitles() throws InvalidCategoryException {
+    private void loadTitles() throws InvalidCategoryRuntimeException {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
         if (config != null) {
             for (String key : config.getKeys(false)) {
                 // key is identifier.
                 String name = config.getString(key + ".Name");
                 String description = config.getString(key + ".Description");
+                boolean unique = config.getBoolean(key + ".Unique");
+
+                // UniqueTo
+                String uuid = config.getString(key + ".UniqueTo");
+                UUID uniqueTo = null;
+                if (uuid != null) uniqueTo = UUID.fromString(uuid);
 
                 // category
                 Category category = null;
@@ -442,8 +447,9 @@ public class DataContainer {
                         break;
                     }
                 }
-                if (category == null) throw new InvalidCategoryException();
-                titles.add(new Title(key, name, description, category));
+                if (category == null) throw new InvalidCategoryRuntimeException();
+
+                titles.add(new Title(key, name, description, category, unique, uniqueTo));
             }
         }
     }
@@ -451,7 +457,7 @@ public class DataContainer {
     /**
      * Loads the data of the requests from the yaml file.
      */
-    private void loadRequests() throws InvalidTitleException {
+    private void loadRequests() throws InvalidTitleRuntimeException {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Requests");
         if (config != null) {
             for (String key : config.getKeys(false)) {
@@ -467,7 +473,7 @@ public class DataContainer {
                         break;
                     }
                 }
-                if (title == null) throw new InvalidTitleException();
+                if (title == null) throw new InvalidTitleRuntimeException();
 
                 // status
                 RequestStatus status = RequestStatus.fromString(config.getString(key + ".Status"));
@@ -555,9 +561,12 @@ public class DataContainer {
         Configuration config = plugin.getConfig();
         config.set("Titles", null);
         for (Title title : titles) {
-            config.set(Utils.TITLES + title.getId() + ".Name", title.getName());
-            config.set(Utils.TITLES + title.getId() + ".Description", title.getDescription());
-            config.set(Utils.TITLES + title.getId() + ".Category", title.getCategory().getId());
+            String id = title.getId();
+            config.set(Utils.TITLES + id + ".Name", title.getName());
+            config.set(Utils.TITLES + id + ".Description", title.getDescription());
+            config.set(Utils.TITLES + id + ".Category", title.getCategory().getId());
+            config.set(Utils.TITLES + id + ".Unique", title.isUnique());
+            config.set(Utils.TITLES + id + ".UniqueTo", title.getUniqueTo());
         }
     }
 

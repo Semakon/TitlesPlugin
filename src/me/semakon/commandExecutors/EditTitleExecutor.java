@@ -1,15 +1,16 @@
 package me.semakon.commandExecutors;
 
 import me.semakon.Handlers.EditTitleCommands;
-import me.semakon.TitlesPlugin;
 import me.semakon.Utils;
 import me.semakon.localStorage.Category;
 import me.semakon.localStorage.DataContainer;
 import me.semakon.localStorage.Exceptions.CannotRemoveDefaultCategoryException;
-import me.semakon.localStorage.Exceptions.InvalidCategoryException;
+import me.semakon.localStorage.Exceptions.InvalidCategoryRuntimeException;
 import me.semakon.localStorage.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.IllegalFormatConversionException;
 
 /**
  * Author:  Martijn
@@ -62,7 +63,7 @@ public class EditTitleExecutor {
                                 Utils.sendMsg(sender, String.format("Added new category: %s%s%s.", ChatColor.ITALIC, category, ChatColor.RESET));
                             } else Utils.sendError(sender, "That category already exists.");
                         } else return false;
-                    } catch (InvalidCategoryException e) {
+                    } catch (InvalidCategoryRuntimeException e) {
                         Utils.sendError(sender, "That category doesn't exist.");
                     }
                     return true;
@@ -113,7 +114,7 @@ public class EditTitleExecutor {
                         // /titles edit title <title> description <description>
                         if (type.equalsIgnoreCase("description")) {
                             dataContainer.editTitleDescription(title, typeValue);
-                            Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title,
+                            Utils.sendMsg(sender, String.format("Changed description of %s%s%s to %s%s%s.", ChatColor.ITALIC, title.getName(),
                                     ChatColor.RESET, ChatColor.ITALIC, typeValue, ChatColor.RESET));
 
                         // /titles edit title <title> category <category>
@@ -126,17 +127,22 @@ public class EditTitleExecutor {
                                         ChatColor.RESET, ChatColor.ITALIC, category.getName(), ChatColor.RESET));
                             } else Utils.sendError(sender, "That category doesn't exist.");
 
-                        // /titles edit title <title> unique <false|true> TODO: test
-                        } else if (type.equalsIgnoreCase("true")) {
-                            dataContainer.editTitleUnique(title, true);
-                            Utils.sendMsg(sender, String.format("Changed %s%s%s to a %sunique%s title.", ChatColor.ITALIC, title.getName(),
-                                    ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
+                            // /titles edit title <title> unique <false|true>
+                        } else if (type.equalsIgnoreCase("unique")) {
+                            String unique = args[4];
+                            if (unique.equalsIgnoreCase("true")) {
+                                dataContainer.editTitleUnique(title, true);
+                                Utils.sendMsg(sender, String.format("Changed %s%s%s to a %sunique%s title.", ChatColor.ITALIC, title.getName(),
+                                        ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
 
-                        } else if (type.equalsIgnoreCase("false")) {
-                            dataContainer.editTitleUnique(title, false);
-                            Utils.sendMsg(sender, String.format("Changed %s%s%s to a %snormal%s title.", ChatColor.ITALIC, title.getName(),
-                                    ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
+                            } else if (unique.equalsIgnoreCase("true")) {
+                                dataContainer.editTitleUnique(title, false);
+                                Utils.sendMsg(sender, String.format("Changed %s%s%s to a %snormal%s title.", ChatColor.ITALIC, title.getName(),
+                                        ChatColor.RESET, ChatColor.ITALIC, ChatColor.RESET));
+                            } else return false;
+
                         }
+
                         return true;
                     }
                     return false;
