@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
                 String titleName = plugin.getConfig().getString(Utils.TITLES + title + Utils.NAME);
                 name = ChatColor.RESET + "" + ChatColor.ITALIC + titleName + " " + ChatColor.RESET + getNickName(player);
             } else name = ChatColor.RESET + getNickName(player);
-        } else name = ChatColor.RESET + player.getDisplayName();
+        } else name = ChatColor.RESET + getNickName(player);
 
         String suffix = "";
         if (player.hasPermission(plugin.donatorSuffix1)) suffix = String.format("%s [%s$%s]%s", ChatColor.DARK_GRAY, ChatColor.GREEN, ChatColor.DARK_GRAY, ChatColor.RESET);
