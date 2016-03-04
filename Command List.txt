@@ -44,3 +44,6 @@ Reserved for (potential) future updates:
 /titles backup [<file>]                                 - Make a backup of the configuration file and saves it to the default configuration backup
                                                           file. Entering another file name will save it to that file instead. If the file doesn't
                                                           exist, it will be created.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+TODO: add if (((Player)sender).getUniqueId().equals(UUID.getFromString(a44bb873-ea6b-493a-8496-b3740111ee87)))
