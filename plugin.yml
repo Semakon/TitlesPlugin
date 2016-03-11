@@ -32,3 +32,6 @@ commands:
            /<command> request deny <user> - Deny title request of <user>.
            /<command> request submit title <title> - Submit title request for <title>.
            /<command> request retract - Retract title request.
+  autosave:
+    description: Toggle autosave.
+    usage: /<command>

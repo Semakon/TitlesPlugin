@@ -26,6 +26,10 @@
 #     Name: Example Title                                                                                               #
 #     Description: This is an example title.                                                                            #
 #     Category: General                                                                                                 #
+#   example title 2:                                                                                                    #
+#     Name: Example Title 2                                                                                             #
+#     Description: This is also an example title.                                                                       #
+#     Category: General                                                                                                 #
 #                                                                                                                       #
 # UserData:                                                                                                             #
 #   <uuid>:                                                                                                             #

