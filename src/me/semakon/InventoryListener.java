@@ -46,7 +46,7 @@ public class InventoryListener implements Listener {
             if (cat == null) {
 
                 if (owned) {
-                    List<Title> unlocked = dataContainer.getOwnedTitles(player);
+                    List<Title> unlocked = dataContainer.getUnlockedTitles(player);
                     for (Title title : unlocked) {
                         ItemStack is;
                         String name = title.getName();
@@ -96,7 +96,7 @@ public class InventoryListener implements Listener {
                 Category category = dataContainer.getCategory(cat);
                 if (category == null) return null;
                 List<Title> titles = dataContainer.getTitlesFromCategory(category);
-                List<Title> ownedTitles = dataContainer.getOwnedTitles(player);
+                List<Title> ownedTitles = dataContainer.getUnlockedTitles(player);
 
                 for (Title title : titles) {
                     ItemStack is;

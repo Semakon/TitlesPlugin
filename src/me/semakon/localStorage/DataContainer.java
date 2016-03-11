@@ -26,8 +26,8 @@ public class DataContainer {
 
     private List<Category> categories;
     private List<Title> titles;
-    private List<Request> requests;
-    private List<Mapping> mappings;
+    private List<UserData> userData;
+
 
     private Category defaultCategory;
 
@@ -40,8 +40,7 @@ public class DataContainer {
 
         categories = new ArrayList<>();
         titles = new ArrayList<>();
-        requests = new ArrayList<>();
-        mappings = new ArrayList<>();
+        userData = new ArrayList<>();
 
         defaultCategory = new Category(Utils.DEFAULT_CATEGORY.toLowerCase(), Utils.DEFAULT_CATEGORY, "This is the default category.");
     }
@@ -145,34 +144,32 @@ public class DataContainer {
     }
 
     /**
-     * Removes a title from all mappings, requests and finally the titles list.
+     * Removes a title from all userData, requests and finally the titles list.
      * @param title Title that is removed.
      */
     public void removeTitle(Title title) {
-        // remove title from mappings
-        for (Mapping mapping : mappings) {
-            List<Title> owned = new ArrayList<>();
-            for (Title o : mapping.getOwned()) {
+        // remove title from userData
+        for (UserData userData : this.userData) {
+            List<Title> unlocked = new ArrayList<>();
+            for (Title o : userData.getUnlocked()) {
                 if (o.equals(title)) {
-                    owned = mapping.getOwned();
+                    unlocked = userData.getUnlocked();
                     break;
                 }
             }
-            if (!owned.isEmpty()) {
-                owned.remove(title);
-                mapping.setOwned(owned);
+            if (!unlocked.isEmpty()) {
+                unlocked.remove(title);
+                userData.setUnlocked(unlocked);
             }
-            if (mapping.getCurrent().equals(title)) mapping.setCurrent(null);
+            if (userData.getCurrent().equals(title)) userData.setCurrent(null);
         }
 
         // remove title from requests
         List<Request> requests = new ArrayList<>();
-        for (Request request : this.requests) {
-            if (request.getTitle().equals(title)) requests.add(request);
+        for (UserData ud : userData) {
+            if (ud.getRequest().getTitle().equals(title)) requests.add(ud.getRequest());
         }
-        for (Request request : requests) {
-            removeRequest(request);
-        }
+        for (Request request : requests) removeRequest(request);
 
         // remove title from titles
         titles.remove(title);
@@ -230,13 +227,9 @@ public class DataContainer {
 
     //-------------------------------------------------------------- Requests ------------------------------------------------------------------------
 
-    public List<Request> getRequests() {
-        return requests;
-    }
-
     public Request getRequest(OfflinePlayer player) {
-        for (Request request : requests) {
-            if (request.getUuid().equals(player.getUniqueId())) return request;
+        for (UserData ud : userData) {
+            if (ud.getUuid().equals(player.getUniqueId())) return ud.getRequest();
         }
         return null;
     }
@@ -247,8 +240,8 @@ public class DataContainer {
      * @return Title that is requested, or if it doesn't exist null.
      */
     public Title getRequestedTitle(OfflinePlayer player) {
-        for (Request request : requests) {
-            if (request.getUuid().equals(player.getUniqueId())) return request.getTitle();
+        for (UserData ud : userData) {
+            if (ud.getUuid().equals(player.getUniqueId())) return ud.getRequest().getTitle();
         }
         return null;
     }
@@ -259,8 +252,8 @@ public class DataContainer {
      * @return The location of a request of a player, or null if the request/location doesn't exist.
      */
     public Location getRequestLocation(OfflinePlayer player) {
-        for (Request request : requests) {
-            if (request.getUuid().equals(player.getUniqueId())) return request.getLocation();
+        for (UserData ud : userData) {
+            if (ud.getUuid().equals(player.getUniqueId())) return ud.getRequest().getLocation();
         }
         return null;
     }
@@ -270,13 +263,15 @@ public class DataContainer {
      * @param request Request that is removed.
      */
     public void removeRequest(Request request) {
-        requests.remove(request);
+        for (UserData ud : userData) {
+            if (ud.getRequest().equals(request)) ud.setRequest(null);
+        }
     }
 
-    //-------------------------------------------------------------- Mappings ------------------------------------------------------------------------
+    //-------------------------------------------------------------- UserData ------------------------------------------------------------------------
 
-    public List<Mapping> getMappings() {
-        return mappings;
+    public List<UserData> getUserData() {
+        return userData;
     }
 
     /**
@@ -285,9 +280,9 @@ public class DataContainer {
      * @param title The title that is set.
      */
     public void setCurrentTitle(OfflinePlayer player, Title title) {
-        for (Mapping mapping : mappings) {
-            if (mapping.getUuid().equals(player.getUniqueId()) && getOwnedTitles(player).contains(title)) {
-                mapping.setCurrent(title);
+        for (UserData userData : this.userData) {
+            if (userData.getUuid().equals(player.getUniqueId()) && getUnlockedTitles(player).contains(title)) {
+                userData.setCurrent(title);
             }
         }
     }
@@ -298,38 +293,38 @@ public class DataContainer {
      * @return Current title of player, or null if it doesn't exist.
      */
     public Title getCurrentTitle(OfflinePlayer player) {
-        for (Mapping mapping : mappings) {
-            if (mapping.getUuid().equals(player.getUniqueId())) return mapping.getCurrent();
+        for (UserData userData : this.userData) {
+            if (userData.getUuid().equals(player.getUniqueId())) return userData.getCurrent();
         }
         return null;
     }
 
     /**
-     * Gets a list of all titles owned by a player.
+     * Gets a list of all titles unlocked by a player.
      * @param player The player that owns the titles.
-     * @return A list of all titles owned by a player.
+     * @return A list of all titles unlocked by a player.
      */
-    public List<Title> getOwnedTitles(OfflinePlayer player) {
+    public List<Title> getUnlockedTitles(OfflinePlayer player) {
         List<Title> titles = new ArrayList<>();
-        for (Mapping mapping : mappings) {
-            if (mapping.getUuid().equals(player.getUniqueId())) {
-                titles.addAll(mapping.getOwned());
+        for (UserData userData : this.userData) {
+            if (userData.getUuid().equals(player.getUniqueId())) {
+                titles.addAll(userData.getUnlocked());
             }
         }
         return titles;
     }
 
     /**
-     * Removes a title from a player's owned list.
+     * Removes a title from a player's unlocked list.
      * @param player The player that has their title removed.
      * @param title The title that is removed.
      */
-    public void removeFromOwnedTitles(OfflinePlayer player, Title title) {
-        for (Mapping mapping : mappings) {
-            if (mapping.getUuid().equals(player.getUniqueId())) {
-                List<Title> owned = mapping.getOwned();
-                owned.remove(title);
-                mapping.setOwned(owned);
+    public void removeFromUnlockedTitles(OfflinePlayer player, Title title) {
+        for (UserData userData : this.userData) {
+            if (userData.getUuid().equals(player.getUniqueId())) {
+                List<Title> unlocked = userData.getUnlocked();
+                unlocked.remove(title);
+                userData.setUnlocked(unlocked);
                 if (title.isUnique()) title.setUniqueTo(null);
                 return;
             }
@@ -337,24 +332,24 @@ public class DataContainer {
     }
 
     /**
-     * Adds a title to a player's owned list.
+     * Adds a title to a player's unlocked list.
      * @param player The player that gets the title.
      * @param title The title that the player gets.
      */
-    public void addToOwnedTitles(OfflinePlayer player, Title title) {
-        for (Mapping mapping : mappings) {
-            if (mapping.getUuid().equals(player.getUniqueId())) {
-                List<Title> owned = mapping.getOwned();
-                owned.add(title);
-                mapping.setOwned(owned);
+    public void addToUnlockedTitles(OfflinePlayer player, Title title) {
+        for (UserData userData : this.userData) {
+            if (userData.getUuid().equals(player.getUniqueId())) {
+                List<Title> unlocked = userData.getUnlocked();
+                unlocked.add(title);
+                userData.setUnlocked(unlocked);
                 if (title.isUnique()) title.setUniqueTo(player.getUniqueId());
                 return;
             }
         }
-        List<Title> owned = new ArrayList<>();
-        owned.add(title);
-        Mapping mapping = new Mapping(player.getUniqueId(), owned, null);
-        mappings.add(mapping);
+        List<Title> unlocked = new ArrayList<>();
+        unlocked.add(title);
+        UserData userData = new UserData(player.getUniqueId(), unlocked, null);
+        this.userData.add(userData);
     }
 
     //-------------------------------------------------------------- Loading ------------------------------------------------------------------------
@@ -366,8 +361,7 @@ public class DataContainer {
     public void reload() {
         categories.clear();
         titles.clear();
-        requests.clear();
-        mappings.clear();
+        userData.clear();
         loadStorage();
     }
 
@@ -380,8 +374,7 @@ public class DataContainer {
             loadSettings();
             loadCategories();
             loadTitles();
-            loadMappings();
-            loadRequests();
+            loadUserData();
         } catch (InvalidTitleRuntimeException | InvalidCategoryRuntimeException e) {
             Utils.consolePrint("Problem with loading data from config.yml");
             Utils.save = false;
@@ -393,11 +386,14 @@ public class DataContainer {
         if (Settings.isDebugging()) {
             for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
             for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
-            for (Request r : requests) Utils.consolePrint("Request: " + Bukkit.getOfflinePlayer(r.getUuid()).getName() + ": " + r.getTitle().getName() + ", " + r.getStatus());
-            for (Mapping m : mappings) Utils.consolePrint("Mapping: " + Bukkit.getOfflinePlayer(m.getUuid()).getName() + ": " + m.getCurrent());
+            for (UserData m : userData) Utils.consolePrint("UserData: " + Bukkit.getOfflinePlayer(m.getUuid()).getName()
+                    + ": " + m.getCurrent());
         }
     }
 
+    /**
+     * Loads the settings from the yaml file.
+     */
     private void loadSettings() {
         //TODO: Implement
     }
@@ -424,6 +420,7 @@ public class DataContainer {
 
     /**
      * Loads the data of the titles from the yaml file.
+     * @throws InvalidTitleRuntimeException When a title is invalid in any way.
      */
     private void loadTitles() throws InvalidCategoryRuntimeException {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Titles");
@@ -434,12 +431,12 @@ public class DataContainer {
                 String description = config.getString(key + ".Description");
                 boolean unique = config.getBoolean(key + ".Unique");
 
-                // UniqueTo
+                // load UniqueTo
                 String uuid = config.getString(key + ".UniqueTo");
                 UUID uniqueTo = null;
                 if (uuid != null) uniqueTo = UUID.fromString(uuid);
 
-                // category
+                // load category
                 Category category = null;
                 for (Category c : categories) {
                     if (c.getId().equalsIgnoreCase(config.getString(key + ".Category"))) {
@@ -455,62 +452,27 @@ public class DataContainer {
     }
 
     /**
-     * Loads the data of the requests from the yaml file.
+     * Loads the UserData from the yaml file.
+     * @throws InvalidTitleRuntimeException When a title is invalid in any way.
      */
-    private void loadRequests() throws InvalidTitleRuntimeException {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Requests");
+    private void loadUserData() throws InvalidTitleRuntimeException {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Userdata");
         if (config != null) {
             for (String key : config.getKeys(false)) {
 
-                // uuid
+                // load uuid
                 UUID uuid = UUID.fromString(key);
 
-                // titles
-                Title title = null;
+                // load unlocked
+                List<Title> unlocked = new ArrayList<>();
+                List<String> configUnlocked = config.getStringList(key + ".Unlocked");
                 for (Title t : titles) {
-                    if (t.getId().equalsIgnoreCase(config.getString(key + ".Title"))) {
-                        title = t;
-                        break;
-                    }
-                }
-                if (title == null) throw new InvalidTitleRuntimeException();
-
-                // status
-                RequestStatus status = RequestStatus.fromString(config.getString(key + ".Status"));
-
-                // location
-                World world = Bukkit.getWorld(config.getString(key + ".Location.World"));
-                double x = config.getDouble(uuid + ".Location.X");
-                double y = config.getDouble(uuid + ".Location.Y");
-                double z = config.getDouble(uuid + ".Location.Z");
-                Location loc = new Location(world, x, y, z);
-
-                requests.add(new Request(uuid, title, loc, status));
-            }
-        }
-    }
-
-    /**
-     * Loads the data of the mappings from the yaml file.
-     */
-    private void loadMappings() {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Mappings");
-        if (config != null) {
-            for (String key : config.getKeys(false)) {
-
-                // uuid
-                UUID uuid = UUID.fromString(key);
-
-                // owned
-                List<Title> owned = new ArrayList<>();
-                List<String> configOwned = config.getStringList(key + ".Owned");
-                for (Title t : titles) {
-                    for (String name : configOwned) {
-                        if (t.getId().equalsIgnoreCase(name)) owned.add(t);
+                    for (String name : configUnlocked) {
+                        if (t.getId().equalsIgnoreCase(name)) unlocked.add(t);
                     }
                 }
 
-                // current
+                // load current
                 Title current = null;
                 for (Title t : titles) {
                     if (t.getId().equalsIgnoreCase(config.getString(key + ".Current"))) {
@@ -519,7 +481,30 @@ public class DataContainer {
                     }
                 }
 
-                mappings.add(new Mapping(uuid, owned, current));
+                // load request title
+                Title title = null;
+                for (Title t : titles) {
+                    if (t.getId().equalsIgnoreCase(config.getString(key + ".Request.Title"))) {
+                        title = t;
+                        break;
+                    }
+                }
+                if (title == null) throw new InvalidTitleRuntimeException();
+
+                // load request status
+                RequestStatus status = RequestStatus.fromString(config.getString(key + ".Request.Status"));
+
+                // load request location
+                World world = Bukkit.getWorld(config.getString(key + ".Request.Location.World"));
+                double x = config.getDouble(uuid + ".Request.Location.X");
+                double y = config.getDouble(uuid + ".Request.Location.Y");
+                double z = config.getDouble(uuid + ".Request.Location.Z");
+                Location loc = new Location(world, x, y, z);
+
+                // add request and userData to lists
+                Request request = new Request(uuid, title, loc, status);
+
+                userData.add(new UserData(uuid, unlocked, current, request));
             }
         }
     }
@@ -533,11 +518,13 @@ public class DataContainer {
         saveSettings();
         saveCategories();
         saveTitles();
-        saveMappings();
-        saveRequests();
+        saveUserData();
         plugin.saveConfig();
     }
 
+    /**
+     * Saves the settings to the yaml file.
+     */
     private void saveSettings() {
         //TODO: Implement
     }
@@ -571,42 +558,36 @@ public class DataContainer {
     }
 
     /**
-     * Saves all local data of the requests to the yaml file.
+     * Saves all local user data to the yaml file.
      */
-    private void saveRequests() {
-        Configuration config = plugin.getConfig();
-        for (Request request : requests) {
-            String uuid = request.getUuid().toString();
-            config.set(Utils.REQUESTS + uuid + ".Title", request.getTitle().getId());
-            config.set(Utils.REQUESTS + uuid + ".Status", request.getStatus().toString());
+    private void saveUserData() {
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Userdata");
+        for (UserData userData : this.userData) {
 
+            // string of the key
+            String uuid = userData.getUuid().toString();
+
+            // save unlocked titles
+            List<String> unlocked = new ArrayList<>();
+            for (Title title : userData.getUnlocked()) {
+                unlocked.add(title.getId());
+            }
+            config.set(uuid + ".Unlocked", unlocked);
+
+            // save current title
+            config.set(uuid + ".Current", userData.getCurrent() != null ? userData.getCurrent().getId() : null);
+
+            // save request title and status
+            Request request = userData.getRequest();
+            config.set(uuid + ".Request.Title", request.getTitle().getId());
+            config.set(uuid + ".Request.Status", request.getStatus().toString());
+
+            // save request location
             Location loc = request.getLocation();
-            config.set(Utils.REQUESTS + uuid + ".Location.World", loc.getWorld().getName());
-            config.set(Utils.REQUESTS + uuid + ".Location.X", loc.getX());
-            config.set(Utils.REQUESTS + uuid + ".Location.Y", loc.getY());
-            config.set(Utils.REQUESTS + uuid + ".Location.Z", loc.getZ());
-        }
-    }
-
-    /**
-     * Saves all local data of the mappings to the yaml file.
-     */
-    private void saveMappings() {
-        Configuration config = plugin.getConfig();
-        for (Mapping mapping : mappings) {
-            String uuid = mapping.getUuid().toString();
-
-            List<String> owned = new ArrayList<>();
-            for (Title title : mapping.getOwned()) {
-                owned.add(title.getId());
-            }
-            config.set(Utils.MAPPINGS + uuid + ".Owned", owned);
-
-            if (mapping.getCurrent() != null) {
-                config.set(Utils.MAPPINGS + uuid + ".Current", mapping.getCurrent().getId());
-            } else {
-                config.set(Utils.MAPPINGS + uuid + ".Current", null);
-            }
+            config.set(uuid + ".Request.Location.World", loc.getWorld().getName());
+            config.set(uuid + ".Request.Location.X", loc.getX());
+            config.set(uuid + ".Request.Location.Y", loc.getY());
+            config.set(uuid + ".Request.Location.Z", loc.getZ());
         }
     }
 

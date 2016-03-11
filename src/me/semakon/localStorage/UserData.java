@@ -7,45 +7,59 @@ import java.util.UUID;
  * Author:  Martijn
  * Date:    23-2-2016
  */
-public class Mapping {
+public class UserData {
 
     private UUID uuid;
-    private List<Title> owned;
+    private List<Title> unlocked;
     private Title current;
+    private Request request;
 
-    public Mapping(UUID uuid, List<Title> owned, Title current) {
+    public UserData(UUID uuid, List<Title> unlocked, Title current) {
+        this(uuid, unlocked, current, null);
+    }
+
+    public UserData(UUID uuid, List<Title> unlocked, Title current, Request request) {
         this.uuid = uuid;
-        this.owned = owned;
+        this.unlocked = unlocked;
         this.current = current;
+        this.request = request;
     }
 
     public UUID getUuid() {
         return uuid;
     }
 
-    public List<Title> getOwned() {
-        return owned;
+    public List<Title> getUnlocked() {
+        return unlocked;
     }
 
     public Title getCurrent() {
         return current;
     }
 
+    public Request getRequest() {
+        return request;
+    }
+
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
-    public void setOwned(List<Title> owned) {
-        this.owned = owned;
+    public void setUnlocked(List<Title> unlocked) {
+        this.unlocked = unlocked;
     }
 
     public void setCurrent(Title current) {
         this.current = current;
     }
 
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
     public String toString() {
         String res = "{" + uuid + ",\n";
-        for (Title t : owned) {
+        for (Title t : unlocked) {
             res += t.getName() + ",\n";
         }
         if (current == null) return res + null + "}";

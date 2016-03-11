@@ -19,8 +19,8 @@ TitlesPlugin - Abstract Command List
 /titles rename title <title> <newName> 					- Rename <title> to <newName>.
 /titles rename category <category> <newName> 			- Rename <category> to <newName>.
 	
-/titles user <user> add title <title> 				    - Add <title> to owned list of <user>.
-/titles user <user> remove title <title> 				- Remove <title> from owned list of <user>.
+/titles user <user> add title <title> 				    - Add <title> to unlocked list of <user>.
+/titles user <user> remove title <title> 				- Remove <title> from unlocked list of <user>.
 /titles user <user> set title <title> 					- Sets current title of <user> to <title>.
 /titles set title <title> 								- Sets current title to <title>.
 /titles set title                                       - Disable current title.

@@ -1,9 +1,6 @@
 package me.semakon.Handlers;
 
-import me.semakon.localStorage.DataContainer;
-import me.semakon.localStorage.Request;
-import me.semakon.localStorage.RequestStatus;
-import me.semakon.localStorage.Title;
+import me.semakon.localStorage.*;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -75,10 +72,13 @@ public class RequestCommands {
         Request request = dc.getRequest(player);
         if (request == null) {
             request = new Request(player.getUniqueId(), title, player.getLocation());
-            dc.getRequests().add(request);
-            return true;
-        }
-        if (request.getStatus() != RequestStatus.pending) {
+            for (UserData ud : dc.getUserData()) {
+                if (ud.getUuid().equals(player.getUniqueId())) {
+                    ud.setRequest(request);
+                    return true;
+                }
+            }
+        } else if (request.getStatus() != RequestStatus.pending) {
             request.setTitle(title);
             request.setLocation(player.getLocation());
             request.setStatus(RequestStatus.pending);

@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 /**
+ * Utility class that provides the other classes with static fields and methods.
+ *
  * Author:  Martijn
  * Date:    9-2-2016
- *
- * Utility class that provides the other classes with static fields and methods.
  */
 public class Utils {
 

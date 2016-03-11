@@ -10,7 +10,7 @@ commands:
            /<command> set title <title> - Sets current title to <title>.
            /<command> set title - Disable current title.
            /<command> get titles [category] [<category>] - Print all available titles or all available titles from <category>.
-           /<command> get titles user <user> - Print all titles owned by <user>.
+           /<command> get titles user <user> - Print all titles unlocked by <user>.
            /<command> get title <title> description - Print description of <title>.
            /<command> get title <title> category - Print category of <title>.
            /<command> get request [user] [<user>] - Print pending request of self or <user>.
@@ -24,8 +24,8 @@ commands:
            /<command> edit <title> category <category> - Change category of <title> to <category>.
            /<command> rename title <title> <newName> - Rename <title> to <newName>.
            /<command> rename category <category> <newName> - Rename <category> to <newName>.
-           /<command> user <user> add title <title> - Add <title> to owned list of <user>.
-           /<command> user <user> remove title <title> - Remove <title> from owned list of <user>.
+           /<command> user <user> add title <title> - Add <title> to unlocked list of <user>.
+           /<command> user <user> remove title <title> - Remove <title> from unlocked list of <user>.
            /<command> user <user> set title <title> - Sets current title of <user> to <title>.
            /<command> request tp user <user> - Teleports the sender to the location where the request of <user> was submitted.
            /<command> request approve user <user> - Approve title request of <user>.

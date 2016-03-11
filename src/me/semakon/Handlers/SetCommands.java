@@ -1,7 +1,7 @@
 package me.semakon.Handlers;
 
 import me.semakon.localStorage.DataContainer;
-import me.semakon.localStorage.Mapping;
+import me.semakon.localStorage.UserData;
 import me.semakon.localStorage.Title;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
+ * Class that contains static methods that deal with the adding, removing and setting of titles to a user.
+ *
  * Author:  Martijn
  * Date:    15-2-2016
- *
- * Class that contains static methods that deal with the adding, removing and setting of titles to a user.
  */
 public class SetCommands {
 
@@ -29,7 +29,7 @@ public class SetCommands {
         Title title = dc.getTitle(id);
         if (title == null) return false;
 
-        for (Title t : dc.getOwnedTitles(player)) {
+        for (Title t : dc.getUnlockedTitles(player)) {
             if (title.equals(t)) {
                 dc.setCurrentTitle(player, t);
                 return true;
@@ -45,9 +45,9 @@ public class SetCommands {
      * @return True if the title has been disabled.
      */
     public static boolean disableTitle(DataContainer dc, OfflinePlayer player) {
-        for (Mapping mapping : dc.getMappings()) {
-            if (mapping.getUuid().equals(player.getUniqueId())) {
-                mapping.setCurrent(null);
+        for (UserData userData : dc.getUserData()) {
+            if (userData.getUuid().equals(player.getUniqueId())) {
+                userData.setCurrent(null);
                 return true;
             }
         }
@@ -69,9 +69,9 @@ public class SetCommands {
         // if title is unique and already owned by another player
         if (title.isUnique() && title.getUniqueTo() != null) return false;
 
-        List <Title> owned = dc.getOwnedTitles(player);
+        List <Title> owned = dc.getUnlockedTitles(player);
         if (!owned.contains(title)) {
-            dc.addToOwnedTitles(player, title);
+            dc.addToUnlockedTitles(player, title);
             return true;
         }
         return false;
@@ -90,10 +90,10 @@ public class SetCommands {
         if (title == null) return false;
 
         // if player doesn't own that title
-        if (!dc.getOwnedTitles(player).contains(title)) return false;
+        if (!dc.getUnlockedTitles(player).contains(title)) return false;
 
         // remove title from player's owned list
-        dc.removeFromOwnedTitles(player, title);
+        dc.removeFromUnlockedTitles(player, title);
 
         // if title is equipped, unequip it.
         if (dc.getCurrentTitle(player).equals(title)) dc.setCurrentTitle(player, null);

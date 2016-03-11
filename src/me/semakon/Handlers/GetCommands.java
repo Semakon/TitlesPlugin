@@ -1,6 +1,5 @@
 package me.semakon.Handlers;
 
-import me.semakon.Utils;
 import me.semakon.localStorage.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -52,7 +51,7 @@ public class GetCommands {
      */
     public static List<String> getMapping(DataContainer dc, OfflinePlayer player) {
         List<String> titles = new ArrayList<>();
-        for (Title title : dc.getOwnedTitles(player)) {
+        for (Title title : dc.getUnlockedTitles(player)) {
             titles.add(title.getName());
         }
         return titles;
@@ -81,10 +80,11 @@ public class GetCommands {
     public static List<String> getRequests(DataContainer dc) {
         List<String> requests = new ArrayList<>();
         // for every pending request:
-        for (Request request : dc.getRequests()) {
+        for (UserData ud : dc.getUserData()) {
             // if the request is pending add the name of the player of the request and the title's name to the list.
-            if (request.getStatus() == RequestStatus.pending) {
-                requests.add(Bukkit.getOfflinePlayer(request.getUuid()).getName() + ": " + request.getTitle().getName());
+            if (ud.getRequest().getStatus() == RequestStatus.pending) {
+                requests.add(Bukkit.getOfflinePlayer(ud.getRequest().getUuid()).getName() + ": " +
+                        ud.getRequest().getTitle().getName());
             }
         }
         return requests;
@@ -98,10 +98,10 @@ public class GetCommands {
      */
     public static String getRequest(DataContainer dc, OfflinePlayer player) {
         // for every pending request:
-        for (Request request : dc.getRequests()) {
+        for (UserData ud : dc.getUserData()) {
             // if the request of the player is found, return the player's name and the title
-            if (request.getUuid().equals(player.getUniqueId()) && request.getStatus() == RequestStatus.pending) {
-                return player.getName() + ": " + request.getTitle().getName();
+            if (ud.getUuid().equals(player.getUniqueId()) && ud.getRequest().getStatus() == RequestStatus.pending) {
+                return player.getName() + ": " + ud.getRequest().getTitle().getName();
             }
         }
         return null;
