@@ -1,4 +1,4 @@
-#########################################################################################################################
+#-----------------------------------------------------------------------------------------------------------------------#
 #  _________   _     _      _                              ______      _                                _               #
 # |___   ___| |_|   | |    | |                            |  ____|_   | |                              |_|              #
 #     | |      _   _| |_   | |       _____        _____   | |    | |  | |     _      _                  _    ______     #
@@ -17,7 +17,7 @@
 # for editing yaml files.                                                                                               #
 #                                                                                                                       #
 # Categories:                                                                                                           #
-#   gemeral:                                                                                                            #
+#   general:                                                                                                            #
 #     Name: General                                                                                                     #
 #     Description: This is the default category.                                                                        #
 #                                                                                                                       #
@@ -27,21 +27,19 @@
 #     Description: This is an example title.                                                                            #
 #     Category: General                                                                                                 #
 #                                                                                                                       #
-# Mappings:                                                                                                             #
+# UserData:                                                                                                             #
 #   <uuid>:                                                                                                             #
 #     Owned:                                                                                                            #
 #     - example title                                                                                                   #
 #     - example title 2                                                                                                 #
 #     Current: example title                                                                                            #
+#     Requests:                                                                                                         #
+#       Title: example title 3                                                                                          #
+#       Status: pending                                                                                                 #
+#       Location:                                                                                                       #
+#         World: ExampleWorld                                                                                           #
+#         X: 0.0                                                                                                        #
+#         Y: 0.0                                                                                                        #
+#         Z: 0.0                                                                                                        #
 #                                                                                                                       #
-# Requests:                                                                                                             #
-#   <uuid>:                                                                                                             #
-#     Title: example title 3                                                                                            #
-#     Status: pending                                                                                                   #
-#     Location:                                                                                                         #
-#       World: ExampleWorld                                                                                             #
-#       X: 0.0                                                                                                          #
-#       Y: 0.0                                                                                                          #
-#       Z: 0.0                                                                                                          #
-#                                                                                                                       #
-#########################################################################################################################
+#-----------------------------------------------------------------------------------------------------------------------#

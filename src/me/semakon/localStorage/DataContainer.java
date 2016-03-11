@@ -150,17 +150,11 @@ public class DataContainer {
     public void removeTitle(Title title) {
         // remove title from userData
         for (UserData userData : this.userData) {
-            List<Title> unlocked = new ArrayList<>();
-            for (Title o : userData.getUnlocked()) {
-                if (o.equals(title)) {
-                    unlocked = userData.getUnlocked();
-                    break;
-                }
-            }
-            if (!unlocked.isEmpty()) {
-                unlocked.remove(title);
-                userData.setUnlocked(unlocked);
-            }
+
+            // remove title from list of unlocked titles
+            if (userData.getUnlocked().contains(title)) userData.getUnlocked().remove(title);
+
+            // remove title from current
             if (userData.getCurrent().equals(title)) userData.setCurrent(null);
         }
 
