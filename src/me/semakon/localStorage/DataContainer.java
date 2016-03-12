@@ -44,7 +44,6 @@ public class DataContainer {
         defaultCategory = new Category(Utils.DEFAULT_CATEGORY.toLowerCase(), Utils.DEFAULT_CATEGORY, "This is the default category.");
     }
 
-
     //-------------------------------------------------------------- Categories ------------------------------------------------------------------------
 
     public List<Category> getCategories() {
@@ -348,14 +347,45 @@ public class DataContainer {
     //-------------------------------------------------------------- Loading ------------------------------------------------------------------------
 
     /**
-     * Clears all lists, adds the default category to the categories list and
-     * reloads all storage from the yaml files again.
+     * Clears all lists and reloads all storage from the yaml files again.
      */
-    public void reload() {
+    public void reloadAllData() {
         categories.clear();
         titles.clear();
         userData.clear();
         loadStorage();
+    }
+
+    /**
+     * Clears categories and titles lists and reloads them from the config file.
+     */
+    public void reloadTitleData() {
+        categories.clear();
+        titles.clear();
+        try {
+            loadCategories();
+            loadTitles();
+        } catch (InvalidTitleRuntimeException e) {
+            Utils.consolePrint("Problem with loading data from config.yml");
+            Utils.save = false;
+            plugin.getPluginLoader().disablePlugin(plugin);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Clears userData list and reloads it from the config file.
+     */
+    public void reloadUserData() {
+        userData.clear();
+        try {
+            loadUserData();
+        } catch (InvalidTitleRuntimeException e) {
+            Utils.consolePrint("Problem with loading data from config.yml");
+            Utils.save = false;
+            plugin.getPluginLoader().disablePlugin(plugin);
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -376,7 +406,7 @@ public class DataContainer {
         }
 
         // debug
-        if (Settings.isDebugging()) {
+        if (Settings.isDebuggingOn()) {
             for (Category c : categories) Utils.consolePrint("Category: " + c.getName());
             for (Title t : titles) Utils.consolePrint("Title: " + t.getName());
             for (UserData m : userData) Utils.consolePrint("UserData: " + Bukkit.getOfflinePlayer(m.getUuid()).getName()
@@ -388,7 +418,12 @@ public class DataContainer {
      * Loads the settings from the yaml file.
      */
     private void loadSettings() {
-        //TODO: Implement
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Settings");
+        if (config != null) {
+            Settings.setAutoSave(config.getBoolean(".AutoSave"));
+            Settings.setDebugging(config.getBoolean(".Debugging"));
+            Settings.setDonatorSuffixes(config.getBoolean(".DonatorSuffixes"));
+        }
     }
 
     /**
@@ -519,7 +554,11 @@ public class DataContainer {
      * Saves the settings to the yaml file.
      */
     private void saveSettings() {
-        //TODO: Implement
+        Configuration config = plugin.getConfig();
+
+        config.set("AutoSave", Settings.isAutoSaveOn());
+        config.set("Debugging", Settings.isDebuggingOn());
+        config.set("DonatorSuffixes", Settings.getDonatorSuffixes());
     }
 
     /**
@@ -527,7 +566,7 @@ public class DataContainer {
      */
     private void saveCategories() {
         Configuration config = plugin.getConfig();
-        config.set("Categories" ,null);
+        config.set("Categories", null);
         for (Category category : categories) {
             config.set(Utils.CATEGORIES + category.getId() + ".Name", category.getName());
             config.set(Utils.CATEGORIES + category.getId() + ".Description", category.getDescription());

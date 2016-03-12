@@ -125,7 +125,7 @@ public class Utils {
     }
 
     public static void debugMsg(CommandSender receiver, String msg) {
-        if (Settings.isDebugging()) {
+        if (Settings.isDebuggingOn()) {
             msg = "[TP Debug]" + msg;
             if (receiver == null) System.out.println(msg);
             else receiver.sendMessage(msg);

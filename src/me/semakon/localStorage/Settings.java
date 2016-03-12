@@ -16,11 +16,11 @@ public class Settings {
         return donatorSuffixes;
     }
 
-    public static boolean isAutoSave() {
+    public static boolean isAutoSaveOn() {
         return autoSave;
     }
 
-    public static boolean isDebugging() {
+    public static boolean isDebuggingOn() {
         return debugging;
     }
 

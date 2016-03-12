@@ -1,9 +1,6 @@
 package me.semakon;
 
-import me.semakon.commandExecutors.EditTitleExecutor;
-import me.semakon.commandExecutors.GetExecutor;
-import me.semakon.commandExecutors.RequestExecutor;
-import me.semakon.commandExecutors.SetExecutor;
+import me.semakon.commandExecutors.*;
 import me.semakon.localStorage.DataContainer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,6 +24,7 @@ public class TitlesPlugin extends JavaPlugin {
     public Permission editUserTitlesPerm = new Permission("titles.editUserTitles");
     public Permission makeRequestsPerm = new Permission("titles.makeRequests");
     public Permission setTitlePerm = new Permission("titles.setTitle");
+    public Permission configFilePerm = new Permission("titles.configFile");
 
     public Permission donatorSuffix1 = new Permission("titles.suffix.donator1");
     public Permission donatorSuffix2 = new Permission("titles.suffix.donator2");
@@ -36,6 +34,7 @@ public class TitlesPlugin extends JavaPlugin {
     private SetExecutor setExecutor;
     private RequestExecutor requestExecutor;
     private EditTitleExecutor editTitleExecutor;
+    private FileExecutor fileExecutor;
 
     private DataContainer dataContainer;
 
@@ -58,6 +57,7 @@ public class TitlesPlugin extends JavaPlugin {
         setExecutor = new SetExecutor(dataContainer);
         requestExecutor = new RequestExecutor(this);
         editTitleExecutor = new EditTitleExecutor(dataContainer);
+        fileExecutor = new FileExecutor(dataContainer);
     }
 
     /**
@@ -182,6 +182,47 @@ public class TitlesPlugin extends JavaPlugin {
                         Utils.sendArray(sender, commands);
                     }
                     return true;
+
+                case "autosave":
+                    if (sender.hasPermission(configFilePerm) || sem) {
+                        if (args.length > 1 || !fileExecutor.execute(sender, args)) {
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles autosave", "/titles save"};
+                            Utils.sendArray(sender, commands);
+                        }
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
+                    return true;
+
+                case "reload":
+                    if (sender.hasPermission(configFilePerm) || sem) {
+                        if (args.length > 1 || !fileExecutor.execute(sender, args)) {
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles reload"};
+                            Utils.sendArray(sender, commands);
+                        }
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
+                    return true;
+
+                case "save":
+                    if (sender.hasPermission(configFilePerm) || sem) {
+                        if (args.length > 1 || !fileExecutor.execute(sender, args)) {
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles autosave", "/titles save"};
+                            Utils.sendArray(sender, commands);
+                        }
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
+                    return true;
+
+                case "backup":
+                    if (sender.hasPermission(configFilePerm) || sem) {
+                        if (args.length > 2 || !fileExecutor.execute(sender, args)) {
+                            Utils.sendMsg(sender, "Did you mean:", ChatColor.GOLD);
+                            String[] commands = {"/titles autosave", "/titles save"};
+                            Utils.sendArray(sender, commands);
+                        }
+                    } else Utils.sendError(sender, "You don't have permission to do that.");
+                    return true;
+
             }
         } else if (cmd.getName().equals(Utils.TITLES_COMMAND) && args.length == 0) {
             if (sender instanceof Player) {
