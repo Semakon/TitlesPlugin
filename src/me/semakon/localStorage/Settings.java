@@ -8,9 +8,9 @@ public class Settings {
 
     //TODO: make loadSettings in DataContainer
 
-    private static boolean donatorSuffixes;
-    private static boolean autoSave;
-    private static boolean debugging;
+    private static boolean donatorSuffixes = false;
+    private static boolean autoSave = true;
+    private static boolean debugging = false;
 
     public static boolean getDonatorSuffixes() {
         return donatorSuffixes;
