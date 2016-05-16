@@ -26,21 +26,43 @@ public class FileExecutor {
     public boolean execute(CommandSender sender, String[] args) {
         switch (args[0].toLowerCase()) {
             case "reload":
-                //TODO: add different reload options: 'reloadAllData userdata', 'reloadAllData settings', 'reloadAllData titles'
-                dataContainer.reloadAllData();
-                Utils.sendMsg(sender, "Reloaded data from config file.");
+                if (args.length == 2) {
+                    if (args[1].equalsIgnoreCase("all")) {
+                        dataContainer.reloadAllData();
+                        Utils.sendMsg(sender, "Reloaded all data from config file, " +
+                                "current data overwritten.");
+                    }
+                    else if (args[1].equalsIgnoreCase("userdata")) {
+                        dataContainer.reloadUserData();
+                        Utils.sendMsg(sender, "Reloaded userdata from config file, " +
+                                "current userdata overwritten.");
+                    }
+                    else if (args[1].equalsIgnoreCase("titledata")) {
+                        dataContainer.reloadTitleData();
+                        Utils.sendMsg(sender, "Reloaded title data from config file, " +
+                                "current title data overwritten.");
+                    }
+                    else if (args[1].equalsIgnoreCase("settings")) {
+                        dataContainer.loadSettings();
+                        Utils.sendMsg(sender, "Reloaded settings from config file, " +
+                                "current settings overwritten.");
+                    }
+                }
                 return true;
 
             case "save":
                 dataContainer.saveStorage();
+                Utils.sendMsg(sender, "Saved all current data to config file(s). " +
+                        "Config file(s) have been overwritten.");
                 return true;
 
             case "autosave":
                 Settings.setAutoSave(!Settings.isAutoSaveOn());
+                Utils.sendMsg(sender, "Autosave is now turned " + (Settings.isAutoSaveOn() ? "on." : "off."));
                 return true;
 
             case "backup":
-
+                //TODO: implement
                 return true;
         }
         return false;

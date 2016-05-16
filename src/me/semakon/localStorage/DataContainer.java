@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -366,7 +367,7 @@ public class DataContainer {
             loadCategories();
             loadTitles();
         } catch (InvalidTitleRuntimeException e) {
-            Utils.consolePrint("Problem with loading data from config.yml");
+            Utils.consolePrint("Error while trying to load data from config.yml");
             Utils.save = false;
             plugin.getPluginLoader().disablePlugin(plugin);
             e.printStackTrace();
@@ -381,7 +382,7 @@ public class DataContainer {
         try {
             loadUserData();
         } catch (InvalidTitleRuntimeException e) {
-            Utils.consolePrint("Problem with loading data from config.yml");
+            Utils.consolePrint("Error while trying to load data from config.yml");
             Utils.save = false;
             plugin.getPluginLoader().disablePlugin(plugin);
             e.printStackTrace();
@@ -399,7 +400,7 @@ public class DataContainer {
             loadTitles();
             loadUserData();
         } catch (InvalidTitleRuntimeException | InvalidCategoryRuntimeException e) {
-            Utils.consolePrint("Problem with loading data from config.yml");
+            Utils.consolePrint("Error while trying to load data from config.yml");
             Utils.save = false;
             plugin.getPluginLoader().disablePlugin(plugin);
             e.printStackTrace();
@@ -417,7 +418,7 @@ public class DataContainer {
     /**
      * Loads the settings from the yaml file.
      */
-    private void loadSettings() {
+    public void loadSettings() {
         ConfigurationSection config = plugin.getConfig().getConfigurationSection("Settings");
         if (config != null) {
             Settings.setAutoSave(config.getBoolean(".AutoSave"));
@@ -543,19 +544,33 @@ public class DataContainer {
      * Saves all local data to the yaml file.
      */
     public void saveStorage() {
-        saveSettings();
-        saveCategories();
-        saveTitles();
-        saveUserData();
+        saveSettings(plugin.getConfig());
+        saveCategories(plugin.getConfig());
+        saveTitles(plugin.getConfig());
+        saveUserData(plugin.getConfig());
         plugin.saveConfig();
+    }
+
+    /**
+     * Creates a backup file of the current data, NOT the config files.
+     * If there already exists a backup file, a new file is created with a number higher than the previous.
+     */
+    public void backup() {
+        //TODO: create a file to save the backup to.
+//        String filename = "backup.yml";
+//        File backup = new File(plugin.getDataFolder() + Utils.BACKUP_FOLDER, filename);
+
+        //TODO: construct a customConfig from the file.
+        saveSettings(plugin.getConfig());
+        saveCategories(plugin.getConfig());
+        saveTitles(plugin.getConfig());
+        saveUserData(plugin.getConfig());
     }
 
     /**
      * Saves the settings to the yaml file.
      */
-    private void saveSettings() {
-        Configuration config = plugin.getConfig();
-
+    private void saveSettings(Configuration config) {
         config.set("AutoSave", Settings.isAutoSaveOn());
         config.set("Debugging", Settings.isDebuggingOn());
         config.set("DonatorSuffixes", Settings.getDonatorSuffixes());
@@ -564,8 +579,7 @@ public class DataContainer {
     /**
      * Saves all local data of the categories to the yaml file.
      */
-    private void saveCategories() {
-        Configuration config = plugin.getConfig();
+    private void saveCategories(Configuration config) {
         config.set("Categories", null);
         for (Category category : categories) {
             config.set(Utils.CATEGORIES + category.getId() + ".Name", category.getName());
@@ -576,8 +590,7 @@ public class DataContainer {
     /**
      * Saves all local data of the titles to the yaml file.
      */
-    private void saveTitles() {
-        Configuration config = plugin.getConfig();
+    private void saveTitles(Configuration config) {
         config.set("Titles", null);
         for (Title title : titles) {
             String id = title.getId();
@@ -592,8 +605,8 @@ public class DataContainer {
     /**
      * Saves all local user data to the yaml file.
      */
-    private void saveUserData() {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("Userdata");
+    private void saveUserData(Configuration cfg) {
+        ConfigurationSection config = cfg.getConfigurationSection("Userdata");
         for (UserData userData : this.userData) {
 
             // string of the key

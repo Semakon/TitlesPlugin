@@ -38,7 +38,11 @@ Reserved for (potential) future updates:
 
 /titles edit title <title> unique <true:false>          - Set <title>'s unique option.
 
-/titles reload                                          - Reload all data from configuration. Overwrites current data.
+/titles reload all                                      - Reload all data from configuration. Overwrites current data.
+/titles reload userdata                                 - Reload userdata from configuration. Overwrites current data.
+/titles reload titledata                                - Reload titledata from configuration. Overwrites current data.
+/titles reload settings                                 - Reload settings from configuration. Overwrites current settings.
+
 /titles save                                            - Save all current data to configuration. Overwrites configuration file.
 /titles autosave                                        - turn autosave on or off.
 /titles backup [<file>]                                 - Make a backup of the configuration file and saves it to the default configuration backup

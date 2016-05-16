@@ -26,13 +26,13 @@ public class Utils {
 
     public static final String ESSENTIALS_USERDATA_FOLDER = "/../Essentials/userdata/";
 
+    public static final String BACKUP_FOLDER = "/backups/";
+
     /**
      * YAML file conventions:
      */
     public static final String CATEGORIES = "Categories.";
     public static final String TITLES = "Titles.";
-    public static final String MAPPINGS = "Mappings.";
-    public static final String REQUESTS = "Requests.";
 
     public static boolean save = true;
 
@@ -204,7 +204,8 @@ public class Utils {
      */
     private static String msgPrefix(CommandSender sender, String msg) {
         String prefix = "%s[%sTP%s]%s";
-        prefix = sender instanceof Player ? String.format(prefix, ChatColor.DARK_GRAY, ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.RESET) :
+        prefix = sender instanceof Player ? String.format(prefix, ChatColor.DARK_GRAY,
+                ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.RESET) :
                 String.format(prefix, "", "", "", "");
         return (prefix + " " + msg);
     }
